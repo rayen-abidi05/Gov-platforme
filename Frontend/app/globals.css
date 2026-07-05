@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+/*
+  DESIGN TOKENS — Tunisia Olive Oil Export Platform
+  Palette is derived from the subject itself (olive tree + oil), not the
+  generic AI-default cream/terracotta combo.
+
+  Tailwind v4 is CSS-first: tokens declared in @theme below are turned
+  directly into utility classes (bg-olive-950, text-gold-300, etc.) —
+  there is no tailwind.config.ts color table to keep in sync anymore.
+
+  olive-950  #16210F  deep grove shadow      (background base, hero panel)
+  olive-800  #2E4620  canopy green           (panel gradient, borders)
+  olive-600  #55742F  leaf green             (secondary accents, links)
+  olive-400  #8FA35C  sun-lit leaf           (muted text on dark)
+  gold-500   #C79A2E  pressed-oil amber      (primary CTA, focus ring)
+  gold-300   #E3C56B  first-press oil glow  (hover/shimmer highlight)
+  cream-50   #F8F6EE  raw cotton / paper     (card surface, light text)
+  ink-900    #1B1B16  near-black text        (body copy on light)
+*/
+
+@theme {
+  --color-olive-950: #16210f;
+  --color-olive-800: #2e4620;
+  --color-olive-600: #55742f;
+  --color-olive-400: #8fa35c;
+  --color-gold-500: #c79a2e;
+  --color-gold-300: #e3c56b;
+  --color-cream-50: #f8f6ee;
+  --color-ink-900: #1b1b16;
+
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-xl2: 1.25rem;
+  --shadow-glass: 0 8px 40px -8px rgb(22 33 15 / 0.35);
+}
+
+/*
+  font-display / font-body utility classes are generated automatically
+  by Tailwind v4 from the --font-display / --font-body tokens in @theme
+  above — no manual .font-display {} class needed like in v3.
+
+  Load Fraunces via next/font/google in app/layout.tsx (see README);
+  the @font-face fallback below only matters if it's already installed
+  as a local/system font.
+*/
+@font-face {
+  font-family: 'Fraunces';
+  src: local('Fraunces');
+}
+
+/* Signature element: slow, ambient olive-oil "aurora" drift.
+   Respects reduced-motion. */
+@keyframes olive-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(-2%, 3%, 0) scale(1.05); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .olive-aurora-layer { animation: none !important; }
+}

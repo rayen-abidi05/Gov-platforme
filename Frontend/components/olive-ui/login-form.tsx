@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -153,12 +153,12 @@ export function LoginForm() {
 
       <p className="mt-6 text-center text-sm font-body text-cream-50/70">
         Nouvel exportateur ?{" "}
-        <a
+        <Link
           href="/register"
           className="font-medium text-gold-300 underline-offset-2 hover:underline"
         >
           Créer un compte
-        </a>
+        </Link>
       </p>
     </form>
   );

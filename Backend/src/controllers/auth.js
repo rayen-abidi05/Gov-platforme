@@ -26,7 +26,7 @@ const login = async (req, res) => {
     if (!isPasswordValid) {
         return res.status(401).json({ error: 'Invalid password' });
     }
-    const token = await new SignJWT({ id :user.id ,email: user.email,name : user.name })
+    const token = await new SignJWT({ id :user.id ,email: user.email,name : user.name ,role: user.role})
         .setProtectedHeader({ alg: 'HS256' })
         .setIssuedAt()
         .setExpirationTime('2min')
@@ -37,7 +37,7 @@ const login = async (req, res) => {
         sameSite: 'lax',
         maxAge:  2 * 60 * 1000
     });
-    const tokenRefresh = await new SignJWT({ id :user.id , email: user.email,name : user.name })
+    const tokenRefresh = await new SignJWT({ id :user.id , email: user.email,name : user.name ,role: user.role})
         .setProtectedHeader({ alg: 'HS256' })
         .setIssuedAt()
         .setExpirationTime('7d')
@@ -53,20 +53,48 @@ const login = async (req, res) => {
 }catch (error) {   
      res.status(500).json({ error : error.message });
 }};
-const registerUser = async (req, res) => {
+const registerUser = async (req, res,status=null) => {
     const { name, email, password, role } = req.body;
+
     try {
         const cryptedPassword = await brypt.hash(password, 10);
         const user = await prisma.user.create({
-            data: {
+            data:{
                 name,
                 email,
                 password: cryptedPassword,
                 role,
-                status : null
+                status:status
             }
         });
-    const token = await new SignJWT({  id :user.id ,email: user.email, name : user.name })
+        if(role==="EXPORTER"){
+        const {commName,rne,activity,isResident,city,governorate,matFisc,address,phone,nationality,isRented,registerState,labName,userId } = req.body;
+       const company = await prisma.Company.create({
+            data:{
+                commName, 
+                rne,
+                activity,    
+                isResident,      
+                city,         
+                governorate,   
+                matFisc,       
+                address,     
+                phone,         
+                nationality,    
+                isRented,     
+                registerState, 
+                labName,    
+                userId:user.id,         
+            }
+        });
+       };
+        
+    
+    
+
+
+
+    const token = await new SignJWT({  id :user.id ,email: user.email, name : user.name ,role: user.role})
                 .setProtectedHeader({ alg: 'HS256' })
                 .setIssuedAt()
                 .setExpirationTime('2h')
@@ -78,7 +106,7 @@ const registerUser = async (req, res) => {
                 maxAge:  2 * 60 * 1000
             }); 
               
-        const tokenRefresh = await new SignJWT({  id :user.id ,email: user.email,name : user.name })
+        const tokenRefresh = await new SignJWT({  id :user.id ,email: user.email,name : user.name ,role: user.role})
                 .setProtectedHeader({ alg: 'HS256' })
                 .setIssuedAt()
                 .setExpirationTime('7d')
@@ -90,10 +118,10 @@ const registerUser = async (req, res) => {
             sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000
         }); 
-        res.status(201).json({ user,token,tokenRefresh });
+        res.status(201).json({ "message":"user added"});
         
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error:error.message});
     }
 };
 

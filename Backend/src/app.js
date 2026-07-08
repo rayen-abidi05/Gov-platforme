@@ -1,8 +1,13 @@
 const express = require('express');
 const cors = require('cors');
-const authRouter = require('./routes/authRoute');
 const cookieParser = require('cookie-parser');
+
+const authRouter = require('./routes/authRoute');
+const fileRoute = require("./routes/fileRoute");
+const authenticateToken = require('./middleware/authToken');
+
 const app = express();
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
@@ -12,7 +17,7 @@ app.use(cors({
 }));
 
 app.use('/api/auth', authRouter);
-
+app.use("/api/files",authenticateToken,fileRoute);
 
 
 

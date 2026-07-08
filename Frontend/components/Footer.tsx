@@ -53,7 +53,7 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6 text-cream-50">
           <div className="flex flex-wrap justify-center lg:justify-start items-center gap-4 text-sm">
-            {socialLinks.map((link) => (
+            {socialLinks.map((link : any) => (
               <a
                 key={link.href}
                 href={link.href}

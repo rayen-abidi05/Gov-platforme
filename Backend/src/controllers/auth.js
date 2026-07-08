@@ -68,25 +68,25 @@ const registerUser = async (req, res,status=null) => {
             }
         });
         if(role==="EXPORTER"){
-        const {commName,rne,activity,isResident,city,governorate,matFisc,address,phone,nationality,isRented,registerState,labName,userId } = req.body;
-       const company = await prisma.Company.create({
-            data:{
-                commName, 
-                rne,
-                activity,    
-                isResident,      
-                city,         
-                governorate,   
-                matFisc,       
-                address,     
-                phone,         
-                nationality,    
-                isRented,     
-                registerState, 
-                labName,    
-                userId:user.id,         
-            }
-        });
+            const {commName,rne,activity,isResident,city,governorate,matFisc,address,phone,nationality,isRented,registerState,labName,userId } = req.body;
+        const company = await prisma.Company.create({
+                data:{
+                    commName, 
+                    rne,
+                    activity,    
+                    isResident,      
+                    city,         
+                    governorate,   
+                    matFisc,       
+                    address,     
+                    phone,         
+                    nationality,    
+                    isRented,     
+                    registerState, 
+                    labName,    
+                    userId:user.id,         
+                }
+            });
        };
         
     

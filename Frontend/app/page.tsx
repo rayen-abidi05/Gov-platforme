@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ShieldCheck, Leaf } from "lucide-react";
 import { OliveAuroraBackground } from "@/components/olive-ui/olive-aurora-background";
 import { OliveBranchMotif } from "@/components/olive-ui/olive-branch-motif";
-import Link from "next/link";
+import Navbar from "@/components/Navbar.tsx"
 import Footer from "@/components/Footer";
 import "./globals.css";
 export const metadata: Metadata = {
@@ -10,41 +10,13 @@ export const metadata: Metadata = {
   description:
     "Plateforme nationale d'export de l'huile d'olive tunisienne - Inscription, connexion et suivi des exportations.",
 };
+
 export default function Home() {
   return (
-    <main className="relative min-h-screen w-full font-body text-cream-50">
+   <main className="relative min-h-screen w-full font-body text-cream-50">
       <OliveAuroraBackground />
-
       <div className="relative z-10 flex min-h-screen flex-col lg:flex-row">
-        {/* Navigation Bar */}
-        <nav className="absolute top-0 right-0 z-20 p-4 sm:p-6 lg:p-10 flex flex-wrap justify-end gap-3 sm:gap-6 max-w-full lg:max-w-[80%] bg-olive-950/30 backdrop-blur-md rounded-bl-xl">
-          <Link
-            href="/about"
-            className="px-3 py-2 text-sm font-medium text-cream-50/80 hover:text-gold-300 rounded-lg transition-all duration-200"
-          >
-            À propos
-          </Link>
-          <Link
-            href="/chaier-de-charge"
-            className="px-3 py-2 text-sm font-medium text-cream-50/80 hover:text-gold-300 rounded-lg transition-all duration-200"
-          >
-            Chaier de charge
-          </Link>
-          <Link
-            href="/register"
-            className="px-3 py-2 text-sm font-medium bg-gold-300/20 hover:bg-gold-300/30 text-gold-300 rounded-lg transition-all duration-200"
-          >
-            S'inscrire
-          </Link>
-          <Link
-            href="/login"
-            className="px-3 py-2 text-sm font-medium bg-olive-950/40 hover:bg-olive-800/20 text-cream-50 rounded-lg transition-all duration-200"
-          >
-            Se connecter
-          </Link>
-        </nav>
-
-        {/* Left Section - Branding & Information */}
+        <Navbar />
         <section className="flex flex-1 flex-col justify-between pt-28 px-8 pb-10 sm:pt-32 sm:px-12 lg:pt-16 lg:px-16 lg:py-16">
           <div className="flex items-center gap-2.5">
             <Leaf className="h-6 w-6 text-gold-300" />

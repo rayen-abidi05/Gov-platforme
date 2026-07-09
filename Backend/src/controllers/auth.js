@@ -32,7 +32,7 @@ const login = async (req, res) => {
         .setExpirationTime('2min')
         .sign(secret);
     res.cookie('access_token', token, {
-        httpOnly: false,
+        httpOnly: true,
         secure: false,
         sameSite: 'lax',
         maxAge:  2 * 60 * 1000
@@ -100,7 +100,7 @@ const registerUser = async (req, res,status=null) => {
                 .setExpirationTime('2h')
                 .sign(secret);
          res.cookie('access_token', token, {
-                httpOnly: false,
+                httpOnly: true,
                 secure: false,
                 sameSite: 'lax',
                 maxAge:  2 * 60 * 1000
@@ -125,9 +125,9 @@ const registerUser = async (req, res,status=null) => {
     }
 };
 
-const logout = async (req, res) => {
+    const logout = async (req, res) => {
   res.clearCookie("access_token", {
-    httpOnly: false,
+    httpOnly: true,
     sameSite: "lax",
     secure: false, 
     path: "/",
@@ -145,7 +145,31 @@ const logout = async (req, res) => {
   return res.status(200).json({ message: "logged out" });
 };
 
+const verify = async (req,res) =>{
+    try {
+        const user = await prisma.user.findUnique({
+        where: { id: req.user.id },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            
+        },
+        });
+
+        if (!user) {
+        return res.status(401).json({ error: "User not found" });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ error : error.message });
+    }
+}
+
 module.exports = {
+    verify,
     registerUser,
     login,
     logout

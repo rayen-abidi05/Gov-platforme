@@ -12,6 +12,8 @@ export const metadata: Metadata = {
 };
 
 export default function LoginPage() {
+
+  
   return (
     <main className="relative min-h-screen w-full font-body text-cream-50">
       <OliveAuroraBackground />

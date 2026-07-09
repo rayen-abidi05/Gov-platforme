@@ -13,7 +13,7 @@ privateApi.interceptors.response.use(
             originalRequest._retry = true;
     }
     try{
-        await publicApi.post("/auth/refresh")
+        await publicApi.post("/api/auth/refresh")
         return privateApi(originalRequest)
     }
     catch (err) {

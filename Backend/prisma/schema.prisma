@@ -24,6 +24,12 @@ enum Role {
   DIWAN_MEMBER
 }
 
+enum documenttype {
+  RNE
+  ADMIN
+  OBSERVATOR
+  DIWAN_MEMBER
+} 
 enum RegionStatus {
   UE
   AMERICA

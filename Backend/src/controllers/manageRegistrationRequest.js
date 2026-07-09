@@ -1,6 +1,6 @@
 const {PrismaClient} = require ("@prisma/client")
 const prisma = new PrismaClient();
-
+const {addFiles} = require ("../controllers/files")
 const getRequestRegis = async(req,res) => {
     try{
         
@@ -65,8 +65,47 @@ const getAllRequestRegis = async(req,res) => {
         res.status(500).json ({"message" : error.message})
     }
 }
+
 const addRequest = async(req,res) => {
-    
+    try {
+        const user = req.user
+        const {note="",docType} = req.body;
+        
+       
+        const company = await prisma.company.findUnique({
+            where : {
+                userId : user.id
+            }
+        });
+        if (!company) {
+            return res.status(404).json({
+                message: "Company not found"
+            });
+        }
+        const files = req.files;
+
+            const request = await prisma.registrationRequest.create({
+                data: {
+                    status: "PENDING",
+                    notes: note,
+                    companyId: company.id
+                }
+            });
+
+
+            await addFiles(
+                files,
+                docTypes,
+                request.id
+            );
+
+
+        return res.status(201).json({
+                message: "Request created successfully"
+            });
+    } catch (error) {
+        res.status(500).json ({"message" : error.message})
+    }
 }
 module.exports = {
     getRequestRegis,

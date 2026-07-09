@@ -26,9 +26,13 @@ enum Role {
 
 enum documenttype {
   RNE
-  ADMIN
-  OBSERVATOR
-  DIWAN_MEMBER
+  TAXREALTED
+  DIWAN
+  QUITTANCE
+  EXISTANCEDECLARATION
+  RENTEDDECLARATION
+  CERTIFICATIONOWNERSHIP
+  LABDOC
 } 
 enum RegionStatus {
   UE
@@ -169,7 +173,7 @@ model Document {
   fileName    String
   fileType    String
   fileUrl     String
-
+  DocType     documenttype
   size        Int
 
   uploadedAt  DateTime @default(now())

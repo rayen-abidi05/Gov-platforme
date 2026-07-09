@@ -4,7 +4,7 @@ const {getFiles} = require ("../controllers/files")
 const router = express.Router();
 
 
-router.get("/upload",upload.single("file"),getFiles);
+router.get("/",getFiles);
 
 
 

@@ -2,6 +2,9 @@
 CREATE TYPE "Role" AS ENUM ('EXPORTER', 'ADMIN', 'OBSERVATOR', 'DIWAN_MEMBER');
 
 -- CreateEnum
+CREATE TYPE "documenttype" AS ENUM ('RNE', 'TAXREALTED', 'DIWAN', 'QUITTANCE', 'EXISTANCEDECLARATION', 'RENTEDDECLARATION', 'CERTIFICATIONOWNERSHIP', 'LABDOC');
+
+-- CreateEnum
 CREATE TYPE "RegionStatus" AS ENUM ('UE', 'AMERICA', 'MIDDLE_EAST');
 
 -- CreateEnum
@@ -84,6 +87,7 @@ CREATE TABLE "Document" (
     "fileName" TEXT NOT NULL,
     "fileType" TEXT NOT NULL,
     "fileUrl" TEXT NOT NULL,
+    "DocType" "documenttype" NOT NULL,
     "size" INTEGER NOT NULL,
     "uploadedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "registrationRequestId" TEXT,

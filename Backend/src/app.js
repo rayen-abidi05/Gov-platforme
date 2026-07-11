@@ -4,6 +4,8 @@ const cookieParser = require('cookie-parser');
 
 const authRouter = require('./routes/authRoute');
 const fileRoute = require("./routes/fileRoute");
+const reqRgistRoute = require("./routes/reqRgist");
+const companyRoute = require("./routes/companyRoute");
 const authenticateToken = require('./middleware/authToken');
 
 const app = express();
@@ -18,8 +20,8 @@ app.use(cors({
 
 app.use('/api/auth', authRouter);
 app.use("/api/files",authenticateToken,fileRoute);
-
-
+app.use("/api/registration",authenticateToken,reqRgistRoute)
+app.use("/api/company",authenticateToken,companyRoute);
 
 
 module.exports = app;

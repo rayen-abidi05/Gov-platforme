@@ -8,11 +8,12 @@ import { documentsSchema, DocumentsFormValues } from "@/lib/validations/document
 import { getRequiredDocTypes, DOCUMENT_LABELS, DocType } from "@/lib/documentConfig";
 import DocumentSlot from "@/components/DocumentSlot";
 import Navbar from "@/components/Navbar.tsx"
-
+import { useCompany } from "@/hooks/useCompany";
 const MOCK_IS_RENTED = true;
 
 export default function RegistrationPage() {
-  const isRented = MOCK_IS_RENTED;
+  const {data : company} = useCompany()
+  const isRented = company?.isRented && false ;
   const requiredTypes = getRequiredDocTypes(isRented);
 
   const {

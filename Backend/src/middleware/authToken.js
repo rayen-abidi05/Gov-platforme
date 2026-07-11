@@ -9,6 +9,7 @@ const authenticateToken = async (req, res, next) => {
         }
         const { payload } = await jwtVerify(token, secret);
         req.user = payload;
+        console.log("checking token")
         next();
     }
     catch(error){

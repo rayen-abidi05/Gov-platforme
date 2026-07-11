@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Upload, FileText } from "lucide-react";
+import { Upload, FileText } from "lucide-react";
 import { DocType } from "@/lib/documentConfig";
 
 interface Props {

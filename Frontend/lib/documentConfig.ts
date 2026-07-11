@@ -1,12 +1,4 @@
-export type DocType =
-  | "RNE"
-  | "TAXREALTED"
-  | "DIWAN"
-  | "QUITTANCE"
-  | "EXISTANCEDECLARATION"
-  | "RENTEDDECLARATION"
-  | "CERTIFICATIONOWNERSHIP"
-  | "LABDOC";
+import { DocType } from "@/types/registration";
 
 export const DOCUMENT_LABELS: Record<DocType, { fr: string; ar: string }> = {
   RNE: { fr: "Registre National des Entreprises", ar: "السجل الوطني للمؤسسات" },
@@ -20,13 +12,6 @@ export const DOCUMENT_LABELS: Record<DocType, { fr: string; ar: string }> = {
 };
 
 export function getRequiredDocTypes(isRented: boolean): DocType[] {
-  const base: DocType[] = [
-    "RNE",
-    "TAXREALTED",
-    "DIWAN",
-    "QUITTANCE",
-    "EXISTANCEDECLARATION",
-    "LABDOC",
-  ];
+  const base: DocType[] = ["RNE", "TAXREALTED", "DIWAN", "QUITTANCE", "EXISTANCEDECLARATION", "LABDOC"];
   return isRented ? [...base, "RENTEDDECLARATION"] : [...base, "CERTIFICATIONOWNERSHIP"];
 }

@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import {
   Mail,
-  
+  AlertCircle,
   Lock,
  
 } from "lucide-react";
@@ -119,7 +119,7 @@ export function LoginForm() {
         )}
       </div>
 
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-2 ">
         {/* <label className="flex cursor-pointer items-center gap-2 text-sm font-body text-cream-50/80">
           <Controller
             name="rememberMe"
@@ -133,6 +133,19 @@ export function LoginForm() {
           />
           Se souvenir de moi
         </label> */}
+        {mutation.isError && (
+      <div className="mb-4 flex items-start gap-3 rounded-xl border-l-4 border-red-500 bg-red-500/10 px-4 py-3 backdrop-blur-sm">
+        <AlertCircle className="mt-0.5 h-5 w-5 text-red-500" />
+        <div>
+          <p className="text-sm font-semibold text-red-500">
+            Échec de la connexion
+          </p>
+          <p className="text-xs text-red-400">
+            Vérifiez votre adresse e-mail et votre mot de passe, puis réessayez.
+          </p>
+        </div>
+      </div>
+    )}
         <a
           href="/forgot-password"
           className="text-sm font-body text-gold-300 underline-offset-2 hover:underline"

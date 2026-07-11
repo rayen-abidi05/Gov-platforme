@@ -1,5 +1,8 @@
 const {PrismaClient} = require ("@prisma/client")
 const prisma = new PrismaClient();
+const path = require("path");
+const fs = require("fs");
+
 const getFiles = async(req,res) => {
     try{
         const {id} = req.params;
@@ -49,7 +52,72 @@ const addFiles = async (files, regisId) => {
     }
 };
 
+ const viewFile = async (req, res) => {
+  const user = req.user;
+
+  const file = await prisma.document.findUnique({
+    where: { 
+        id: req.params.id ,
+        registrationRequest : {
+            company : {
+                userId : user.id
+            }
+        }
+
+    },
+  });
+
+  if (!file) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: "File not found on server" });
+    }
+
+
+  const filePath = path.resolve(file.filePath);
+
+  res.sendFile(filePath);
+};
+
+ const downloadFile = async (req, res) => {
+  const user = req.user;
+
+   const file = await prisma.document.findUnique({
+    where: { 
+        id: req.params.id ,
+        registrationRequest : {
+            company : {
+                userId : user.id
+            }
+        }
+
+    },
+  });
+
+ if (!file) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: "File not found on server" });
+    }
+
+
+  const filePath = path.resolve(file.filePath);
+
+  
+  res.download(filePath, file.fileName);
+};
+
 module.exports = {
     getFiles,
-    addFiles
+    addFiles,
+    viewFile,
+    downloadFile
 }

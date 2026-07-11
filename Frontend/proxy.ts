@@ -3,7 +3,7 @@ import {NextRequest,NextResponse} from "next/server"
 
 export function proxy (request :  NextRequest) {
     const refresh_token = request.cookies.get("refresh_token")
-    const isProtected = request.nextUrl.pathname.startsWith("/dashboard");
+    const isProtected = request.nextUrl.pathname.startsWith("/dashboard") ;
     if (!refresh_token && isProtected) {
         return NextResponse.redirect(new URL ("/login", request.url))
     }
@@ -11,5 +11,5 @@ export function proxy (request :  NextRequest) {
 }
 
 export const config = {
-    matcher: ["/dashboard/:path*"],
+    matcher: ["/ryn/:path*"],
 }

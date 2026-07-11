@@ -49,16 +49,57 @@ const getRequestRegisById = async(req,res) => {
         res.status(500).json ({"message" : error.message})
     }
 }
+
+const getRequestRegisByIdAdmin = async(req,res) => {
+    try{
+        
+        const user = req.user;
+        const {id} = req.params
+        const request = await prisma.registrationRequest.findFirst({
+            where : {
+                id : id,
+
+                
+            },
+            
+        })
+        if (!request) {
+            return res.status(404).json({
+                message: "Request not found",
+            });
+            }
+                
+        res.status(200).json ({request})
+    }
+    catch(error) {
+        res.status(500).json ({"message" : error.message})
+    }
+}
 const getAllRequestRegis = async(req,res) => {
     try{
         
-       
         const requests = await prisma.registrationRequest.findMany({
-           
+            include: {
+                company: {
+                    select: {
+                        commName: true,
+                        matFisc: true,
+                        governorate: true,
+                        isRented: true,
+                        user: {
+                            select: {
+                                name: true,
+                                email: true,
+                            },
+                        },
+                    },
+                },
+                documents: true,
+            },
             orderBy: {
                 createdAt: "desc",
-            }
-        })
+            },
+        });
          res.status(200).json ({requests})
     }
     catch(error) {
@@ -107,10 +148,32 @@ const addRequest = async(req,res) => {
         res.status(500).json ({"message" : error.message})
     }
 }
+const updateRequestStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status, notes } = req.body;
+
+  const request = await prisma.registrationRequest.update({
+    where: { id },
+    data: { status, notes, reviewedAt: new Date() },
+    include: { company: true },
+  });
+
+  
+  if (status === "APPROVED") {
+    await prisma.user.update({
+      where: { id: request.company.userId },
+      data: { status: "APPROVED" },
+    });
+  }
+
+  res.status(200).json(request);
+};
 module.exports = {
     getRequestRegis,
     getAllRequestRegis,
     getRequestRegisById,
-    addRequest
+    addRequest,
+    getRequestRegisByIdAdmin,
+    updateRequestStatus
 
 }

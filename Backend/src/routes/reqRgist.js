@@ -2,14 +2,15 @@ const express = require('express');
 
 const router = express.Router();
 
-const { getRequestRegis , getAllRequestRegis , getRequestRegisById , addRequest } = require('../controllers/manageRegistrationRequest');
+const { getRequestRegis , updateRequestStatus , getAllRequestRegis, getRequestRegisByIdAdmin , getRequestRegisById , addRequest } = require('../controllers/manageRegistrationRequest');
 const authenticateToken = require('../middleware/authToken');
 const adminCheck = require ("../middleware/adminCheck")
-
+const upload = require ("../middleware/upload")
 
 router.get("/",authenticateToken,adminCheck,getAllRequestRegis);
 router.get("/myRequests",authenticateToken,getRequestRegis);
 router.get("/:id",authenticateToken,getRequestRegisById);
+router.get("/admin/:id",authenticateToken,adminCheck,getRequestRegisByIdAdmin);
 router.post(
     "/",
     authenticateToken,
@@ -24,7 +25,7 @@ router.post(
     ]),
     addRequest
 );
-
+router.put("/updateStatus/:id",authenticateToken,adminCheck,updateRequestStatus)
 
 
 

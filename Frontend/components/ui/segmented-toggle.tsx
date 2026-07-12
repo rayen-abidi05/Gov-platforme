@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 export interface SegmentedOption {
-  value: string;
+  value: boolean;
   fr: string;
   ar: string;
 }
@@ -12,8 +12,8 @@ export function SegmentedToggle({
   options,
   hasError,
 }: {
-  value: string | undefined;
-  onChange: (value: string) => void;
+  value: boolean ;
+  onChange: (value: boolean) => void;
   options: [SegmentedOption, SegmentedOption];
   hasError?: boolean;
 }) {
@@ -24,11 +24,11 @@ export function SegmentedToggle({
         hasError ? "border-red-400" : "border-cream-50/20"
       )}
     >
-      {options.map((opt) => {
+      {options.map((opt,index) => {
         const active = value === opt.value;
         return (
           <button
-            key={opt.value}
+            key={index}
             type="button"
             onClick={() => onChange(opt.value)}
             aria-pressed={active}

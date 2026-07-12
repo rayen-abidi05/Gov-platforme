@@ -23,7 +23,7 @@ export function useUpdateRequestStatus() {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["requetsALL"] }); // must match useRequestsRegit's queryKey exactly
+      queryClient.invalidateQueries({ queryKey: ["requetsALL"] }); 
     },
   });
 }

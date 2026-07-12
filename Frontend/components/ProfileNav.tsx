@@ -42,7 +42,7 @@ export default function ProfileNav({ user }: { user: { id: string; name: string 
       {isDropdownOpen && (
         <div className="absolute right-0 mt-2 w-48 rounded-lg bg-olive-950/95 backdrop-blur-md border border-gold-300/10 shadow-lg overflow-hidden">
           <Link
-            href={`/dashboard/${user.id}`}
+            href={`/${user.id}`}
             className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-cream-50/80 hover:text-gold-300 hover:bg-olive-800/30 transition-all duration-200"
             onClick={() => setIsDropdownOpen(false)}
           >

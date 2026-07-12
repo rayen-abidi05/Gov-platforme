@@ -10,7 +10,7 @@ interface Props {
   request: ApiRegistrationRequest;
   onClose: () => void;
   onStatusChange: (id: string, status: RequestStatus, notes?: string) => void;
-  // TODO: wire these to your viewFile/downloadFile endpoints (blob fetch via privateApi)
+  
   onViewDocument: (docId: string) => void;
   onDownloadDocument: (docId: string) => void;
 }

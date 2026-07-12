@@ -13,6 +13,10 @@ const getRequestRegis = async(req,res) => {
             },
             orderBy: {
             createdAt: "desc",
+            },
+            include : {
+                company : true,
+                documents : true
             }
         })
          res.status(200).json ({requests})
@@ -107,47 +111,62 @@ const getAllRequestRegis = async(req,res) => {
     }
 }
 
-const addRequest = async(req,res) => {
+const addRequest = async (req, res) => {
     try {
-        const user = req.user
-        const {note="",docType} = req.body;
-        
-       
+        const user = req.user;
+        const { note = "" } = req.body;
+
         const company = await prisma.company.findUnique({
-            where : {
-                userId : user.id
+            where: {
+                userId: user.id
             }
         });
+
         if (!company) {
             return res.status(404).json({
                 message: "Company not found"
             });
         }
-        const files = req.files;
 
-            const request = await prisma.registrationRequest.create({
-                data: {
-                    status: "PENDING",
-                    notes: note,
-                    companyId: company.id
-                }
+        const files = req.files|| {};
+
+        
+        if (company.isRented && !files.RENTEDDECLARATION) {
+            return res.status(400).json({
+                message: "RENTEDDECLARATION is required"
             });
+        }
 
+        if (!company.isRented && !files.CERTIFICATIONOWNERSHIP) {
+            return res.status(400).json({
+                message: "CERTIFICATIONOWNERSHIP is required"
+            });
+        }
 
-            await addFiles(
-                files,
-                docTypes,
-                request.id
-            );
+        const request = await prisma.registrationRequest.create({
+            data: {
+                status: "PENDING",
+                notes: note,
+                companyId: company.id
+            }
+        });
 
+        await addFiles(
+            files,
+           
+            request.id
+        );
 
         return res.status(201).json({
-                message: "Request created successfully"
-            });
+            message: "Request created successfully"
+        });
+
     } catch (error) {
-        res.status(500).json ({"message" : error.message})
+        res.status(500).json({
+            message: error.message
+        });
     }
-}
+};
 const updateRequestStatus = async (req, res) => {
   const { id } = req.params;
   const { status, notes } = req.body;

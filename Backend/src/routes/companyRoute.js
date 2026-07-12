@@ -1,10 +1,10 @@
 const express = require('express');
-const upload = require("../middleware/upload");
+const authenticateToken = require('../middleware/authToken');
 const {getCompany} = require ("../controllers/company")
 const router = express.Router();
 
 
-router.get("/me",getCompany);
+router.get("/me",authenticateToken,getCompany);
 
 
 

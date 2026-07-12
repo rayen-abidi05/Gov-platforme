@@ -21,13 +21,9 @@ import { loginSchema, type LoginFormValues } from "@/lib/validations/login";
 
 
 export function LoginForm() {
-  const router = useRouter()
+  
 
-  const mutation = useLogin ({
-    onSuccess : () =>{
-      router.replace("/")
-    }
-  });
+  const mutation = useLogin ();
  
   
 

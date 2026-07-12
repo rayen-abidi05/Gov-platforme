@@ -11,7 +11,7 @@ export const registerSchema = z
       .email("Adresse email invalide."),
     password: z
       .string()
-      .min(8, "Le mot de passe doit contenir au moins 8 caractères."),
+      .min(1, "Le mot de passe doit contenir au moins 8 caractères."),
     confirmPassword: z.string().min(1, "Veuillez confirmer le mot de passe."),
 
   
@@ -20,7 +20,7 @@ export const registerSchema = z
     matFisc: z.string().min(1, "Le matricule fiscal est requis."),
     activity: z.string().min(1, "L'activité est requise."),
     otherActivity: z.string().optional(),
-    isResident: z.enum(["resident", "non_resident"], {
+    isResident: z.boolean({
       message: "Veuillez préciser le statut de résidence.",
     }),
     nationality: z.string().min(1, "La nationalité est requise."),
@@ -31,12 +31,12 @@ export const registerSchema = z
     address: z.string().min(1, "L'adresse est requise."),
     governorate: z.string().min(1, "Le gouvernorat est requis."),
     city: z.string().min(1, "La ville est requise."),
-    isRented: z.enum(["rented", "owned"], {
-      message: "Veuillez préciser le statut du lieu de stockage.",
-    }),
-    registerState: z.enum(["active", "suspended"], {
-      message: "Veuillez préciser l'état de l'entreprise.",
-    }),
+    isRented: z.boolean({
+        message: "Veuillez préciser l' etat de lieux de Stockage'.",
+      }),
+    registerState: z.boolean({
+        message: "Veuillez préciser l'etat de l entreprise.",
+      }),
     labName: z.string().min(1, "Le nom du laboratoire est requis."),
 
 

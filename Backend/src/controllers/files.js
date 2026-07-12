@@ -54,31 +54,29 @@ const addFiles = async (files, regisId) => {
 
  const viewFile = async (req, res) => {
   const user = req.user;
-
-  const file = await prisma.document.findUnique({
+    console.log(req.params.id )
+  const file = await prisma.document.findFirst({
     where: { 
         id: req.params.id ,
-        registrationRequest : {
-            company : {
-                userId : user.id
-            }
-        }
+        
 
     },
   });
 
+console.log(file)
   if (!file) {
       return res.status(403).json({ message: "Access denied" });
     }
 
     
+    const filePath = path.resolve(file.fileUrl);
 
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: "File not found on server" });
     }
 
 
-  const filePath = path.resolve(file.filePath);
+  
 
   res.sendFile(filePath);
 };
@@ -89,11 +87,7 @@ const addFiles = async (files, regisId) => {
    const file = await prisma.document.findUnique({
     where: { 
         id: req.params.id ,
-        registrationRequest : {
-            company : {
-                userId : user.id
-            }
-        }
+        
 
     },
   });
@@ -103,13 +97,13 @@ const addFiles = async (files, regisId) => {
     }
 
     
-
+    const filePath = path.resolve(file.fileUrl);
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: "File not found on server" });
     }
 
 
-  const filePath = path.resolve(file.filePath);
+  
 
   
   res.download(filePath, file.fileName);

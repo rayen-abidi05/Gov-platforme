@@ -15,17 +15,18 @@ router.post(
     "/",
     authenticateToken,
     upload.fields([
-        { name: "RNE", maxCount: 1 },
-        { name: "TAXREALTED", maxCount: 1 },
-        { name: "DIWAN", maxCount: 1 },
-        { name: "QUITTANCE", maxCount: 1 },
-        { name: "EXISTANCEDECLARATION", maxCount: 1 },
-        { name: "RENTEDDECLARATION", maxCount: 1 },
-        { name: "CERTIFICATIONOWNERSHIP", maxCount: 1 },
-    ]),
+    { name: "RNE", maxCount: 1 },
+    { name: "TAXREALTED", maxCount: 1 },
+    { name: "DIWAN", maxCount: 1 },
+    { name: "QUITTANCE", maxCount: 1 },
+    { name: "EXISTANCEDECLARATION", maxCount: 1 },
+    { name: "LABDOC", maxCount: 1 },
+    { name: "RENTEDDECLARATION", maxCount: 1 },
+    { name: "CERTIFICATIONOWNERSHIP", maxCount: 1 },
+]),
     addRequest
 );
-router.put("/updateStatus/:id",authenticateToken,adminCheck,updateRequestStatus)
+router.post("/updateStatus/:id",authenticateToken,adminCheck,updateRequestStatus)
 
 
 

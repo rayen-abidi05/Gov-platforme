@@ -38,7 +38,7 @@ export default function AdminDashboardPage() {
     });
   }, [requests, search, status, month, year]);
 
-  // TODO: replace with your real mutation, this just re-triggers a refetch after wiring it yourself
+ 
   const { mutate: updateStatus } = useUpdateRequestStatus();
 
 const handleStatusChange = (id: string, newStatus: RequestStatus, notes?: string) => {
@@ -47,13 +47,13 @@ const handleStatusChange = (id: string, newStatus: RequestStatus, notes?: string
 
   
     const handleViewDocument = async (docId: string) => {
-    const res = await privateApi.get(`/documents/${docId}/view`, { responseType: "blob" });
+    const res = await privateApi.get(`/api/files/${docId}/view`, { responseType: "blob" });
     const url = URL.createObjectURL(res.data);
     window.open(url, "_blank");
   };
 
 const handleDownloadDocument = async (docId: string) => {
-  const res = await privateApi.get(`/documents/${docId}/download`, { responseType: "blob" });
+  const res = await privateApi.get(`/api/files/${docId}//download`, { responseType: "blob" });
   const url = URL.createObjectURL(res.data);
   const a = document.createElement("a");
   a.href = url;

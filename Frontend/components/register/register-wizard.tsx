@@ -127,7 +127,7 @@ export function RegisterWizard() {
         />
 
 
-        {registerMutation.isError && (
+        {registerMutation.isError ? (
 
           <div
             role="alert"
@@ -146,6 +146,21 @@ export function RegisterWizard() {
 
           </div>
 
+        ) : (
+           <div
+            role="alert"
+            className="
+              mb-5 rounded-xl 
+              border border-green-400/40 
+              bg-green-500/10 
+              px-4 py-3 
+              text-sm text-green-200
+            "
+          >
+
+            Register succeed !!!
+
+          </div>
         )}
 
 

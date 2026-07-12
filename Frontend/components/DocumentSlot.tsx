@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { Upload, FileText } from "lucide-react";
-import { DocType } from "@/lib/documentConfig";
+import { DocType } from "@/types/registration";
 
 interface Props {
   docType: DocType;
@@ -20,8 +21,12 @@ export default function DocumentSlot({
   onChange,
   inputRef,
 }: Props) {
+  const [fileName, setFileName] = useState<string | null>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
+
+    setFileName(file ? file.name : null);
     onChange(file);
   };
 
@@ -43,10 +48,18 @@ export default function DocumentSlot({
         <p className="text-xs text-cream-50/50" dir="rtl">
           {label.ar}
         </p>
+
+        {fileName && (
+          <p className="mt-1 truncate text-xs text-gold-300">
+            {fileName}
+          </p>
+        )}
+
         {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
       </div>
 
       <Upload className="h-4 w-4 shrink-0 text-cream-50/50" />
+
       <input
         id={docType}
         ref={inputRef}

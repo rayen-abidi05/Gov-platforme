@@ -1,112 +1,177 @@
 "use client";
 
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle2, Upload, FileText, ShieldCheck, Leaf } from "lucide-react";
-import { useSubmitRegistration } from "@/hooks/useSubmitRegistration";
-import { documentsSchema, DocumentsFormValues } from "@/lib/validations/documentsSchema";
-import { getRequiredDocTypes, DOCUMENT_LABELS, DocType } from "@/lib/documentConfig";
-import DocumentSlot from "@/components/DocumentSlot";
-import Navbar from "@/components/Navbar.tsx"
-import { useCompany } from "@/hooks/useCompany";
-const MOCK_IS_RENTED = true;
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Leaf, CheckCircle2, FileText, RefreshCcw, Plus } from "lucide-react";
+import { useMyRegistrationRequests } from "@/hooks/useMyRegistrationRequests";
+import { useModifyDocument } from "@/hooks/useModifyDocument";
+import { getRequiredDocTypes, DOCUMENT_LABELS } from "@/lib/documentConfig";
+import { DocType } from "@/types/registration";
+import NotificationBell from "@/components/NotificationBell";
+import Spinner from "@/components/ui/spinner";
 
-export default function RegistrationPage() {
-  const {data : company} = useCompany()
-  const isRented = company?.isRented && false ;
-  const requiredTypes = getRequiredDocTypes(isRented);
+const STEPS = [
+  { key: "PENDING", label: "Envoyée" },
+  { key: "UNDER_REVIEW", label: "En cours d'examen" },
+  { key: "APPROVED", label: "Approuvée" },
+];
 
-  const {
-    control,
-    handleSubmit,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm<DocumentsFormValues>({
-    resolver: zodResolver(documentsSchema),
-  });
+export default function RegistrationTrackingPage() {
+  const router = useRouter();
+  const { data, isLoading, isError } = useMyRegistrationRequests();
 
-  const { mutateAsync, isPending, isError, error } = useSubmitRegistration();
+  // safe fallback id so the hook can always be called unconditionally —
+  // it just won't be used until `request` actually exists
+  const requestId = data?.requests?.[0]?.id ?? "";
+  const { mutate: modifyDoc, isPending: isModifying } = useModifyDocument(requestId);
 
-  const onSubmit = async (values: DocumentsFormValues) => {
-    if (isRented && !values.RENTEDDECLARATION) {
-      setError("RENTEDDECLARATION", { message: "Ce document est requis" });
-      return;
-    }
-    if (!isRented && !values.CERTIFICATIONOWNERSHIP) {
-      setError("CERTIFICATIONOWNERSHIP", { message: "Ce document est requis" });
-      return;
-    }
-    await mutateAsync(values);
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-olive-950">
+        <Spinner size="h-10 w-10" />
+      </div>
+    );
+  }
+
+  if (isError || !data?.requests?.length) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-olive-950 text-cream-50/70">
+        Aucune demande d'inscription trouvée.
+      </div>
+    );
+  }
+
+  const request = data.requests[0];
+  const requiredTypes = getRequiredDocTypes(request.company.isRented);
+  const uploadedMap = new Map(request.documents.map((d) => [d.DocType, d]));
+  const isRejected = request.status === "REJECTED";
+
+  const handleReplace = (docType: DocType, file: File) => {
+    modifyDoc({ docType, file });
   };
 
   return (
-    <main className="relative min-h-screen w-full bg-olive-950 font-body text-cream-50">
-      <div className="relative z-10 mx-auto max-w-3xl px-6 py-12 sm:px-10 lg:py-16">
+    <main className="min-h-screen w-full bg-olive-950 font-body text-cream-50">
+      <div className="mx-auto max-w-3xl px-6 py-12 sm:px-10 lg:py-16">
         <div className="mb-10 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <Leaf className="h-6 w-6 text-gold-300" />
-            <span className="font-display text-lg tracking-wide">
-              Ministère de l'Agriculture
-            </span>
+            <span className="font-display text-lg tracking-wide">Ministère de l'Agriculture</span>
           </div>
-          <Navbar />
+          <NotificationBell />
         </div>
 
         <div className="rounded-2xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md p-8 sm:p-10">
-          <h1 className="font-display text-2xl sm:text-3xl">
-            Finaliser votre demande d'inscription
-          </h1>
+          <h1 className="font-display text-2xl sm:text-3xl">Suivi de votre demande d'inscription</h1>
           <p className="mt-2 text-sm text-cream-50/70">
-            Téléversez les documents requis. Votre dossier sera vérifié par le
-            Ministère avant l'activation de votre accès.
+            Votre dossier sera vérifié par le Ministère avant l'activation de votre accès.
           </p>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
-            <h2 className="text-sm font-medium text-cream-50/90">
-              Documents requis
-              <span className="ml-1.5 text-xs text-cream-50/50">الوثائق المطلوبة</span>
-            </h2>
-
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              {requiredTypes.map((type) => (
-                <Controller
-                  key={type}
-                  name={type}
-                  control={control}
-                  render={({ field: { onChange, ref } }) => (
-                    <DocumentSlot
-                      docType={type}
-                      label={DOCUMENT_LABELS[type]}
-                      disabled={isPending}
-                      error={(errors as any)[type]?.message}
-                      onChange={(file) => onChange(file)}
-                      inputRef={ref}
-                    />
-                  )}
-                />
-              ))}
-            </div>
-
-            {isError && (
-              <div className="mt-4 rounded-lg border border-red-400/30 bg-red-950/20 p-3 text-sm text-red-300">
-                {(error as any)?.response?.data?.message ??
-                  "Une erreur est survenue lors de l'envoi. Veuillez réessayer."}
+          
+          <div className="mt-8">
+            {isRejected ? (
+              <div className="rounded-lg border border-red-400/30 bg-red-950/20 p-4">
+                <p className="text-sm font-medium text-red-300">Statut : Demande rejetée</p>
+                {request.notes && (
+                  <p className="mt-1.5 text-sm text-cream-50/70">{request.notes}</p>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 sm:gap-4">
+                {STEPS.map((step, i) => {
+                  const currentIndex = STEPS.findIndex((s) => s.key === request.status);
+                  const active = i <= currentIndex;
+                  return (
+                    <div key={step.key} className="flex items-center gap-2 sm:gap-3">
+                      <div className="flex flex-col items-center gap-1.5">
+                        <div
+                          className={`flex h-8 w-8 items-center justify-center rounded-full border text-sm font-medium transition-all duration-200 ${
+                            active
+                              ? "border-gold-300 bg-gold-300 text-olive-950"
+                              : "border-cream-50/20 text-cream-50/40"
+                          }`}
+                        >
+                          {i + 1}
+                        </div>
+                        <span className={`text-xs text-center ${active ? "text-cream-50" : "text-cream-50/40"}`}>
+                          {step.label}
+                        </span>
+                      </div>
+                      {i < STEPS.length - 1 && <div className="h-px w-8 sm:w-14 bg-cream-50/15" />}
+                    </div>
+                  );
+                })}
               </div>
             )}
-
-            <button
-              type="submit"
-              disabled={isSubmitting || isPending}
-              className="mt-8 flex w-full items-center justify-center gap-2 rounded-lg bg-gold-300 px-4 py-3 text-sm font-medium text-olive-950 transition-all duration-200 hover:bg-gold-300/90 disabled:opacity-60"
-            >
-              {isPending ? "Envoi en cours..." : "Soumettre la demande"}
-            </button>
-          </form>
-
-          <div className="mt-8 flex items-center gap-2 text-xs text-cream-50/50">
-            <ShieldCheck className="h-3.5 w-3.5 text-gold-300" />
-            <span>Accès chiffré et conforme aux normes du Ministère</span>
           </div>
+
+        
+          <h2 className="mt-10 text-sm font-medium text-cream-50/90">
+            Documents envoyés
+            <span className="ml-1.5 text-xs text-cream-50/50">الوثائق المرسلة</span>
+          </h2>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {requiredTypes.map((type) => {
+              const doc = uploadedMap.get(type);
+              return (
+                <div
+                  key={type}
+                  className={`flex items-center justify-between gap-2.5 rounded-lg border p-4 ${
+                    doc ? "border-gold-300/30 bg-gold-300/[0.03]" : "border-cream-50/15"
+                  }`}
+                >
+                  <div className="flex min-w-0 items-center gap-2.5">
+                    {doc ? (
+                      <CheckCircle2 className="h-4.5 w-4.5 shrink-0 text-gold-300" />
+                    ) : (
+                      <FileText className="h-4.5 w-4.5 shrink-0 text-cream-50/40" />
+                    )}
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-cream-50">
+                        {DOCUMENT_LABELS[type].fr}
+                      </p>
+                      {doc && (
+                        <p className="truncate text-xs text-cream-50/50">{doc.fileName}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {isRejected && (
+                    <label className="shrink-0 cursor-pointer rounded-md p-1.5 text-cream-50/50 transition-colors duration-150 hover:bg-cream-50/10 hover:text-gold-300">
+                      <RefreshCcw className="h-4 w-4" />
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        disabled={isModifying}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleReplace(type, file);
+                        }}
+                      />
+                    </label>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          
+          {isRejected && (
+            <div className="mt-8 flex flex-col gap-2.5 sm:flex-row">
+              <p className="flex-1 text-xs text-cream-50/50 sm:hidden">
+                Remplacez un document via l'icône, ou repartez de zéro :
+              </p>
+              <button
+                onClick={() => router.push("/registration/new")}
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-cream-50/15 px-4 py-2.5 text-sm font-medium text-cream-50/80 transition-all duration-200 hover:bg-cream-50/5"
+              >
+                <Plus className="h-4 w-4" />
+                Créer une nouvelle demande
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </main>

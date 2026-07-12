@@ -42,3 +42,13 @@ export interface ApiRegistrationRequest {
   company: ApiCompany;
   documents: ApiDocument[];
 }
+export type Role = "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER"
+ 
+// add to existing file
+export interface ApiNotification {
+  id: string;
+  title: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+}

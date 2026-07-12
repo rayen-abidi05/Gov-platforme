@@ -21,7 +21,7 @@ app.use(cors({
 app.use('/api/auth', authRouter);
 app.use("/api/files",authenticateToken,fileRoute);
 app.use("/api/registration",authenticateToken,reqRgistRoute)
-app.use("/api/company",authenticateToken,companyRoute);
+app.use("/api/company",companyRoute);
 
 
 module.exports = app;

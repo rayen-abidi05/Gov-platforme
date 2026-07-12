@@ -152,8 +152,8 @@ export function StepCompany() {
                 onChange={field.onChange}
                 hasError={!!errors.isResident}
                 options={[
-                  { value: "resident", fr: "Résidente", ar: "مقيمة" },
-                  { value: "non_resident", fr: "Non-résidente", ar: "غير مقيمة" },
+                  { value: true, fr: "Résidente", ar: "مقيمة" },
+                  { value: false, fr: "Non-résidente", ar: "غير مقيمة" },
                 ]}
               />
             )}
@@ -278,8 +278,8 @@ export function StepCompany() {
                 onChange={field.onChange}
                 hasError={!!errors.isRented}
                 options={[
-                  { value: "rented", fr: "Loué", ar: "مكتري" },
-                  { value: "owned", fr: "Propriété", ar: "ملك خاص" },
+                  { value: true, fr: "Loué", ar: "مكتري" },
+                  { value: false, fr: "Propriété", ar: "ملك خاص" },
                 ]}
               />
             )}
@@ -301,8 +301,8 @@ export function StepCompany() {
                 onChange={field.onChange}
                 hasError={!!errors.registerState}
                 options={[
-                  { value: "active", fr: "En activité", ar: "نشيطة" },
-                  { value: "suspended", fr: "Suspendue", ar: "معلقة" },
+                  { value: true, fr: "En activité", ar: "نشيطة" },
+                  { value: false, fr: "Suspendue", ar: "معلقة" },
                 ]}
               />
             )}

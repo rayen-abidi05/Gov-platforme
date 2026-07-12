@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 const getCompany = async (req,res) =>{
     try {
-        const user = user.req;
+        const user = req.user;
         const company = await prisma.company.findUnique ({
             where : {
                 userId : user.id

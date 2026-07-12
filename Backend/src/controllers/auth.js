@@ -49,7 +49,7 @@ const login = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000
     });
     
-    res.status(200).json({ "messgae" : "logged in!!!" });
+    res.status(200).json({ "messgae" : "logged in!!!",role : user.role });
 }catch (error) {   
      res.status(500).json({ error : error.message });
 }};
@@ -58,6 +58,16 @@ const registerUser = async (req, res,status=null) => {
 
     try {
         const cryptedPassword = await brypt.hash(password, 10);
+        const check = await prisma.user.findFirst({
+            where : {
+                email : email
+            }
+        })
+        if (check) {
+            res.status(402).json({
+                error : "This email exists"
+            });
+        }
         const user = await prisma.user.create({
             data:{
                 name,
@@ -145,6 +155,7 @@ const registerUser = async (req, res,status=null) => {
   return res.status(200).json({ message: "logged out" });
 };
 
+
 const verify = async (req,res) =>{
     try {
         const user = await prisma.user.findUnique({
@@ -167,10 +178,18 @@ const verify = async (req,res) =>{
         res.status(500).json({ error : error.message });
     }
 }
-
+const users = async (req,res) => {
+    try {
+        const users = await prisma.user.findMany();
+        res.status(200).json({ users });
+    } catch (error) {
+         res.status(500).json({ error : error.message });
+    }
+}
 module.exports = {
     verify,
     registerUser,
     login,
-    logout
+    logout,
+    users
 };

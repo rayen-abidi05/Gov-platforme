@@ -90,6 +90,7 @@ const getAllRequestRegis = async(req,res) => {
                         matFisc: true,
                         governorate: true,
                         isRented: true,
+                        rne : true,
                         user: {
                             select: {
                                 name: true,
@@ -187,12 +188,57 @@ const updateRequestStatus = async (req, res) => {
 
   res.status(200).json(request);
 };
+
+const getApprovedExporters = async (req, res) => {
+  try {
+    const companies = await prisma.company.findMany({
+      where: {
+        registrationRequests: {
+          some: { status: "APPROVED" },
+        },
+      },
+      select: {
+        id: true,
+        commName: true,
+        rne: true,
+        matFisc: true,
+        activity: true,
+        governorate: true,
+        city: true,
+        address: true,
+        phone: true,
+        nationality: true,
+        isResident: true,
+        isRented: true,
+        labName: true,
+        user: { select: { name: true, email: true } },
+        registrationRequests: {
+          where: { status: "APPROVED" },
+          orderBy: { reviewedAt: "desc" },
+          take: 1,
+          select: { reviewedAt: true },
+        },
+      },
+    });
+
+    const exporters = companies.map((c) => ({
+      ...c,
+      approvedAt: c.registrationRequests[0]?.reviewedAt,
+      registrationRequests: undefined, 
+    }));
+
+    res.status(200).json({ exporters });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 module.exports = {
     getRequestRegis,
     getAllRequestRegis,
     getRequestRegisById,
     addRequest,
     getRequestRegisByIdAdmin,
-    updateRequestStatus
+    updateRequestStatus,
+    getApprovedExporters
 
 }

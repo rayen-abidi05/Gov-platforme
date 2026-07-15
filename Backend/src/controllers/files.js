@@ -81,7 +81,7 @@ console.log(file)
   res.sendFile(filePath);
 };
 
- const downloadFile = async (req, res) => {
+ const downloadFile = async (req, res ) => {
   const user = req.user;
 
    const file = await prisma.document.findUnique({

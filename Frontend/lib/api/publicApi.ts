@@ -4,3 +4,6 @@ export const publicApi = axios.create({
     baseURL: "/api",
     withCredentials : true
 })
+
+
+

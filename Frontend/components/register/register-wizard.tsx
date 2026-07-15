@@ -146,7 +146,7 @@ export function RegisterWizard() {
 
           </div>
 
-        ) : (
+        ) : registerMutation.isSuccess && (
            <div
             role="alert"
             className="

@@ -2,11 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 
-const { getRequestRegis , updateRequestStatus , getAllRequestRegis, getRequestRegisByIdAdmin , getRequestRegisById , addRequest } = require('../controllers/manageRegistrationRequest');
+const {getApprovedExporters, getRequestRegis , updateRequestStatus , getAllRequestRegis, getRequestRegisByIdAdmin , getRequestRegisById , addRequest } = require('../controllers/manageRegistrationRequest');
 const authenticateToken = require('../middleware/authToken');
 const adminCheck = require ("../middleware/adminCheck")
 const upload = require ("../middleware/upload")
-
+router.get("/exporters",authenticateToken,adminCheck,getApprovedExporters);
 router.get("/",authenticateToken,adminCheck,getAllRequestRegis);
 router.get("/myRequests",authenticateToken,getRequestRegis);
 router.get("/:id",authenticateToken,getRequestRegisById);

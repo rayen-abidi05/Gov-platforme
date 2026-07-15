@@ -21,7 +21,7 @@ export default function Home() {
           <div className="flex items-center gap-2.5">
             <Leaf className="h-6 w-6 text-gold-300" />
             <span className="font-display text-lg tracking-wide">
-              Ministère de l'Agriculture
+              MARHP
             </span>
           </div>
 

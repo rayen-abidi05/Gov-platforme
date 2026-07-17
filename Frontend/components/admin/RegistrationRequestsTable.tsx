@@ -3,6 +3,7 @@
 import { ApiRegistrationRequest } from "@/types/registration";
 import { getRequiredDocTypes } from "@/lib/documentConfig";
 import StatusBadge from "./StatusBadge";
+import OliveListeBadge from "@/components/diwan/OliveListeBadge";
 import { Eye } from "lucide-react";
 
 interface Props {
@@ -17,10 +18,10 @@ export default function RegistrationRequestsTable({ requests, onView }: Props) {
         <thead>
           <tr className="border-b border-cream-50/10 text-xs uppercase tracking-wide text-cream-50/50">
             <th className="px-5 py-3.5 font-medium">Entreprise</th>
-            
             <th className="px-5 py-3.5 font-medium">Matricule fiscal</th>
             <th className="px-5 py-3.5 font-medium">RNE</th>
             <th className="px-5 py-3.5 font-medium">Gouvernorat</th>
+            <th className="px-5 py-3.5 font-medium">Catégorie</th>
             <th className="px-5 py-3.5 font-medium">Soumise le</th>
             <th className="px-5 py-3.5 font-medium">Documents</th>
             <th className="px-5 py-3.5 font-medium">Statut</th>
@@ -30,7 +31,7 @@ export default function RegistrationRequestsTable({ requests, onView }: Props) {
         <tbody>
           {requests.map((req) => {
             const required = getRequiredDocTypes(req.company.isRented);
-            
+
             return (
               <tr
                 key={req.id}
@@ -38,9 +39,11 @@ export default function RegistrationRequestsTable({ requests, onView }: Props) {
               >
                 <td className="px-5 py-4 font-medium text-cream-50">{req.company.commName}</td>
                 <td className="px-5 py-4 text-cream-50/70">{req.company.matFisc}</td>
-                
                 <td className="px-5 py-4 text-cream-50/70">{req.company.rne}</td>
                 <td className="px-5 py-4 text-cream-50/70">{req.company.governorate}</td>
+                <td className="px-5 py-4">
+                  <OliveListeBadge liste={req.company.exportType} />
+                </td>
                 <td className="px-5 py-4 text-cream-50/70">
                   {new Date(req.submittedAt).toLocaleDateString("fr-FR", {
                     day: "2-digit",
@@ -69,7 +72,7 @@ export default function RegistrationRequestsTable({ requests, onView }: Props) {
 
           {requests.length === 0 && (
             <tr>
-              <td colSpan={8} className="px-5 py-10 text-center text-cream-50/40">
+              <td colSpan={9} className="px-5 py-10 text-center text-cream-50/40">
                 Aucune demande ne correspond à ces filtres.
               </td>
             </tr>

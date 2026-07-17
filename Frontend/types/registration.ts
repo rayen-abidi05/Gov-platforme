@@ -25,12 +25,12 @@ export type OliveListe = "liste1" | "liste2";
 
 export const OLIVE_LISTE_LABELS: Record<OliveListe, { fr: string; ar: string; description: string }> = {
   liste1: {
-    fr: "Liste 1 — Toutes espèces",
+    fr: "Liste 1 ",
     ar: "القائمة 1 — جميع الأنواع",
     description: "Exportation de toutes les huiles d'olive",
   },
   liste2: {
-    fr: "Liste 2 — Huile en conserve",
+    fr: "Liste 2 ",
     ar: "القائمة 2 — معلبات",
     description: "Exportation d'huile d'olive en conserve uniquement",
   },
@@ -79,12 +79,14 @@ export interface ApiNotification {
   isRead: boolean;
   createdAt: string;
 }
+// types/registration.ts — add to ApiCompany
 export interface ApiCompany {
   commName: string;
-  rne: string; 
+  rne: string;
   matFisc: string;
   governorate: string;
   isRented: boolean;
+  exportType?: OliveListe;
   user: {
     name: string;
     email: string;

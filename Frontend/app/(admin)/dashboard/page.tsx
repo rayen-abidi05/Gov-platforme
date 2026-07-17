@@ -1,143 +1,193 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import Link from "next/link";
+import { FileCheck2, Users, Clock, CheckCircle2, XCircle, ArrowRight } from "lucide-react";
 import { useRequestsRegit } from "@/hooks/useRequestsRegit";
-import { ApiRegistrationRequest, RequestStatus } from "@/types/registration";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import { useApprovedExporters } from "@/hooks/useApprovedExporters";
+import AdminHeader from "@/components/admin/AdminHeader";
 import AdminStatsCharts from "@/components/admin/AdminStatsCharts";
-import RegistrationRequestsFilters, { SearchField } from "@/components/admin/RegistrationRequestsFilters";
-import RegistrationRequestsTable from "@/components/admin/RegistrationRequestsTable";
-import RegistrationRequestModal from "@/components/admin/RegistrationRequestModal";
-import NotificationBell from "@/components/NotificationBell";
+import StatusBadge from "@/components/admin/StatusBadge";
 import Spinner from "@/components/ui/spinner";
-import { privateApi } from "@/lib/api/privateApi";
-import { useUpdateRequestStatus } from "@/hooks/useUpdateRequestStatus";
 
-export default function AdminDashboardPage() {
-  const { data: dataRequests, isLoading, isError } = useRequestsRegit();
-  const requests: ApiRegistrationRequest[] = dataRequests?.requests ?? [];
+export default function DashboardOverviewPage() {
+  const { data: dataRequests, isLoading: loadingRequests } = useRequestsRegit();
+  const { data: dataExporters, isLoading: loadingExporters } = useApprovedExporters();
 
-  const [search, setSearch] = useState("");
-  const [searchFields, setSearchFields] = useState<SearchField[]>(["commName", "ownerName"]);
-  const [status, setStatus] = useState<RequestStatus | "ALL">("ALL");
-  const [month, setMonth] = useState("ALL");
-  const [year, setYear] = useState("ALL");
-  const [selected, setSelected] = useState<ApiRegistrationRequest | null>(null);
+  const requests = dataRequests?.requests ?? [];
+  const exporters = dataExporters?.exporters ?? [];
 
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
+  const isLoading = loadingRequests || loadingExporters;
 
-    return requests.filter((r) => {
-      const matchesSearch =
-        q === "" ||
-        searchFields.some((field) => {
-          switch (field) {
-            case "commName":
-              return r.company.commName.toLowerCase().includes(q);
-            case "ownerName":
-              return r.company.user.name.toLowerCase().includes(q);
-            case "rne":
-              return r.company.rne?.toLowerCase().includes(q);
-            case "matFisc":
-              return r.company.matFisc.toLowerCase().includes(q);
-            default:
-              return false;
-          }
-        });
+  const pendingCount = requests.filter((r : any) => r.status === "PENDING").length;
+  const underReviewCount = requests.filter((r : any) => r.status === "UNDER_REVIEW").length;
+  const rejectedCount = requests.filter((r : any) => r.status === "REJECTED").length;
 
-      const matchesStatus = status === "ALL" || r.status === status;
+  const recentRequests = [...requests]
+    .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
+    .slice(0, 5);
 
-      const date = new Date(r.submittedAt);
-      const matchesMonth = month === "ALL" || String(date.getMonth() + 1) === month;
-      const matchesYear = year === "ALL" || String(date.getFullYear()) === year;
-
-      return matchesSearch && matchesStatus && matchesMonth && matchesYear;
-    });
-  }, [requests, search, searchFields, status, month, year]);
-
-  const { mutate: updateStatus } = useUpdateRequestStatus();
-
-  const handleStatusChange = (id: string, newStatus: RequestStatus, notes?: string) => {
-    updateStatus({ id, status: newStatus, notes });
-  };
-
-  const handleViewDocument = async (docId: string) => {
-    const res = await privateApi.get(`/api/files/${docId}/view`, { responseType: "blob" });
-    
-    const url = URL.createObjectURL(res.data);
-    window.open(url, "_blank");
-  };
-
-  const handleDownloadDocument = async (docId: string) => {
-    const res = await privateApi.get(`/api/files/${docId}/download`, { responseType: "blob" });
-    const url = URL.createObjectURL(res.data);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  if (isLoading) {
+    return (
+      <>
+        <AdminHeader title="Tableau de bord" subtitle="Vue d'ensemble de la plateforme" />
+        <div className="flex items-center justify-center py-24">
+          <Spinner size="h-10 w-10" />
+        </div>
+      </>
+    );
+  }
 
   return (
-    <div className="flex min-h-screen w-full bg-olive-950 font-body text-cream-50">
-      <AdminSidebar />
+    <>
+      <AdminHeader title="Tableau de bord" subtitle="Vue d'ensemble de la plateforme" />
 
-      <div className="flex-1 overflow-x-hidden">
-        <header className="flex items-center justify-between border-b border-cream-50/10 px-6 py-4 sm:px-10">
-          <div>
-            <h1 className="font-display text-xl sm:text-2xl">Tableau de bord</h1>
-            <p className="text-xs text-cream-50/50">Demandes d'inscription des exportateurs</p>
+      <main className="mx-auto max-w-6xl px-6 py-8 sm:px-10">
+        
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <SummaryCard
+            icon={Clock}
+            label="En attente"
+            value={pendingCount}
+            accent="text-cream-50/70"
+          />
+          <SummaryCard
+            icon={FileCheck2}
+            label="En examen"
+            value={underReviewCount}
+            accent="text-blue-300"
+          />
+          <SummaryCard
+            icon={XCircle}
+            label="Rejetées"
+            value={rejectedCount}
+            accent="text-red-300"
+          />
+          <SummaryCard
+            icon={CheckCircle2}
+            label="Exportateurs approuvés"
+            value={exporters.length}
+            accent="text-gold-300"
+          />
+        </div>
+
+       
+        <div className="mt-8">
+          <AdminStatsCharts requests={requests} />
+        </div>
+
+        {/* quick links */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <QuickLinkCard
+            href="/dashboard/requests"
+            icon={FileCheck2}
+            title="Demandes d'inscription"
+            description="Examiner, filtrer et traiter les demandes en attente"
+            count={requests.length}
+          />
+          <QuickLinkCard
+            href="/dashboard/exporters"
+            icon={Users}
+            title="Exportateurs"
+            description="Consulter la liste des exportateurs approuvés"
+            count={exporters.length}
+          />
+        </div>
+
+        {/* recent activity */}
+        <div className="mt-8 rounded-2xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md p-5 sm:p-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-medium text-cream-50/90">Demandes récentes</h2>
+            <Link
+              href="/dashboard/requests"
+              className="flex items-center gap-1 text-xs text-gold-300 transition-colors duration-150 hover:text-gold-300/80"
+            >
+              Voir tout
+              <ArrowRight className="h-3 w-3" />
+            </Link>
           </div>
-          <NotificationBell />
-        </header>
 
-        <main className="mx-auto max-w-6xl px-6 py-8 sm:px-10">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-24">
-              <Spinner size="h-10 w-10" />
-            </div>
-          ) : isError ? (
-            <div className="flex items-center justify-center py-24 text-cream-50/70">
-              Une erreur est survenue lors du chargement des demandes.
-            </div>
-          ) : (
-            <>
-              <div className="mb-8">
-                <AdminStatsCharts requests={requests} />
-              </div>
-
-              <div className="rounded-2xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md p-5 sm:p-6">
-                <RegistrationRequestsFilters
-                  search={search}
-                  onSearchChange={setSearch}
-                  searchFields={searchFields}
-                  onSearchFieldsChange={setSearchFields}
-                  status={status}
-                  onStatusChange={setStatus}
-                  month={month}
-                  onMonthChange={setMonth}
-                  year={year}
-                  onYearChange={setYear}
-                />
-
-                <div className="mt-5">
-                  <RegistrationRequestsTable requests={filtered} onView={setSelected} />
+          <div className="mt-4 divide-y divide-cream-50/5">
+            {recentRequests.length === 0 ? (
+              <p className="py-6 text-center text-sm text-cream-50/40">Aucune demande récente.</p>
+            ) : (
+              recentRequests.map((r) => (
+                <div key={r.id} className="flex items-center justify-between gap-3 py-3">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-cream-50">
+                      {r.company.commName}
+                    </p>
+                    <p className="text-xs text-cream-50/50">
+                      {new Date(r.submittedAt).toLocaleDateString("fr-FR", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                  <StatusBadge status={r.status} />
                 </div>
-              </div>
-            </>
-          )}
-        </main>
-      </div>
+              ))
+            )}
+          </div>
+        </div>
+      </main>
+    </>
+  );
+}
 
-      {selected && (
-        <RegistrationRequestModal
-          request={selected}
-          onClose={() => setSelected(null)}
-          onStatusChange={handleStatusChange}
-          onViewDocument={handleViewDocument}
-          onDownloadDocument={handleDownloadDocument}
-        />
-      )}
+function SummaryCard({
+  icon: Icon,
+  label,
+  value,
+  accent,
+}: {
+  icon: React.ElementType;
+  label: string;
+  value: number;
+  accent: string;
+}) {
+  return (
+    <div className="rounded-xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md p-4">
+      <div className="flex items-center gap-2">
+        <Icon className={`h-4 w-4 ${accent}`} />
+        <span className="text-xs text-cream-50/60">{label}</span>
+      </div>
+      <p className="mt-2 font-display text-2xl text-cream-50">{value}</p>
     </div>
+  );
+}
+
+function QuickLinkCard({
+  href,
+  icon: Icon,
+  title,
+  description,
+  count,
+}: {
+  href: string;
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  count: number;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group flex items-center justify-between gap-4 rounded-2xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md p-5 transition-all duration-200 hover:border-gold-300/30 hover:bg-olive-950/60"
+    >
+      <div className="flex items-center gap-3.5">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gold-300/10 text-gold-300">
+          <Icon className="h-5 w-5" />
+        </div>
+        <div>
+          <p className="text-sm font-medium text-cream-50">{title}</p>
+          <p className="text-xs text-cream-50/50">{description}</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-2 text-cream-50/40 transition-colors duration-200 group-hover:text-gold-300">
+        <span className="text-lg font-display">{count}</span>
+        <ArrowRight className="h-4 w-4" />
+      </div>
+    </Link>
   );
 }

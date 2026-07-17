@@ -91,6 +91,7 @@ const getAllRequestRegis = async(req,res) => {
                         governorate: true,
                         isRented: true,
                         rne : true,
+                        exportType : true,
                         user: {
                             select: {
                                 name: true,

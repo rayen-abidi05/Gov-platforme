@@ -211,6 +211,7 @@ const getApprovedExporters = async (req, res) => {
         isResident: true,
         isRented: true,
         labName: true,
+        exportType : true,
         user: { select: { name: true, email: true } },
         registrationRequests: {
           where: { status: "APPROVED" },

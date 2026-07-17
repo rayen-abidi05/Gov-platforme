@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { privateApi } from "@/lib/api/privateApi";
 import { DocumentsFormValues } from "@/lib/validations/documentsSchema";
-
+import { toast } from "sonner";
 export function useSubmitRegistration() {
   const queryClient = useQueryClient();
 
@@ -21,6 +21,7 @@ export function useSubmitRegistration() {
       return res.data;
     },
     onSuccess: () => {
+      toast.success("envoyées avec succées!");
       queryClient.invalidateQueries({ queryKey: ["registration-status"] });
     },
   });

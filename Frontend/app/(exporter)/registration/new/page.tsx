@@ -1,8 +1,9 @@
 "use client";
 
+
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle2, Upload, FileText, ShieldCheck, Leaf } from "lucide-react";
+import {  ShieldCheck, Leaf } from "lucide-react";
 import { useSubmitRegistration } from "@/hooks/useSubmitRegistration";
 import { documentsSchema, DocumentsFormValues } from "@/lib/validations/documentsSchema";
 import { getRequiredDocTypes, DOCUMENT_LABELS, } from "@/lib/documentConfig";
@@ -13,7 +14,8 @@ const MOCK_IS_RENTED = true;
 
 export default function RegistrationPage() {
   const {data : company} = useCompany()
-  const isRented = company?.isRented ?? false ;
+  const isRented = company?.company.isRented ;
+  console.log(isRented)
   const requiredTypes = getRequiredDocTypes(isRented);
 
   const {
@@ -46,10 +48,10 @@ export default function RegistrationPage() {
           <div className="flex items-center gap-2.5">
             <Leaf className="h-6 w-6 text-gold-300" />
             <span className="font-display text-lg tracking-wide">
-              Ministère de l'Agriculture
+              MARP
             </span>
           </div>
-          <Navbar />
+          
         </div>
 
         <div className="rounded-2xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md p-8 sm:p-10">

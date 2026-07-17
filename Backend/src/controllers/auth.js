@@ -78,8 +78,9 @@ const registerUser = async (req, res,status=null) => {
             }
         });
         if(role==="EXPORTER"){
-            const {commName,rne,activity,isResident,city,governorate,matFisc,address,phone,nationality,isRented,registerState,labName,userId } = req.body;
-        const company = await prisma.Company.create({
+            const {commName,rne,activity,isResident,city,governorate,matFisc,address,phone,nationality,isRented,registerState,labName,userId,exportType } = req.body;
+            const type = exportType ? "liste1" : "liste2";
+            const company = await prisma.Company.create({
                 data:{
                     commName, 
                     rne,
@@ -94,7 +95,8 @@ const registerUser = async (req, res,status=null) => {
                     isRented,     
                     registerState, 
                     labName,    
-                    userId:user.id,         
+                    userId:user.id,   
+                    exportType : type,       
                 }
             });
        };

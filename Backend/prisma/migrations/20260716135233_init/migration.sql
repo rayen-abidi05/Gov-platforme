@@ -2,6 +2,9 @@
 CREATE TYPE "Role" AS ENUM ('EXPORTER', 'ADMIN', 'OBSERVATOR', 'DIWAN_MEMBER');
 
 -- CreateEnum
+CREATE TYPE "exportType" AS ENUM ('liste1', 'liste2');
+
+-- CreateEnum
 CREATE TYPE "documenttype" AS ENUM ('RNE', 'TAXREALTED', 'DIWAN', 'QUITTANCE', 'EXISTANCEDECLARATION', 'RENTEDDECLARATION', 'CERTIFICATIONOWNERSHIP', 'LABDOC');
 
 -- CreateEnum
@@ -43,6 +46,7 @@ CREATE TABLE "Company" (
     "isRented" BOOLEAN NOT NULL,
     "registerState" BOOLEAN NOT NULL,
     "labName" TEXT NOT NULL,
+    "exportType" "exportType" NOT NULL,
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,

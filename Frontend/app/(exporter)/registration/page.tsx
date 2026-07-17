@@ -20,8 +20,6 @@ export default function RegistrationTrackingPage() {
   const router = useRouter();
   const { data, isLoading, isError } = useMyRegistrationRequests();
 
-  // safe fallback id so the hook can always be called unconditionally —
-  // it just won't be used until `request` actually exists
   const requestId = data?.requests?.[0]?.id ?? "";
   const { mutate: modifyDoc, isPending: isModifying } = useModifyDocument(requestId);
 
@@ -33,14 +31,27 @@ export default function RegistrationTrackingPage() {
     );
   }
 
-  if (isError || !data?.requests?.length) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-olive-950 text-cream-50/70">
+ if (isError || !data?.requests?.length) {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-olive-950 text-cream-50/70">
+      <p className="text-center text-sm">
         Aucune demande d'inscription trouvée.
-      </div>
-    );
-  }
+      </p>
 
+      <p className="mt-2 text-center text-xs text-cream-50/50">
+        Remplacez un document via l'icône, ou repartez de zéro :
+      </p>
+
+      <button
+        onClick={() => router.push("/registration/new")}
+        className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg border border-cream-50/15 px-4 py-2.5 text-sm font-medium text-cream-50/80 transition-all duration-200 hover:bg-cream-50/5"
+      >
+        <Plus className="h-4 w-4" />
+        Créer une nouvelle demande
+      </button>
+    </div>
+  );
+}
   const request = data.requests[0];
   const requiredTypes = getRequiredDocTypes(request.company.isRented);
   const uploadedMap = new Map(request.documents.map((d) => [d.DocType, d]));
@@ -56,7 +67,7 @@ export default function RegistrationTrackingPage() {
         <div className="mb-10 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <Leaf className="h-6 w-6 text-gold-300" />
-            <span className="font-display text-lg tracking-wide">Ministère de l'Agriculture</span>
+            <span className="font-display text-lg tracking-wide">MARHP</span>
           </div>
           <NotificationBell />
         </div>

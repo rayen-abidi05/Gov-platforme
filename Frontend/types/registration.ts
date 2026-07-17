@@ -21,8 +21,24 @@ export interface ApiDocument {
 }
 
 // add to existing file
+export type OliveListe = "liste1" | "liste2";
+
+export const OLIVE_LISTE_LABELS: Record<OliveListe, { fr: string; ar: string; description: string }> = {
+  liste1: {
+    fr: "Liste 1 — Toutes espèces",
+    ar: "القائمة 1 — جميع الأنواع",
+    description: "Exportation de toutes les huiles d'olive",
+  },
+  liste2: {
+    fr: "Liste 2 — Huile en conserve",
+    ar: "القائمة 2 — معلبات",
+    description: "Exportation d'huile d'olive en conserve uniquement",
+  },
+};
+
+
 export interface ApprovedExporter {
-  id: string; 
+  id: string;
   commName: string;
   rne: string;
   matFisc: string;
@@ -35,11 +51,12 @@ export interface ApprovedExporter {
   isResident: boolean;
   isRented: boolean;
   labName: string;
+  exportType?: OliveListe; 
   user: {
     name: string;
     email: string;
   };
-  approvedAt: string; 
+  approvedAt: string;
 }
 
 export interface ApiRegistrationRequest {

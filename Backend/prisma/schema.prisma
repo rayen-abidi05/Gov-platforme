@@ -23,7 +23,10 @@ enum Role {
   OBSERVATOR
   DIWAN_MEMBER
 }
-
+enum exportType {
+  liste1
+  liste2
+}
 enum documenttype {
   RNE
   TAXREALTED
@@ -100,6 +103,7 @@ model Company {
   registerState   Boolean
 
   labName         String
+  exportType     exportType
 
   userId          String   @unique
   user            User     @relation(fields: [userId], references: [id])

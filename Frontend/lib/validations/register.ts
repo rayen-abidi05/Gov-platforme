@@ -23,6 +23,9 @@ export const registerSchema = z
     isResident: z.boolean({
       message: "Veuillez préciser le statut de résidence.",
     }),
+    exportType: z.boolean({
+      message: "Veuillez préciser le type d' exportation.",
+    }),
     nationality: z.string().min(1, "La nationalité est requise."),
     phone: z
       .string()

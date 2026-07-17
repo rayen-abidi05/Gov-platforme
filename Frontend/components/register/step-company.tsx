@@ -208,7 +208,7 @@ export function StepCompany() {
           )}
         </div>
 
-        {/* Adresse */}
+        
         <div className="sm:col-span-2">
           <BilingualLabel htmlFor="address" fr="Adresse" ar="العنوان" required />
           <div className="relative">
@@ -228,7 +228,7 @@ export function StepCompany() {
           )}
         </div>
 
-        {/* Gouvernorat */}
+        
         <div>
           <BilingualLabel fr="Gouvernorat" ar="الولاية" required />
           <Controller
@@ -252,7 +252,7 @@ export function StepCompany() {
           )}
         </div>
 
-        {/* Ville */}
+        
         <div>
           <BilingualLabel htmlFor="city" fr="Ville" ar="المدينة" required />
           <Input
@@ -266,7 +266,7 @@ export function StepCompany() {
           )}
         </div>
 
-        {/* Lieu de stockage loué / en propriété */}
+        
         <div>
           <BilingualLabel fr="Lieu de stockage" ar="مكان التخزين" required />
           <Controller
@@ -289,7 +289,7 @@ export function StepCompany() {
           )}
         </div>
 
-        {/* État actuel de l'entreprise */}
+        
         <div>
           <BilingualLabel fr="État actuel de l'entreprise" ar="الحالة الحالية للشركة" required />
           <Controller
@@ -314,7 +314,8 @@ export function StepCompany() {
           )}
         </div>
 
-        {/* Laboratoire */}
+        
+
         <div className="sm:col-span-2">
           <BilingualLabel
             htmlFor="labName"
@@ -337,6 +338,29 @@ export function StepCompany() {
           {errors.labName && (
             <p className="mt-1.5 text-xs text-red-300">{errors.labName.message}</p>
           )}
+         <div >
+          <BilingualLabel fr="Type d'exportation" ar="نوع التصدير" required />
+          <Controller
+            name="exportType"
+            control={control}
+            render={({ field }) => (
+              <SegmentedToggle
+                value={field.value}
+                onChange={field.onChange}
+                hasError={!!errors.exportType}
+                options={[
+                  { value: false, fr: "Conditionnée", ar: "معلب" },
+                  { value: true, fr: "En vrac", ar: "ميع الأنواع" },
+                ]}
+              />
+            )}
+          />
+          {errors.exportType && (
+            <p className="mt-1.5 text-xs text-red-300">
+              {errors.exportType.message}
+            </p>
+          )}
+        </div>
         </div>
       </div>
     </div>

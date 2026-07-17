@@ -18,8 +18,9 @@ export function useMarkNotificationRead() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const res = await privateApi.patch(`/api/notifications/${id}/read`);
-      return res.data;
+      // const res = await privateApi.patch(`/api/notifications/${id}/read`);
+      // return res.data;
+      return []
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notifications"] });

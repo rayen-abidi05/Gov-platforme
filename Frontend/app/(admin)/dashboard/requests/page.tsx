@@ -3,12 +3,12 @@
 import { useMemo, useState } from "react";
 import { useRequestsRegit } from "@/hooks/useRequestsRegit";
 import { ApiRegistrationRequest, RequestStatus } from "@/types/registration";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+
 import AdminStatsCharts from "@/components/admin/AdminStatsCharts";
 import RegistrationRequestsFilters, { SearchField } from "@/components/admin/RegistrationRequestsFilters";
 import RegistrationRequestsTable from "@/components/admin/RegistrationRequestsTable";
 import RegistrationRequestModal from "@/components/admin/RegistrationRequestModal";
-import NotificationBell from "@/components/NotificationBell";
+
 import Spinner from "@/components/ui/spinner";
 import { privateApi } from "@/lib/api/privateApi";
 import { useUpdateRequestStatus } from "@/hooks/useUpdateRequestStatus";

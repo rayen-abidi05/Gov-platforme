@@ -1,5 +1,7 @@
 "use client";
 
+import { createPortal } from "react-dom";
+import { useEffect, useState } from "react";
 import { X, Bell } from "lucide-react";
 import { ApiNotification } from "@/types/registration";
 
@@ -10,7 +12,13 @@ export default function NotificationModal({
   notification: ApiNotification;
   onClose: () => void;
 }) {
-  return (
+  // Portals need `document` to exist, which isn't available during
+  // server-side rendering — this guards against a Next.js SSR crash.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="w-full max-w-md rounded-2xl border border-cream-50/10 bg-olive-950 p-6">
         <div className="flex items-start justify-between">
@@ -34,6 +42,7 @@ export default function NotificationModal({
           })}
         </p>
       </div>
-    </div>
+    </div>,
+    document.body 
   );
 }

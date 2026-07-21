@@ -15,12 +15,12 @@ datasource db {
 }
 
 
-enum Role {
-  EXPORTER
-  ADMIN
-  OBSERVATOR
-  DIWAN_MEMBER
-}
+  enum Role {
+    EXPORTER
+    ADMIN
+    OBSERVATOR
+    DIWAN_MEMBER
+  }
 enum exportType {
   liste1
   liste2

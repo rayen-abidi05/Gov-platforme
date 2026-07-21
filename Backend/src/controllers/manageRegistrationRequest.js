@@ -130,9 +130,8 @@ const addRequest = async (req, res) => {
             });
         }
 
-        const files = req.files|| {};
+        const files = req.files || {};
 
-        
         if (company.isRented && !files.RENTEDDECLARATION) {
             return res.status(400).json({
                 message: "RENTEDDECLARATION is required"
@@ -153,11 +152,21 @@ const addRequest = async (req, res) => {
             }
         });
 
-        await addFiles(
-            files,
-           
-            request.id
-        );
+        await addFiles(files, request.id);
+
+        const admins = await prisma.user.findMany({
+            where: { role: "ADMIN" },
+            select: { id: true },
+        });
+
+        await prisma.notification.createMany({
+            data: admins.map((admin) => ({
+                userId: admin.id,
+                title: "Nouvelle demande d'inscription",
+                message: `${company.commName} a soumis une nouvelle demande d'inscription.`,
+                isRead: false,
+            })),
+        });
 
         return res.status(201).json({
             message: "Request created successfully"
@@ -179,13 +188,25 @@ const updateRequestStatus = async (req, res) => {
     include: { company: true },
   });
 
-  
   if (status === "APPROVED") {
     await prisma.user.update({
       where: { id: request.company.userId },
       data: { status: "APPROVED" },
     });
   }
+
+ 
+  await prisma.notification.create({
+    data: {
+      userId: request.company.userId,
+      title: status === "APPROVED" ? "Compte approuvé" : "Demande mise à jour",
+      message:
+        status === "APPROVED"
+          ? "Votre compte exportateur a été approuvé. Vous pouvez maintenant vous connecter."
+          : `Le statut de votre demande de révision a été mis à jour : ${status}.`,
+      read: false,
+    },
+  });
 
   res.status(200).json(request);
 };
@@ -234,6 +255,7 @@ const getApprovedExporters = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 module.exports = {
     getRequestRegis,
     getAllRequestRegis,

@@ -55,7 +55,7 @@ export default function NotificationBell() {
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 mt-2 w-80 rounded-lg border border-cream-50/10 bg-olive-950/95 backdrop-blur-md shadow-lg overflow-hidden">
+          <div className="absolute right-0 mt-2 w-80 rounded-lg border border-cream-50/10 bg-olive-950/95 backdrop-blur-md shadow-lg overflow-hidden z-50">
             <div className="border-b border-cream-50/10 px-4 py-3">
               <p className="text-sm font-medium text-cream-50">Notifications</p>
             </div>

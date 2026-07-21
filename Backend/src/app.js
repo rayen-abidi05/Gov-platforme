@@ -6,6 +6,8 @@ const authRouter = require('./routes/authRoute');
 const fileRoute = require("./routes/fileRoute");
 const reqRgistRoute = require("./routes/reqRgist");
 const companyRoute = require("./routes/companyRoute");
+const notifRoute = require("./routes/notifRoute");
+const activityLogRoute = require("./routes/activityLog.routes");
 const authenticateToken = require('./middleware/authToken');
 
 const app = express();
@@ -20,8 +22,9 @@ app.use(cors({
 
 app.use('/api/auth', authRouter);
 app.use("/api/files",authenticateToken,fileRoute);
-app.use("/api/registration",authenticateToken,reqRgistRoute)
+app.use("/api/registration",authenticateToken,reqRgistRoute);
 app.use("/api/company",companyRoute);
-
+app.use("/api/notifications",authenticateToken,notifRoute)
+app.use("api/activity-logs",authenticateToken,activityLogRoute)
 
 module.exports = app;

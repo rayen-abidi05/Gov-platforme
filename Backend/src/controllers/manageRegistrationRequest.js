@@ -136,32 +136,36 @@ const getAllRequestRegis = async(req,res) => {
 const addRequest = async (req, res) => {
     try {
         const user = req.user;
-        const { note = "" } = req.body;
+        const { note = "", requestText } = req.body;
 
         const company = await prisma.company.findUnique({
-            where: {
-                userId: user.id
-            }
+            where: { userId: user.id }
         });
 
         if (!company) {
-            return res.status(404).json({
-                message: "Company not found"
-            });
+            return res.status(404).json({ message: "Company not found" });
         }
 
         const files = req.files || {};
 
         if (company.isRented && !files.RENTEDDECLARATION) {
-            return res.status(400).json({
-                message: "RENTEDDECLARATION is required"
-            });
+            return res.status(400).json({ message: "RENTEDDECLARATION is required" });
         }
 
         if (!company.isRented && !files.CERTIFICATIONOWNERSHIP) {
-            return res.status(400).json({
-                message: "CERTIFICATIONOWNERSHIP is required"
-            });
+            return res.status(400).json({ message: "CERTIFICATIONOWNERSHIP is required" });
+        }
+
+        if (!company.isResident) {
+            if (!files.DIWAN) {
+                return res.status(400).json({ message: "DIWAN is required" });
+            }
+            if (!files.MARKETCONTROLDECLARATION) {
+                return res.status(400).json({ message: "MARKETCONTROLDECLARATION is required" });
+            }
+            if (!requestText || !requestText.trim()) {
+                return res.status(400).json({ message: "requestText is required for non-resident companies" });
+            }
         }
 
         const request = await prisma.registrationRequest.create({
@@ -173,6 +177,16 @@ const addRequest = async (req, res) => {
         });
 
         await addFiles(files, request.id);
+
+        
+        if (!company.isResident) {
+            await prisma.ministerFormulaire.create({
+                data: {
+                    requestText,
+                    registrationRequestId: request.id,
+                },
+            });
+        }
 
         const admins = await prisma.user.findMany({
             where: { role: "ADMIN" },
@@ -188,18 +202,14 @@ const addRequest = async (req, res) => {
             })),
         });
 
-        return res.status(201).json({
-            message: "Request created successfully"
-        });
+        return res.status(201).json({ message: "Request created successfully" });
 
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+        res.status(500).json({ message: error.message });
     }
 };
 
-// ---------- ADMIN — write, now logged ----------
+
 const updateRequestStatus = async (req, res) => {
   const { id } = req.params;
   const { status, notes } = req.body;
@@ -208,8 +218,19 @@ const updateRequestStatus = async (req, res) => {
   const request = await prisma.registrationRequest.update({
     where: { id },
     data: { status, notes, reviewedAt: new Date() },
-    include: { company: true },
+    include: { company: true, ministerFormulaire: true },
   });
+
+  
+  if (
+    status === "APPROVED" &&
+    !request.company.isResident &&
+    request.ministerFormulaire?.status !== "APPROVED"
+  ) {
+    return res.status(400).json({
+      message: "L'approbation du Ministre est requise avant l'approbation finale.",
+    });
+  }
 
   if (status === "APPROVED") {
     await prisma.user.update({
@@ -218,7 +239,6 @@ const updateRequestStatus = async (req, res) => {
     });
   }
 
- 
   await prisma.notification.create({
     data: {
       userId: request.company.userId,
@@ -227,7 +247,7 @@ const updateRequestStatus = async (req, res) => {
         status === "APPROVED"
           ? "Votre compte exportateur a été approuvé. Vous pouvez maintenant vous connecter."
           : `Le statut de votre demande de révision a été mis à jour : ${status}.`,
-      isRead: false,
+      read: false,
     },
   });
 

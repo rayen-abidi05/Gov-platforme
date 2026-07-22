@@ -15,26 +15,12 @@ datasource db {
 }
 
 
-  enum Role {
-    EXPORTER
-    ADMIN
-    OBSERVATOR
-    DIWAN_MEMBER
-  }
+
 enum exportType {
   liste1
   liste2
 }
-enum documenttype {
-  RNE
-  TAXREALTED
-  DIWAN
-  QUITTANCE
-  EXISTANCEDECLARATION
-  RENTEDDECLARATION
-  CERTIFICATIONOWNERSHIP
-  LABDOC
-} 
+
 enum RegionStatus {
   UE
   AMERICA
@@ -52,7 +38,48 @@ enum RequestStatus {
   APPROVED
   REJECTED
 }
+enum Role {
+  EXPORTER
+  ADMIN
+  OBSERVATOR
+  DIWAN_MEMBER
+  MINISTER          
+}
 
+enum documenttype {
+  RNE
+  TAXREALTED
+  DIWAN
+  QUITTANCE
+  EXISTANCEDECLARATION
+  RENTEDDECLARATION
+  CERTIFICATIONOWNERSHIP
+  LABDOC
+  MARKETCONTROLDECLARATION   
+}
+
+enum FormulaireStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model MinisterFormulaire {
+  id          String           @id @default(cuid())
+
+  status      FormulaireStatus @default(PENDING)
+  requestText String          
+  notes       String?          
+
+  submittedAt DateTime         @default(now())
+  reviewedAt  DateTime?
+
+  registrationRequestId String              @unique
+  registrationRequest   RegistrationRequest @relation(fields: [registrationRequestId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 // =======================
 // USER
 // =======================
@@ -130,6 +157,7 @@ model RegistrationRequest {
   company     Company        @relation(fields: [companyId], references: [id])
 
   documents   Document[]
+  ministerFormulaire MinisterFormulaire?
 
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt

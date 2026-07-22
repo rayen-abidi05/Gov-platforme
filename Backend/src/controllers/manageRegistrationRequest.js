@@ -1,6 +1,8 @@
 const {PrismaClient} = require ("@prisma/client")
 const prisma = new PrismaClient();
 const {addFiles} = require ("../controllers/files")
+const {logActivity} = require ("../lib/logActivity")
+
 const getRequestRegis = async(req,res) => {
     try{
         
@@ -54,6 +56,7 @@ const getRequestRegisById = async(req,res) => {
     }
 }
 
+// ---------- ADMIN — read, now logged ----------
 const getRequestRegisByIdAdmin = async(req,res) => {
     try{
         
@@ -72,16 +75,25 @@ const getRequestRegisByIdAdmin = async(req,res) => {
                 message: "Request not found",
             });
             }
-                
+
+        await logActivity({
+            userId: user.id,
+            action: "VIEW_REQUEST",
+            entity: "RegistrationRequest",
+            entityId: request.id,
+        });
+
         res.status(200).json ({request})
     }
     catch(error) {
         res.status(500).json ({"message" : error.message})
     }
 }
+
 const getAllRequestRegis = async(req,res) => {
     try{
-        
+        const user = req.user;
+
         const requests = await prisma.registrationRequest.findMany({
             include: {
                 company: {
@@ -106,6 +118,14 @@ const getAllRequestRegis = async(req,res) => {
                 createdAt: "desc",
             },
         });
+
+        await logActivity({
+            userId: user.id,
+            action: "VIEW_ALL_REQUESTS",
+            entity: "RegistrationRequest",
+            entityId: "ALL",
+        });
+
          res.status(200).json ({requests})
     }
     catch(error) {
@@ -178,9 +198,12 @@ const addRequest = async (req, res) => {
         });
     }
 };
+
+// ---------- ADMIN — write, now logged ----------
 const updateRequestStatus = async (req, res) => {
   const { id } = req.params;
   const { status, notes } = req.body;
+  const user = req.user;
 
   const request = await prisma.registrationRequest.update({
     where: { id },
@@ -204,15 +227,25 @@ const updateRequestStatus = async (req, res) => {
         status === "APPROVED"
           ? "Votre compte exportateur a été approuvé. Vous pouvez maintenant vous connecter."
           : `Le statut de votre demande de révision a été mis à jour : ${status}.`,
-      read: false,
+      isRead: false,
     },
+  });
+
+  await logActivity({
+    userId: user.id,
+    action: status === "APPROVED" ? "APPROVE_REQUEST" : `${status}_REQUEST`,
+    entity: "RegistrationRequest",
+    entityId: request.id,
   });
 
   res.status(200).json(request);
 };
 
+// ---------- ADMIN — read, now logged ----------
 const getApprovedExporters = async (req, res) => {
   try {
+    const user = req.user;
+
     const companies = await prisma.company.findMany({
       where: {
         registrationRequests: {
@@ -249,6 +282,13 @@ const getApprovedExporters = async (req, res) => {
       approvedAt: c.registrationRequests[0]?.reviewedAt,
       registrationRequests: undefined, 
     }));
+
+    await logActivity({
+      userId: user.id,
+      action: "VIEW_APPROVED_EXPORTERS",
+      entity: "Company",
+      entityId: "ALL",
+    });
 
     res.status(200).json({ exporters });
   } catch (error) {

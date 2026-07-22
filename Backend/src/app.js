@@ -25,6 +25,6 @@ app.use("/api/files",authenticateToken,fileRoute);
 app.use("/api/registration",authenticateToken,reqRgistRoute);
 app.use("/api/company",companyRoute);
 app.use("/api/notifications",authenticateToken,notifRoute)
-app.use("api/activity-logs",authenticateToken,activityLogRoute)
+app.use("/api/activity-logs",authenticateToken,activityLogRoute)
 
 module.exports = app;

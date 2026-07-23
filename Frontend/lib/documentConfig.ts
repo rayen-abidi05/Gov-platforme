@@ -9,9 +9,20 @@ export const DOCUMENT_LABELS: Record<DocType, { fr: string; ar: string }> = {
   RENTEDDECLARATION: { fr: "Déclaration de location", ar: "تصريح الكراء" },
   CERTIFICATIONOWNERSHIP: { fr: "Certificat de propriété", ar: "شهادة الملكية" },
   LABDOC: { fr: "Document du laboratoire", ar: "وثيقة المخبر" },
+  MARKETCONTROLDECLARATION: {
+    fr: "Déclaration d'activité auprès du bureau de contrôle des marchés",
+    ar: "تصريح بالنشاط لدى مكتب مراقبة الأسواق",
+  },
 };
 
-export function getRequiredDocTypes(isRented: boolean): DocType[] {
-  const base: DocType[] = ["RNE", "TAXREALTED", "DIWAN", "QUITTANCE", "EXISTANCEDECLARATION", "LABDOC"];
-  return isRented ? [...base, "RENTEDDECLARATION"] : [...base, "CERTIFICATIONOWNERSHIP"];
+export function getRequiredDocTypes(isRented: boolean, isResident: boolean): DocType[] {
+  const base: DocType[] = ["RNE","DIWAN", "TAXREALTED", "LABDOC"];
+
+  const withResidency : DocType[] = isResident
+    ? [...base,"QUITTANCE","EXISTANCEDECLARATION"]
+    : [...base, "MARKETCONTROLDECLARATION"];
+
+  return isRented
+    ? [...withResidency, "RENTEDDECLARATION"]
+    : [...withResidency, "CERTIFICATIONOWNERSHIP"];
 }

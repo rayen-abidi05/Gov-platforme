@@ -53,7 +53,7 @@ export default function RegistrationTrackingPage() {
   );
 }
   const request = data.requests[0];
-  const requiredTypes = getRequiredDocTypes(request.company.isRented);
+  const requiredTypes = getRequiredDocTypes(request.company.isRented, request.company.isResident);
   const uploadedMap = new Map(request.documents.map((d) => [d.DocType, d]));
   const isRejected = request.status === "REJECTED";
 

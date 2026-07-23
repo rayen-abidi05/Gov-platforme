@@ -1,7 +1,7 @@
 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const { logActivity } = require("../lib/activityLog");
+const { logActivity } = require("../lib/logActivity");
 
 const getMinisterFormulaires = async (req, res) => {
     try {

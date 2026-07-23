@@ -8,7 +8,8 @@ export type DocType =
   | "EXISTANCEDECLARATION"
   | "RENTEDDECLARATION"
   | "CERTIFICATIONOWNERSHIP"
-  | "LABDOC";
+  | "LABDOC"
+  | "MARKETCONTROLDECLARATION";
 
 export interface ApiDocument {
   id: string;
@@ -70,7 +71,7 @@ export interface ApiRegistrationRequest {
   company: ApiCompany;
   documents: ApiDocument[];
 }
-export type Role = "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER"
+export type Role = "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER" | "MINISTER"
 
 export interface ApiNotification {
   id: string;
@@ -87,6 +88,7 @@ export interface ApiCompany {
   governorate: string;
   isRented: boolean;
   exportType?: OliveListe;
+  isResident : boolean;
   user: {
     name: string;
     email: string;

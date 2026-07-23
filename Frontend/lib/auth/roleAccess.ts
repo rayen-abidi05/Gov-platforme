@@ -7,6 +7,7 @@ export const ROLE_HOME_ROUTE: Record<Role, string> = {
   ADMIN: "/dashboard",
   OBSERVATOR: "/",
   DIWAN_MEMBER: "/exporters", 
+  MINISTER : "/minister"
 };
 
 
@@ -15,4 +16,5 @@ export const SECTION_ALLOWED_ROLES = {
   exporterArea: ["EXPORTER"] as Role[],
   adminArea: ["ADMIN"] as Role[],
   diwanArea: ["DIWAN_MEMBER"] as Role[],
+  ministerArea: ["MINISTER"] as Role[],
 };

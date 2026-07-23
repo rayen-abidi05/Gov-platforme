@@ -1,25 +1,24 @@
 "use client";
 
-
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {  ShieldCheck, Leaf } from "lucide-react";
+import { ShieldCheck, Leaf } from "lucide-react";
 import { useSubmitRegistration } from "@/hooks/useSubmitRegistration";
 import { documentsSchema, DocumentsFormValues } from "@/lib/validations/documentsSchema";
-import { getRequiredDocTypes, DOCUMENT_LABELS, } from "@/lib/documentConfig";
+import { getRequiredDocTypes, DOCUMENT_LABELS } from "@/lib/documentConfig";
 import DocumentSlot from "@/components/DocumentSlot";
-import Navbar from "@/components/Navbar.tsx"
 import { useCompany } from "@/hooks/useCompany";
-const MOCK_IS_RENTED = true;
 
 export default function RegistrationPage() {
-  const {data : company} = useCompany()
-  const isRented = company?.company.isRented ;
-  console.log(isRented)
-  const requiredTypes = getRequiredDocTypes(isRented);
+  const { data: company } = useCompany();
+  const isRented = company?.company.isRented;
+  const isResident = company?.company.isResident;
+
+  const requiredTypes = getRequiredDocTypes(isRented, isResident);
 
   const {
     control,
+    register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
@@ -38,6 +37,20 @@ export default function RegistrationPage() {
       setError("CERTIFICATIONOWNERSHIP", { message: "Ce document est requis" });
       return;
     }
+    if (!isResident) {
+      if (!values.DIWAN) {
+        setError("DIWAN", { message: "Ce document est requis" });
+        return;
+      }
+      if (!values.MARKETCONTROLDECLARATION) {
+        setError("MARKETCONTROLDECLARATION", { message: "Ce document est requis" });
+        return;
+      }
+      if (!values.requestText || !values.requestText.trim()) {
+        setError("requestText", { message: "Ce champ est requis" });
+        return;
+      }
+    }
     await mutateAsync(values);
   };
 
@@ -47,11 +60,8 @@ export default function RegistrationPage() {
         <div className="mb-10 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <Leaf className="h-6 w-6 text-gold-300" />
-            <span className="font-display text-lg tracking-wide">
-              MARP
-            </span>
+            <span className="font-display text-lg tracking-wide">MARP</span>
           </div>
-          
         </div>
 
         <div className="rounded-2xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md p-8 sm:p-10">
@@ -88,6 +98,30 @@ export default function RegistrationPage() {
                 />
               ))}
             </div>
+
+            
+            {isResident === false && (
+              <div className="mt-6">
+                <h2 className="text-sm font-medium text-cream-50/90">
+                  Demande adressée au Ministre
+                  <span className="ml-1.5 text-xs text-cream-50/50">مطلب موجه إلى السيد الوزير</span>
+                </h2>
+                <p className="mt-1 text-xs text-cream-50/50">
+                  Décrivez votre demande d'inscription sur la liste des exportateurs
+                  d'huile d'olive tunisienne conditionnée.
+                </p>
+                <textarea
+                  {...register("requestText")}
+                  rows={5}
+                  disabled={isPending}
+                  placeholder="Rédigez votre demande..."
+                  className="mt-3 w-full rounded-lg border border-cream-50/15 bg-cream-50/[0.03] p-3 text-sm text-cream-50 placeholder:text-cream-50/30 focus:border-gold-300/40 focus:outline-none disabled:opacity-60"
+                />
+                {errors.requestText && (
+                  <p className="mt-1.5 text-xs text-red-300">{errors.requestText.message}</p>
+                )}
+              </div>
+            )}
 
             {isError && (
               <div className="mt-4 rounded-lg border border-red-400/30 bg-red-950/20 p-3 text-sm text-red-300">

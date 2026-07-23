@@ -8,6 +8,7 @@ const reqRgistRoute = require("./routes/reqRgist");
 const companyRoute = require("./routes/companyRoute");
 const notifRoute = require("./routes/notifRoute");
 const activityLogRoute = require("./routes/activityLog.routes");
+const ministerRoute = require ("./routes/ministerFormulaire.routes");
 const authenticateToken = require('./middleware/authToken');
 
 const app = express();
@@ -26,5 +27,5 @@ app.use("/api/registration",authenticateToken,reqRgistRoute);
 app.use("/api/company",companyRoute);
 app.use("/api/notifications",authenticateToken,notifRoute)
 app.use("/api/activity-logs",authenticateToken,activityLogRoute)
-
+app.use("/api/minister-formulaires",authenticateToken,ministerRoute)
 module.exports = app;

@@ -24,6 +24,7 @@ router.post(
     { name: "LABDOC", maxCount: 1 },
     { name: "RENTEDDECLARATION", maxCount: 1 },
     { name: "CERTIFICATIONOWNERSHIP", maxCount: 1 },
+    { name: "MARKETCONTROLDECLARATION", maxCount: 1 }, 
 ]),
     addRequest
 );

@@ -17,7 +17,7 @@ export default function DiwanExportersTable({ exporters, onView }: Props) {
         <thead>
           <tr className="border-b border-cream-50/10 text-xs uppercase tracking-wide text-cream-50/50">
             <th className="px-5 py-3.5 font-medium">Entreprise</th>
-            <th className="px-5 py-3.5 font-medium">Propriétaire</th>
+            
             <th className="px-5 py-3.5 font-medium">RNE</th>
             <th className="px-5 py-3.5 font-medium">Matricule fiscal</th>
             <th className="px-5 py-3.5 font-medium">Gouvernorat</th>
@@ -33,7 +33,7 @@ export default function DiwanExportersTable({ exporters, onView }: Props) {
               className="border-b border-cream-50/5 last:border-0 transition-colors duration-150 hover:bg-cream-50/[0.02]"
             >
               <td className="px-5 py-4 font-medium text-cream-50">{exp.commName}</td>
-              <td className="px-5 py-4 text-cream-50/70">{exp.user.name}</td>
+              
               <td className="px-5 py-4 text-cream-50/70">{exp.rne}</td>
               <td className="px-5 py-4 text-cream-50/70">{exp.matFisc}</td>
               <td className="px-5 py-4 text-cream-50/70">{exp.governorate}</td>

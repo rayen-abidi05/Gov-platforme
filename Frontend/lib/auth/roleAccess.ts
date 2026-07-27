@@ -5,7 +5,7 @@ import { Role } from "@/types/registration";
 export const ROLE_HOME_ROUTE: Record<Role, string> = {
   EXPORTER: "/",
   ADMIN: "/dashboard",
-  OBSERVATOR: "/",
+  OBSERVATOR: "/observer",
   DIWAN_MEMBER: "/exporters", 
   MINISTER : "/minister"
 };
@@ -17,4 +17,5 @@ export const SECTION_ALLOWED_ROLES = {
   adminArea: ["ADMIN"] as Role[],
   diwanArea: ["DIWAN_MEMBER"] as Role[],
   ministerArea: ["MINISTER"] as Role[],
+  observerArea : ["OBSERVATOR"] as Role[],
 };

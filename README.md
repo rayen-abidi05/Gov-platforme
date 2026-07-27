@@ -1,7 +1,8 @@
 # Gov-platforme
 
-je propose pour un système de gestion des autorisations d'exportation d'huile d'olive, vous pouvez enrichir les statuts afin de mieux représenter le circuit administratif :
+Pour un système de gestion des autorisations d'exportation d'huile d'olive, les statuts proposés sont les suivants :
 
+```text
 enum RequestStatus {
   DRAFT              // Brouillon
   SUBMITTED          // Soumise
@@ -12,16 +13,19 @@ enum RequestStatus {
   CANCELLED          // Annulée par le demandeur
   EXPORTED           // Exportation réalisée
 }
+```
 
 Et pour les rôles :
 
+```text
 enum Role {
   EXPORTER
   ADMIN // Mme Nourchene est un gestionnaire métier
-  DGEDA // un autre cadre qui asiste au reunion de la comité
+  DGEDA // Un autre cadre qui assiste aux réunions du comité
   OBSERVATOR // DG-EDA
-  DIWAN_MEMBER // la douane
-  INSTANCE //  الهيئة
-  MINISTER  // Mr le ministre
-  SUPER_ADMIN // est le responsable technique de la plateforme
+  DIWAN_MEMBER // La douane
+  INSTANCE // الهيئة
+  MINISTER // M. le Ministre
+  SUPER_ADMIN // Responsable technique de la plateforme
 }
+```

@@ -1,54 +1,138 @@
-import type { Metadata } from "next";
-import { ShieldCheck, Leaf } from "lucide-react";
-import { OliveAuroraBackground } from "@/components/olive-ui/olive-aurora-background";
-import { OliveBranchMotif } from "@/components/olive-ui/olive-branch-motif";
-import Navbar from "@/components/Navbar.tsx"
-import Footer from "@/components/Footer";
-import "./globals.css";
-export const metadata: Metadata = {
-  title: "Plateforme d'Export de l'Huile d'Olive | Tunisie",
-  description:
-    "Plateforme nationale d'export de l'huile d'olive tunisienne - Inscription, connexion et suivi des exportations.",
-};
+"use client"
+import LandingContent from "@/components/landing/LandingContent"
+
+import { useEffect, useRef, useState } from "react";
+import {
+  Leaf,
+  ShieldCheck,
+  Lock,
+  Server,
+  ArrowRight,
+  Clock,
+  MessageSquareWarning,
+  EyeOff,
+  Activity,
+  FileText,
+  BellRing,
+  GitBranch,
+  UserPlus,
+  UploadCloud,
+  BadgeCheck,
+  Mail,
+  Phone,
+  MapPin,
+
+  Menu,
+  X,
+} from "lucide-react";
+
+
+
+
+import Navbar from "@/components/Navbar";
+
+
+
+
+
+
+
+
+
+
+function Footer() {
+  return (
+    <footer id="contact" className="relative border-t border-gold-500/15 bg-olive-950/80">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-5 py-16 md:grid-cols-4 md:px-8">
+        <div className="md:col-span-1">
+          <div className="flex items-center gap-2.5">
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-gold-500/10 ring-hairline">
+              <Leaf className="h-4 w-4 text-gold-300" />
+            </span>
+            <div>
+              <div className="font-serif text-[15px] text-cream-50">
+                Ministère de l'Agriculture
+              </div>
+              <div className="text-[10px] uppercase tracking-[0.18em] text-cream-300/60">
+                République Tunisienne
+              </div>
+            </div>
+          </div>
+          <p className="mt-5 text-sm leading-relaxed text-cream-100/60">
+            Plateforme nationale officielle pour l'exportation de l'huile d'olive
+            tunisienne.
+          </p>
+         
+        </div>
+
+        <div>
+          <div className="text-[11px] uppercase tracking-[0.22em] text-gold-300/80">
+            Navigation
+          </div>
+          <ul className="mt-5 space-y-3 text-sm text-cream-100/75">
+            <li><a href="#apropos" className="hover:text-gold-300">À propos</a></li>
+            <li><a href="#cahier" className="hover:text-gold-300">Cahier de charge</a></li>
+            <li><a href="#demande" className="hover:text-gold-300">Demande d'enregistrement</a></li>
+            <li><a href="/login" className="hover:text-gold-300">Se connecter</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div className="text-[11px] uppercase tracking-[0.22em] text-gold-300/80">
+            Ressources
+          </div>
+          <ul className="mt-5 space-y-3 text-sm text-cream-100/75">
+            <li><a href="#" className="hover:text-gold-300">Guide de l'exportateur</a></li>
+            <li><a href="#" className="hover:text-gold-300">FAQ</a></li>
+            <li><a href="#" className="hover:text-gold-300">Mentions légales</a></li>
+            <li><a href="#" className="hover:text-gold-300">Confidentialité</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div className="text-[11px] uppercase tracking-[0.22em] text-gold-300/80">
+            Contact
+          </div>
+          <ul className="mt-5 space-y-3 text-sm text-cream-100/75">
+            <li className="flex items-start gap-2.5">
+              <MapPin className="mt-0.5 h-4 w-4 text-gold-300" />
+              30 rue Alain Savary, 1002 Tunis
+            </li>
+            <li className="flex items-center gap-2.5">
+              <Phone className="h-4 w-4 text-gold-300" />
+              +216 71 786 833
+            </li>
+            <li className="flex items-center gap-2.5">
+              <Mail className="h-4 w-4 text-gold-300" />
+              contact@agriculture.tn
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="border-t border-olive-700/50">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-5 py-6 text-xs text-cream-100/50 md:flex-row md:px-8">
+          <div>
+            © {new Date().getFullYear()} Ministère de l'Agriculture — République Tunisienne. Tous droits réservés.
+          </div>
+          <div className="flex items-center gap-2">
+            <Lock className="h-3 w-3 text-gold-300/70" />
+            Connexion sécurisée · TLS 1.3
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
 
 export default function Home() {
   return (
-   <main className="relative min-h-screen w-full font-body text-cream-50">
-      <OliveAuroraBackground />
-      <div className="relative z-10 flex min-h-screen flex-col lg:flex-row">
-        <Navbar />
-        <section className="flex flex-1 flex-col justify-between pt-28 px-8 pb-10 sm:pt-32 sm:px-12 lg:pt-16 lg:px-16 lg:py-16">
-          <div className="flex items-center gap-2.5">
-            <Leaf className="h-6 w-6 text-gold-300" />
-            <span className="font-display text-lg tracking-wide">
-              MARHP
-            </span>
-          </div>
-
-          <div className="max-w-xl">
-            <OliveBranchMotif className="mb-8 h-10 w-44 text-gold-300" />
-            <h1 className="font-display text-5xl leading-[1.05] tracking-tight sm:text-6xl">
-              Plateforme Nationale
-              <br />
-              d'Exportation
-              <br />
-              <span className="text-gold-300">de l'Huile d'Olive</span>
-            </h1>
-            <p className="mt-6 max-w-md text-base leading-relaxed text-cream-50/75">
-              La solution tunisienne pour faciliter l'exportation de l'huile d'olive
-              vers les marchés internationaux avec traçabilité complète et
-              certification conforme aux normes internationales.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 text-sm text-cream-50/60">
-            <ShieldCheck className="h-4 w-4 text-gold-300" />
-            <span>Accès chiffré et conforme aux normes du Ministère</span>
-          </div>
-        </section>
-      </div>
-
+    <div className="relative min-h-screen overflow-x-hidden bg-olive-950 text-cream-50">
+      <Navbar />
+      <main>
+        <LandingContent/>
+      </main>
       <Footer />
-    </main>
+    </div>
   );
 }

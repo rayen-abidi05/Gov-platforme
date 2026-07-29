@@ -1,5 +1,5 @@
 "use client";
-
+import {DashboardShell} from "@/components/marhp-exporter/DashboardShell";
 import { useCompany } from "@/hooks/useCompany";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/ui/spinner";
@@ -22,5 +22,5 @@ export default function ExporterLayout({
     router.replace("/login")
   }
 
-  return children;
+  return <DashboardShell>{children}</DashboardShell>;
 }

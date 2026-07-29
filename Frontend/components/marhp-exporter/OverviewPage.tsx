@@ -26,7 +26,7 @@ const CARD =
 
 export function OverviewPage({
   profile,
-  requests,
+  requests ,
   notifications,
 }: OverviewPageProps) {
   const pending = requests.filter(

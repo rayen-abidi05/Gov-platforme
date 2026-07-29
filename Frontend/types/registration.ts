@@ -21,7 +21,7 @@ export interface ApiDocument {
   uploadedAt: string;
 }
 
-// add to existing file
+
 export type OliveListe = "liste1" | "liste2";
 
 export const OLIVE_LISTE_LABELS: Record<OliveListe, { fr: string; ar: string; description: string }> = {

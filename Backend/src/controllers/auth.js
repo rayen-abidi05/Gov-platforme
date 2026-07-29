@@ -167,7 +167,7 @@ const verify = async (req,res) =>{
             name: true,
             email: true,
             role: true,
-            
+            status : true,
         },
         });
 

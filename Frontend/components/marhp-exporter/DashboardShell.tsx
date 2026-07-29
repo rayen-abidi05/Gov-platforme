@@ -24,7 +24,7 @@ interface NavItem {
 }
 
 const NAV: NavItem[] = [
-  { href: "/espace/vue-densemble", labelFr: "Vue d'ensemble", labelAr: "نظرة عامة", icon: LayoutDashboard },
+  { href: "/espace", labelFr: "Vue d'ensemble", labelAr: "نظرة عامة", icon: LayoutDashboard },
   { href: "/espace/inscription", labelFr: "Mon inscription", labelAr: "تسجيلي", icon: FileCheck2 },
   { href: "/espace/exportations", labelFr: "Mes exportations", labelAr: "صادراتي", icon: Ship },
   { href: "/espace/documents", labelFr: "Mes documents", labelAr: "وثائقي", icon: FolderOpen },
@@ -101,7 +101,7 @@ export function DashboardShell({
         </div>
       </aside>
 
-      {/* Main column */}
+     
       <div className="lg:pl-64">
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-cream-50/10 bg-olive-950/80 px-4 backdrop-blur-md sm:px-8">
           <button

@@ -22,5 +22,5 @@ export default function ExporterLayout({
     router.replace("/login")
   }
 
-  return <DashboardShell>{children}</DashboardShell>;
+  return <div>{children}</div>;
 }

@@ -55,7 +55,7 @@ export default function ExporterOverviewPage() {
               <span className="ml-1.5 text-xs text-cream-50/50">طلبات التصدير الأخيرة</span>
             </h2>
             <Link
-              href="/dashboard/exports"
+              href="/espace/exports"
               className="flex items-center gap-1 text-xs text-gold-300 transition-colors duration-150 hover:text-gold-300/80"
             >
               Voir tout

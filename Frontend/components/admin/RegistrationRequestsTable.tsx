@@ -30,7 +30,7 @@ export default function RegistrationRequestsTable({ requests, onView }: Props) {
         </thead>
         <tbody>
           {requests.map((req) => {
-            const required = getRequiredDocTypes(req.company.isRented);
+            const required = getRequiredDocTypes(req.company.isRented,req.company.isResident);
 
             return (
               <tr

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, FileCheck2, Users, Settings, Leaf } from "lucide-react";
+import { LayoutDashboard, FileCheck2, Users, Settings, Leaf,Ship } from "lucide-react";
 import {LogOut } from "lucide-react";
 import { privateApi } from "@/lib/api/privateApi";
 
@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/dashboard/requests", label: "Demandes d'inscription", icon: FileCheck2 },
   { href: "/dashboard/exporters", label: "Exportateurs", icon: Users },
+  { href: "/dashboard/export-requests", label: "Demandes d'exportation", icon: Ship },
   { href: "/dashboard/settings", label: "Paramètres", icon: Settings },
 ];
 

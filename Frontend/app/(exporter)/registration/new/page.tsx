@@ -8,8 +8,9 @@ import { documentsSchema, DocumentsFormValues } from "@/lib/validations/document
 import { getRequiredDocTypes, DOCUMENT_LABELS } from "@/lib/documentConfig";
 import DocumentSlot from "@/components/DocumentSlot";
 import { useCompany } from "@/hooks/useCompany";
+import Image from "next/image";
 
-export default function RegistrationPage() {
+export default function RegistrationPage() {  
   const { data: company } = useCompany();
   const isRented = company?.company.isRented;
   const isResident = company?.company.isResident;
@@ -59,7 +60,13 @@ export default function RegistrationPage() {
       <div className="relative z-10 mx-auto max-w-3xl px-6 py-12 sm:px-10 lg:py-16">
         <div className="mb-10 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Leaf className="h-6 w-6 text-gold-300" />
+            <Image
+              src="/logo-ministere.png"
+              alt="Ministère de l'Agriculture"
+              width={90}
+              height={55}
+              className="h-10 w-auto object-contain"
+            />
             <span className="font-display text-lg tracking-wide">MARP</span>
           </div>
         </div>

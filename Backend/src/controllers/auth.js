@@ -1,7 +1,8 @@
 const {SignJWT, jwtVerify} = require('jose');
 
 const brypt = require('bcryptjs');
-
+const cookieParser = require("cookie-parser");
+const express = require("express");
 
 const {PrismaClient} = require('@prisma/client');
 const prisma = new PrismaClient();

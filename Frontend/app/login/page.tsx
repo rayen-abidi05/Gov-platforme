@@ -4,7 +4,7 @@ import { ShieldCheck, Leaf } from "lucide-react";
 import { OliveAuroraBackground } from "@/components/olive-ui/olive-aurora-background";
 import { OliveBranchMotif } from "@/components/olive-ui/olive-branch-motif";
 import { LoginForm } from "@/components/olive-ui/login-form";
-
+import Image from "next/image";
 export const metadata: Metadata = {
   title: "Connexion — Plateforme d'Export de l'Huile d'Olive | Tunisie",
   description:
@@ -22,7 +22,13 @@ export default function LoginPage() {
         
         <section className="flex flex-1 flex-col justify-between px-8 py-10 sm:px-12 lg:px-16 lg:py-16">
           <div className="flex items-center gap-2.5">
-            <Leaf className="h-6 w-6 text-gold-300" />
+            <Image
+              src="/logo-ministere.png"
+              alt="Ministère de l'Agriculture"
+              width={90}
+              height={55}
+              className="h-10 w-auto object-contain"
+            />
             <span className="font-display text-lg tracking-wide">
               Ministère de l&apos;Agriculture
             </span>

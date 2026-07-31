@@ -43,7 +43,8 @@ enum Role {
   ADMIN
   OBSERVATOR
   DIWAN_MEMBER
-  MINISTER          
+  MINISTER  
+  INSPA        
 }
 
 enum documenttype {

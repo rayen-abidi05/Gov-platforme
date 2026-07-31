@@ -8,7 +8,7 @@ import { OliveBranchMotif } from "@/components/olive-ui/olive-branch-motif";
 import { ContactForm } from "@/components/olive-ui/contact-form";
 import Navbar from "@/components/Navbar.tsx";
 import Footer from "@/components/Footer";
-
+import Image from "next/image";
 export const metadata: Metadata = {
   title: "Contact | Plateforme d'Export de l'Huile d'Olive - Tunisie",
   description:
@@ -63,7 +63,13 @@ export default function Contact() {
         <section className="flex-1 px-8 pt-28 pb-16 sm:px-12 sm:pt-32 lg:px-16 lg:pt-24 lg:pb-20">
           <div className="mx-auto max-w-5xl">
             <div className="mb-10 flex items-center gap-2.5">
-              <Leaf className="h-6 w-6 text-gold-300" />
+              <Image
+                            src="/logo-ministere.png"
+                            alt="Ministère de l'Agriculture"
+                            width={90}
+                            height={55}
+                            className="h-10 w-auto object-contain"
+                          />
               <span className="font-display text-lg tracking-wide">
                 MARHP
               </span>

@@ -4,6 +4,7 @@ import { OliveAuroraBackground } from "@/components/olive-ui/olive-aurora-backgr
 import { OliveBranchMotif } from "@/components/olive-ui/olive-branch-motif";
 import { RegisterWizard } from "@/components/register/register-wizard";
 import Link from "next/link";
+import Image from "next/image";
 export const metadata: Metadata = {
   title: "Inscription Exportateur — Plateforme d'Export de l'Huile d'Olive | Tunisie",
   description:
@@ -19,7 +20,13 @@ export default function RegisterPage() {
         
         <section className="flex flex-1 flex-col justify-between px-8 py-10 sm:px-12 lg:px-16 lg:py-16">
           <div className="flex items-center gap-2.5">
-            <Leaf className="h-6 w-6 text-gold-300" />
+            <Image
+              src="/logo-ministere.png"
+              alt="Ministère de l'Agriculture"
+              width={90}
+              height={55}
+              className="h-10 w-auto object-contain"
+            />
             <span className="font-display text-lg tracking-wide">
               Ministère de l&apos;Agriculture
             </span>

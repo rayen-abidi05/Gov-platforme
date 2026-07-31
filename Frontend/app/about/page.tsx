@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Leaf,
   LayoutDashboard,
@@ -135,7 +136,13 @@ export default function About() {
         <section className="px-8 pt-28 sm:px-12 sm:pt-32 lg:px-16 lg:pt-24">
           <div className="mx-auto max-w-6xl">
             <div className="flex items-center gap-2.5">
-              <Leaf className="h-6 w-6 text-gold-300" />
+              <Image
+              src="/logo-ministere.png"
+              alt="Ministère de l'Agriculture"
+              width={90}
+              height={55}
+              className="h-10 w-auto object-contain"
+            />
               <span className="font-display text-lg tracking-wide">MARHP</span>
             </div>
 

@@ -2,8 +2,8 @@
 import LandingContent from "@/components/landing/LandingContent"
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import {
-  Leaf,
   ShieldCheck,
   Lock,
   Server,
@@ -46,9 +46,13 @@ function Footer() {
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-5 py-16 md:grid-cols-4 md:px-8">
         <div className="md:col-span-1">
           <div className="flex items-center gap-2.5">
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-gold-500/10 ring-hairline">
-              <Leaf className="h-4 w-4 text-gold-300" />
-            </span>
+            <Image
+              src="/logo-ministere.png"
+              alt="Ministère de l'Agriculture"
+              width={90}
+              height={55}
+              className="h-10 w-auto object-contain"
+            />
             <div>
               <div className="font-serif text-[15px] text-cream-50">
                 Ministère de l'Agriculture

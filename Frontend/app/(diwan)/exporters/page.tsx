@@ -12,6 +12,7 @@ import NotificationBell from "@/components/NotificationBell";
 import Spinner from "@/components/ui/spinner";
 import { privateApi } from "@/lib/api/privateApi";
 import { useMutation } from "@tanstack/react-query";
+import Image from "next/image";
 export default function DiwanExportersPage() {
   const router = useRouter()
   const { data, isLoading, isError } = useApprovedExporters();
@@ -67,7 +68,13 @@ export default function DiwanExportersPage() {
       <div className="mx-auto max-w-6xl px-6 py-10 sm:px-10 lg:py-12">
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Leaf className="h-6 w-6 text-gold-300" />
+            <Image
+              src="/logo-ministere.png"
+              alt="Ministère de l'Agriculture"
+              width={90}
+              height={55}
+              className="h-10 w-auto object-contain"
+            />
             <span className="font-display text-lg tracking-wide">MARHP</span>
           </div>
 

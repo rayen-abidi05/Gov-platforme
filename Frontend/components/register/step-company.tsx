@@ -104,7 +104,7 @@ export function StepCompany() {
                   Sélectionnez une activité
                 </option>
                 {ACTIVITIES.map((a) => (
-                  <option key={a.value} value={a.value}>
+                  <option key={a.value} value={a.value} className="text-black">
                     {a.fr} — {a.ar}
                   </option>
                 ))}
@@ -175,7 +175,7 @@ export function StepCompany() {
                   Sélectionnez un pays
                 </option>
                 {COUNTRIES.map((c) => (
-                  <option key={c} value={c}>
+                  <option key={c} value={c} className="text-black">
                     {c}
                   </option>
                 ))}
@@ -240,7 +240,7 @@ export function StepCompany() {
                   Sélectionnez un gouvernorat
                 </option>
                 {GOVERNORATES.map((g) => (
-                  <option key={g.value} value={g.value}>
+                  <option key={g.value} value={g.value} className="text-black">
                     {g.fr} — {g.ar}
                   </option>
                 ))}

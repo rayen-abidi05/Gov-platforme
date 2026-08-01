@@ -71,7 +71,7 @@ export interface ApiRegistrationRequest {
   company: ApiCompany;
   documents: ApiDocument[];
 }
-export type Role = "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER" | "MINISTER"
+export type Role = "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER" | "MINISTER" | "INSPA_MEMBER"
 
 export interface ApiNotification {
   id: string;
@@ -79,6 +79,11 @@ export interface ApiNotification {
   message: string;
   isRead: boolean;
   createdAt: string;
+  // Optional deep-link so the bell/modal can surface an action button
+  // (e.g. "Ouvrir les détails de l'inspection") without breaking roles
+  // that don't set it.
+  link?: string;
+  linkLabel?: string;
 }
 // types/registration.ts — add to ApiCompany
 export interface ApiCompany {

@@ -2,7 +2,8 @@
 
 import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
-import { X, Bell } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { X, Bell, ArrowRight } from "lucide-react";
 import { ApiNotification } from "@/types/registration";
 
 export default function NotificationModal({
@@ -12,6 +13,7 @@ export default function NotificationModal({
   notification: ApiNotification;
   onClose: () => void;
 }) {
+  const router = useRouter();
   // Portals need `document` to exist, which isn't available during
   // server-side rendering — this guards against a Next.js SSR crash.
   const [mounted, setMounted] = useState(false);
@@ -41,6 +43,18 @@ export default function NotificationModal({
             year: "numeric",
           })}
         </p>
+        {notification.link && (
+          <button
+            onClick={() => {
+              onClose();
+              router.push(notification.link!);
+            }}
+            className="mt-5 flex w-full items-center justify-center gap-1.5 rounded-lg bg-gold-300 px-4 py-2.5 text-sm font-medium text-olive-950 transition-colors duration-150 hover:bg-gold-300/90"
+          >
+            {notification.linkLabel || "Voir les détails"}
+            <ArrowRight className="h-3.5 w-3.5" />
+          </button>
+        )}
       </div>
     </div>,
     document.body 

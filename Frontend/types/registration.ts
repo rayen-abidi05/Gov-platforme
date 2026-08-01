@@ -71,12 +71,13 @@ export interface ApiRegistrationRequest {
   company: ApiCompany;
   documents: ApiDocument[];
 }
-export type Role = "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER" | "MINISTER" | "INSPA";
+export type Role = "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER" | "MINISTER" | "INSPA"
 
 export interface ApiNotification {
   id: string;
   title: string;
   message: string;
+  link?: string | null;
   isRead: boolean;
   createdAt: string;
 }

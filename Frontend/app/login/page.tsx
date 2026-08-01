@@ -21,18 +21,18 @@ export default function LoginPage() {
       <div className="relative z-10 flex min-h-screen flex-col lg:flex-row pr-10">
         
         <section className="flex flex-1 flex-col justify-between px-8 py-10 sm:px-12 lg:px-16 lg:py-16">
-          <div className="flex items-center gap-2.5">
-            <Image
-              src="/logo-ministere.png"
-              alt="Ministère de l'Agriculture"
-              width={90}
-              height={55}
-              className="h-10 w-auto object-contain"
-            />
-            <span className="font-display text-lg tracking-wide">
-              Ministère de l&apos;Agriculture
-            </span>
-          </div>
+            <div className="mb-10 flex items-center gap-2.5">
+              <Image
+                            src="/logo-ministere.png"
+                            alt="Ministère de l'Agriculture"
+                            width={90}
+                            height={55}
+                            className="h-10 w-auto object-contain"
+                          />
+              <span className="font-display text-lg tracking-wide">
+                MARHP
+              </span>
+            </div>
 
           <div className="max-w-xl">
             <OliveBranchMotif className="mb-8 h-10 w-44 text-gold-300" />

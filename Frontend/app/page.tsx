@@ -54,11 +54,12 @@ function Footer() {
               className="h-10 w-auto object-contain"
             />
             <div>
-              <div className="font-serif text-[15px] text-cream-50">
-                Ministère de l'Agriculture
-              </div>
+
               <div className="text-[10px] uppercase tracking-[0.18em] text-cream-300/60">
-                République Tunisienne
+                MARHP
+              </div>
+              <div className="font-serif text-[15px] text-cream-50">
+                MARHP
               </div>
             </div>
           </div>

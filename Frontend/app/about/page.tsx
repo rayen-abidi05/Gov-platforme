@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  Leaf,
   LayoutDashboard,
   ShieldCheck,
   Smartphone,
@@ -17,7 +16,7 @@ import {
 import { OliveAuroraBackground } from "@/components/olive-ui/olive-aurora-background";
 import { OliveBranchMotif } from "@/components/olive-ui/olive-branch-motif";
 import { Button } from "@/components/ui/button";
-import Navbar from "@/components/Navbar.tsx";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {

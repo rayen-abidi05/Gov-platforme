@@ -8,8 +8,7 @@ export const ROLE_HOME_ROUTE: Record<Role, string> = {
   OBSERVATOR: "/observer",
   DIWAN_MEMBER: "/exporters", 
   MINISTER : "/minister",
-  INSPA : "/inspa",
-
+  INSPA : "/inspa/dashboard",
 };
 
 

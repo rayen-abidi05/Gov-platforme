@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Leaf, Mail, Phone, MapPin, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { FaFacebook, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 import { OliveAuroraBackground } from "@/components/olive-ui/olive-aurora-background";
 import { OliveBranchMotif } from "@/components/olive-ui/olive-branch-motif";
 import { ContactForm } from "@/components/olive-ui/contact-form";
-import Navbar from "@/components/Navbar.tsx";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 export const metadata: Metadata = {

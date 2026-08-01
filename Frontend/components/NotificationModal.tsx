@@ -2,7 +2,8 @@
 
 import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
-import { X, Bell } from "lucide-react";
+import { X, Bell, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { ApiNotification } from "@/types/registration";
 
 export default function NotificationModal({
@@ -41,6 +42,16 @@ export default function NotificationModal({
             year: "numeric",
           })}
         </p>
+        {notification.link && (
+          <Link
+            href={notification.link}
+            onClick={onClose}
+            className="mt-5 inline-flex items-center gap-2 rounded-lg bg-gold-300 px-4 py-2 text-sm font-medium text-olive-950 transition-colors duration-150 hover:bg-gold-300/90"
+          >
+            Ouvrir les détails
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        )}
       </div>
     </div>,
     document.body 

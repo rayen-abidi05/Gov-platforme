@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, FileCheck2, Users, Settings, Leaf,Ship } from "lucide-react";
+import { LayoutDashboard, FileCheck2, Users, Settings, Ship, ClipboardCheck } from "lucide-react";
 import {LogOut } from "lucide-react";
 import { privateApi } from "@/lib/api/privateApi";
-import { Gavel } from "lucide-react";
+
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 const NAV_ITEMS = [
@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   { href: "/dashboard/requests", label: "Demandes d'inscription", icon: FileCheck2 },
   { href: "/dashboard/exporters", label: "Exportateurs", icon: Users },
   { href: "/dashboard/export-requests", label: "Demandes d'exportation", icon: Ship },
-  { href: "/dashboard/instances", label: "Instances", icon: Gavel },
+  { href: "/dashboard/inspections", label: "Inspections", icon: ClipboardCheck },
   { href: "/dashboard/settings", label: "Paramètres", icon: Settings },
 ];
 

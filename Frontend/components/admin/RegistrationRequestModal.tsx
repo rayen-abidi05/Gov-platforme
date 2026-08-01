@@ -5,15 +5,18 @@ import { X, FileText, Download, Eye as EyeIcon, CheckCircle2, Check } from "luci
 import { ApiRegistrationRequest, RequestStatus } from "@/types/registration";
 import { DOCUMENT_LABELS, getRequiredDocTypes } from "@/lib/documentConfig";
 import StatusBadge from "./StatusBadge";
+import ConfirmDialog from "@/components/ui/confirm-dialog";
 
 interface Props {
   request: ApiRegistrationRequest;
   onClose: () => void;
   onStatusChange: (id: string, status: RequestStatus, notes?: string) => void;
-  
+
   onViewDocument: (docId: string) => void;
   onDownloadDocument: (docId: string) => void;
 }
+
+type PendingAction = "REVIEW" | "APPROVE" | "REJECT" | null;
 
 export default function RegistrationRequestModal({
   request,
@@ -25,9 +28,12 @@ export default function RegistrationRequestModal({
   const [rejectNotes, setRejectNotes] = useState("");
   const [showRejectInput, setShowRejectInput] = useState(false);
   const [verifiedDocIds, setVerifiedDocIds] = useState<Set<string>>(new Set());
+  const [pendingAction, setPendingAction] = useState<PendingAction>(null);
 
   const requiredTypes = getRequiredDocTypes(request.company.isRented);
   const uploadedMap = new Map(request.documents.map((d) => [d.DocType, d]));
+
+  const isFinalized = request.status === "APPROVED" || request.status === "REJECTED";
 
   const toggleVerified = (docId: string) => {
     setVerifiedDocIds((prev) => {
@@ -41,9 +47,18 @@ export default function RegistrationRequestModal({
     });
   };
 
-
-
-
+  const executeAction = (action: PendingAction) => {
+    if (action === "REVIEW") {
+      onStatusChange(request.id, "UNDER_REVIEW");
+    } else if (action === "APPROVE") {
+      onStatusChange(request.id, "APPROVED");
+    } else if (action === "REJECT") {
+      onStatusChange(request.id, "REJECTED", rejectNotes);
+      setShowRejectInput(false);
+      setRejectNotes("");
+    }
+    setPendingAction(null);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -186,11 +201,8 @@ export default function RegistrationRequestModal({
                   Annuler
                 </button>
                 <button
-                  onClick={() => {
-                    onStatusChange(request.id, "REJECTED", rejectNotes);
-                    onClose();
-                  }}
-                  disabled={!rejectNotes.trim()}
+                  onClick={() => setPendingAction("REJECT")}
+                  disabled={!rejectNotes.trim() || isFinalized}
                   className="rounded-lg bg-red-500/90 px-4 py-2 text-sm font-medium text-white transition-colors duration-150 hover:bg-red-500 disabled:opacity-50"
                 >
                   Confirmer le rejet
@@ -200,28 +212,22 @@ export default function RegistrationRequestModal({
           ) : (
             <div className="flex flex-wrap gap-2.5">
               <button
-                onClick={() => {
-                  onStatusChange(request.id, "UNDER_REVIEW");
-                  onClose();
-                }}
-                disabled={request.status === "UNDER_REVIEW"}
+                onClick={() => setPendingAction("REVIEW")}
+                disabled={isFinalized || request.status === "UNDER_REVIEW"}
                 className="rounded-lg border border-blue-400/30 bg-blue-400/10 px-4 py-2 text-sm font-medium text-blue-300 transition-colors duration-150 hover:bg-blue-400/20 disabled:opacity-40"
               >
                 Mettre en examen
               </button>
               <button
-                onClick={() => {
-                  onStatusChange(request.id, "APPROVED");
-                  onClose();
-                }}
-                disabled={request.status === "APPROVED"}
+                onClick={() => setPendingAction("APPROVE")}
+                disabled={isFinalized}
                 className="rounded-lg bg-gold-300 px-4 py-2 text-sm font-medium text-olive-950 transition-colors duration-150 hover:bg-gold-300/90 disabled:opacity-40"
               >
                 Approuver
               </button>
               <button
                 onClick={() => setShowRejectInput(true)}
-                disabled={request.status === "REJECTED"}
+                disabled={isFinalized}
                 className="rounded-lg border border-red-400/30 bg-red-400/10 px-4 py-2 text-sm font-medium text-red-300 transition-colors duration-150 hover:bg-red-400/20 disabled:opacity-40"
               >
                 Rejeter
@@ -230,6 +236,37 @@ export default function RegistrationRequestModal({
           )}
         </div>
       </div>
+
+      {pendingAction === "REVIEW" && (
+        <ConfirmDialog
+          title="Mettre le dossier en examen ?"
+          description="Le dossier passera au statut « En examen ». Vous pourrez toujours l'approuver ou le rejeter par la suite."
+          confirmLabel="Confirmer"
+          onConfirm={() => executeAction("REVIEW")}
+          onCancel={() => setPendingAction(null)}
+        />
+      )}
+
+      {pendingAction === "APPROVE" && (
+        <ConfirmDialog
+          title="Approuver ce dossier ?"
+          description={`Vous êtes sur le point d'approuver le dossier de ${request.company.commName}. Cette action est définitive et ne pourra plus être modifiée.`}
+          confirmLabel="Approuver"
+          onConfirm={() => executeAction("APPROVE")}
+          onCancel={() => setPendingAction(null)}
+        />
+      )}
+
+      {pendingAction === "REJECT" && (
+        <ConfirmDialog
+          title="Rejeter ce dossier ?"
+          description={`Vous êtes sur le point de rejeter le dossier de ${request.company.commName} avec le motif indiqué. Cette action est définitive et ne pourra plus être modifiée.`}
+          confirmLabel="Rejeter"
+          variant="danger"
+          onConfirm={() => executeAction("REJECT")}
+          onCancel={() => setPendingAction(null)}
+        />
+      )}
     </div>
   );
 }

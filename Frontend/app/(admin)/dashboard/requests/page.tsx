@@ -15,14 +15,21 @@ import { useUpdateRequestStatus } from "@/hooks/useUpdateRequestStatus";
 import AdminHeader from "@/components/admin/AdminHeader";
 export default function AdminDashboardPage() {
   const { data: dataRequests, isLoading, isError } = useRequestsRegit();
-  const requests: ApiRegistrationRequest[] = dataRequests?.requests ?? [];
+  const requests: ApiRegistrationRequest[] = useMemo(
+    () => dataRequests?.requests ?? [],
+    [dataRequests]
+  );
 
   const [search, setSearch] = useState("");
   const [searchFields, setSearchFields] = useState<SearchField[]>(["commName", "ownerName"]);
   const [status, setStatus] = useState<RequestStatus | "ALL">("ALL");
   const [month, setMonth] = useState("ALL");
   const [year, setYear] = useState("ALL");
-  const [selected, setSelected] = useState<ApiRegistrationRequest | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selected = useMemo(
+    () => requests.find((r) => r.id === selectedId) ?? null,
+    [requests, selectedId]
+  );
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -115,7 +122,7 @@ export default function AdminDashboardPage() {
                 />
 
                 <div className="mt-5">
-                  <RegistrationRequestsTable requests={filtered} onView={setSelected} />
+                  <RegistrationRequestsTable requests={filtered} onView={(r) => setSelectedId(r.id)} />
                 </div>
               </div>
             </>
@@ -126,7 +133,7 @@ export default function AdminDashboardPage() {
       {selected && (
         <RegistrationRequestModal
           request={selected}
-          onClose={() => setSelected(null)}
+          onClose={() => setSelectedId(null)}
           onStatusChange={handleStatusChange}
           onViewDocument={handleViewDocument}
           onDownloadDocument={handleDownloadDocument}

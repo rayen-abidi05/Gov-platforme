@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -33,7 +34,13 @@ export function RegisterWizard() {
 
   const [stepIndex, setStepIndex] = useState(0);
 
-  const registerMutation = useRegister();
+  const router = useRouter();
+
+  const registerMutation = useRegister({
+    onSuccess: () => {
+      setTimeout(() => router.push("/login"), 1200);
+    },
+  });
 
 
   const methods = useForm<RegisterFormValues>({

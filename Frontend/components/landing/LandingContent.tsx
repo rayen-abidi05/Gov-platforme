@@ -7,6 +7,7 @@ import {
   GitBranch, UserPlus, UploadCloud, BadgeCheck,
 } from "lucide-react";
 import Link from "next/link";
+import { useUser } from "@/hooks/useUser";
 
 /* ---------------- Reveal on scroll ---------------- */
 function useReveal<T extends HTMLElement>() {
@@ -143,6 +144,9 @@ function Aurora() {
 
 /* ---------------- Sections ---------------- */
 function Hero() {
+  const { data: user } = useUser();
+  const isLoggedInExporter = user?.role === "EXPORTER";
+
   return (
     <section className="relative overflow-hidden pt-36 pb-24 md:pt-44 md:pb-32">
       <Aurora />
@@ -178,21 +182,23 @@ function Hero() {
           </Reveal>
 
           <Reveal delay={320}>
-            <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Link
-                href="/register"
-                className="group inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3.5 text-sm font-medium text-olive-950 transition-all hover:scale-[1.03] hover:bg-gold-400 glow-gold"
-              >
-                Devenir exportateur
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-              <Link
-                href="/login"
-                className="inline-flex items-center gap-2 rounded-full border border-gold-500/30 px-6 py-3.5 text-sm font-medium text-cream-50 transition-all hover:border-gold-400 hover:text-gold-300"
-              >
-                Se connecter
-              </Link>
-            </div>
+            {!isLoggedInExporter && (
+              <div className="mt-9 flex flex-wrap items-center gap-3">
+                <Link
+                  href="/register"
+                  className="group inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3.5 text-sm font-medium text-olive-950 transition-all hover:scale-[1.03] hover:bg-gold-400 glow-gold"
+                >
+                  Devenir exportateur
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </Link>
+                <Link
+                  href="/login"
+                  className="inline-flex items-center gap-2 rounded-full border border-gold-500/30 px-6 py-3.5 text-sm font-medium text-cream-50 transition-all hover:border-gold-400 hover:text-gold-300"
+                >
+                  Se connecter
+                </Link>
+              </div>
+            )}
           </Reveal>
 
           <Reveal delay={420}>
@@ -429,6 +435,9 @@ function Trust() {
 }
 
 function FinalCTA() {
+  const { data: user } = useUser();
+  const isLoggedInExporter = user?.role === "EXPORTER";
+
   return (
     <section className="relative overflow-hidden py-28">
       <div className="pointer-events-none absolute inset-0">
@@ -447,15 +456,17 @@ function FinalCTA() {
             simplifiez chaque étape de vos démarches d'exportation.
           </p>
         </Reveal>
-        <Reveal delay={220}>
-          <Link
-            href="/register"
-            className="mt-10 inline-flex items-center gap-2 rounded-full bg-gold-500 px-8 py-4 text-sm font-medium text-olive-950 transition-all hover:scale-[1.03] hover:bg-gold-400 glow-gold"
-          >
-            Créer mon compte exportateur
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </Reveal>
+        {!isLoggedInExporter && (
+          <Reveal delay={220}>
+            <Link
+              href="/register"
+              className="mt-10 inline-flex items-center gap-2 rounded-full bg-gold-500 px-8 py-4 text-sm font-medium text-olive-950 transition-all hover:scale-[1.03] hover:bg-gold-400 glow-gold"
+            >
+              Créer mon compte exportateur
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Reveal>
+        )}
       </div>
     </section>
   );

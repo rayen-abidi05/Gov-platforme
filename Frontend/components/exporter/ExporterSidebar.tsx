@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FileCheck2, Ship, FolderOpen, Building2, Leaf } from "lucide-react";
+import { LayoutDashboard, FileCheck2, Ship, FolderOpen, Building2 } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/espace", label: "Vue d'ensemble", icon: LayoutDashboard },
@@ -18,7 +19,13 @@ export default function ExporterSidebar() {
   return (
     <aside className="hidden w-64 shrink-0 border-r border-cream-50/10 bg-olive-950/60 backdrop-blur-md lg:flex lg:flex-col">
       <div className="flex items-center gap-2.5 px-6 py-6">
-        <Leaf className="h-6 w-6 text-gold-300" />
+        <Image
+          src="/logo-ministere.png"
+          alt="Ministère de l'Agriculture"
+          width={90}
+          height={55}
+          className="h-10 w-auto object-contain"
+        />
         <span className="font-display text-base tracking-wide text-cream-50">MARHP</span>
       </div>
 

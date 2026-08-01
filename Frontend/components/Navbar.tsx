@@ -15,7 +15,6 @@ import { useRouter } from "next/navigation";
 export default function Navbar() {
   const router = useRouter()
   const { data: user, isLoading } = useUser();
-  console.log(user)
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const logoutMutation = useMutation({
@@ -35,9 +34,28 @@ export default function Navbar() {
   const links = [
     { href: "/contact", label: "Contact" },
     { href: "/about", label: "À propos" },
-    { href: "/chaier-de-charge", label: "Cahier de charge" },
+    { href: "/espace", label: "Espace", protected: true },
     { href: "/registration", label: "Demande d'enregistrement" },
   ];
+
+  // "Espace" is the exporter's private dashboard. If the exporter hasn't
+  // been approved by an admin yet, send them to a clear explanation page
+  // instead of letting them hit the (looping) guard inside /espace itself.
+  const handleProtectedNav = (href: string) => {
+    if (href !== "/espace") {
+      router.push(href);
+      return;
+    }
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    if (user.role === "EXPORTER" && user.status !== "APPROVED") {
+      router.push("/not-approved");
+      return;
+    }
+    router.push(href);
+  };
 
   return (
     <header
@@ -54,7 +72,7 @@ export default function Navbar() {
             alt="Ministère de l'Agriculture"
             width={90}
             height={55}
-            className="h-20 w-20 object-contain"
+            className="h-10 w-auto object-contain"
             priority
           />
           <div className="leading-tight">
@@ -67,15 +85,15 @@ export default function Navbar() {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-2 lg:flex">
           {links.map((l) => (
-            <Link
+            <button
               key={l.href}
-              href={l.href}
-              className="text-sm text-cream-100/85 transition-colors hover:text-gold-300"
+              onClick={() => handleProtectedNav(l.href)}
+              className="rounded-full border border-cream-50/10 bg-cream-50/[0.03] px-4 py-2 text-sm text-cream-100/85 transition-all duration-200 hover:border-gold-300/30 hover:bg-gold-300/10 hover:text-gold-300"
             >
               {l.label}
-            </Link>
+            </button>
           ))}
         </nav>
 
@@ -96,14 +114,16 @@ export default function Navbar() {
         <div className="fixed inset-x-0 top-16 bottom-0 z-[999] bg-olive-950 lg:hidden">
           <div className="mx-auto flex h-full max-w-7xl flex-col gap-1 overflow-y-auto px-5 py-6">
             {links.map((l) => (
-              <Link
+              <button
                 key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-3 text-base text-cream-100 hover:bg-olive-800 hover:text-gold-300"
+                onClick={() => {
+                  setOpen(false);
+                  handleProtectedNav(l.href);
+                }}
+                className="rounded-md px-3 py-3 text-left text-base text-cream-100 hover:bg-olive-800 hover:text-gold-300"
               >
                 {l.label}
-              </Link>
+              </button>
             ))}
 
             <div className="mt-4 border-t border-cream-50/10 pt-4">

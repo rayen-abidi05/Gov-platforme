@@ -150,9 +150,17 @@ export function LoginForm() {
         </a>
       </div>
 
-      <Button type="submit" isLoading={mutation.isPending}>
-        {mutation.isPending ? "Connexion en cours..." : "Se connecter"}
-      </Button>
+      <div className="flex items-center gap-3">
+        <Button type="submit" isLoading={mutation.isPending} className="flex-1">
+          {mutation.isPending ? "Connexion en cours..." : "Se connecter"}
+        </Button>
+        <Link
+          href="/"
+          className="inline-flex items-center justify-center rounded-lg border border-cream-50/20 px-4 py-2.5 text-sm font-medium text-cream-50/80 transition-all duration-200 hover:border-gold-300/40 hover:text-gold-300"
+        >
+          Retour à l&apos;accueil
+        </Link>
+      </div>
 
       <div className="mt-6 flex items-center gap-3">
         <span className="h-px flex-1 bg-cream-50/20" />

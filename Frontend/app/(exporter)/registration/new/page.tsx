@@ -1,16 +1,23 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ShieldCheck, Leaf } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ShieldCheck, ArrowLeft, Save } from "lucide-react";
+import { toast } from "sonner";
 import { useSubmitRegistration } from "@/hooks/useSubmitRegistration";
 import { documentsSchema, DocumentsFormValues } from "@/lib/validations/documentsSchema";
 import { getRequiredDocTypes, DOCUMENT_LABELS } from "@/lib/documentConfig";
 import DocumentSlot from "@/components/DocumentSlot";
 import { useCompany } from "@/hooks/useCompany";
 import Image from "next/image";
+import Link from "next/link";
+
+const DRAFT_KEY = "registration-draft-requestText";
 
 export default function RegistrationPage() {  
+  const router = useRouter();
   const { data: company } = useCompany();
   const isRented = company?.company.isRented;
   const isResident = company?.company.isResident;
@@ -22,10 +29,30 @@ export default function RegistrationPage() {
     register,
     handleSubmit,
     setError,
+    setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<DocumentsFormValues>({
     resolver: zodResolver(documentsSchema),
   });
+
+  // Documents (files) can't be persisted across sessions for security
+  // reasons in the browser, but the request text can — so an exporter
+  // can pause mid-way and pick up where they left off.
+  useEffect(() => {
+    const saved = typeof window !== "undefined" ? localStorage.getItem(DRAFT_KEY) : null;
+    if (saved) {
+      setValue("requestText", saved);
+    }
+  }, [setValue]);
+
+  const handleSaveDraft = () => {
+    const values = getValues();
+    if (values.requestText) {
+      localStorage.setItem(DRAFT_KEY, values.requestText);
+    }
+    toast.success("Brouillon enregistré. Vous pouvez revenir plus tard pour continuer.");
+  };
 
   const { mutateAsync, isPending, isError, error } = useSubmitRegistration();
 
@@ -53,6 +80,7 @@ export default function RegistrationPage() {
       }
     }
     await mutateAsync(values);
+    if (typeof window !== "undefined") localStorage.removeItem(DRAFT_KEY);
   };
 
   return (
@@ -69,6 +97,13 @@ export default function RegistrationPage() {
             />
             <span className="font-display text-lg tracking-wide">MARP</span>
           </div>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 rounded-full border border-cream-50/15 px-3.5 py-2 text-sm text-cream-50/80 transition-all duration-200 hover:border-gold-300/30 hover:text-gold-300"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Accueil
+          </Link>
         </div>
 
         <div className="rounded-2xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md p-8 sm:p-10">
@@ -137,13 +172,24 @@ export default function RegistrationPage() {
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={isSubmitting || isPending}
-              className="mt-8 flex w-full items-center justify-center gap-2 rounded-lg bg-gold-300 px-4 py-3 text-sm font-medium text-olive-950 transition-all duration-200 hover:bg-gold-300/90 disabled:opacity-60"
-            >
-              {isPending ? "Envoi en cours..." : "Soumettre la demande"}
-            </button>
+            <div className="mt-8 flex flex-col gap-2.5 sm:flex-row">
+              <button
+                type="button"
+                onClick={handleSaveDraft}
+                disabled={isPending}
+                className="flex items-center justify-center gap-2 rounded-lg border border-cream-50/15 px-4 py-3 text-sm font-medium text-cream-50/80 transition-all duration-200 hover:bg-cream-50/5 disabled:opacity-60 sm:flex-1"
+              >
+                <Save className="h-4 w-4" />
+                Enregistrer le brouillon
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting || isPending}
+                className="flex items-center justify-center gap-2 rounded-lg bg-gold-300 px-4 py-3 text-sm font-medium text-olive-950 transition-all duration-200 hover:bg-gold-300/90 disabled:opacity-60 sm:flex-1"
+              >
+                {isPending ? "Envoi en cours..." : "Soumettre la demande"}
+              </button>
+            </div>
           </form>
 
           <div className="mt-8 flex items-center gap-2 text-xs text-cream-50/50">

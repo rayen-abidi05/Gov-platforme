@@ -1,8 +1,10 @@
 "use client";
 
 
+import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Leaf, CheckCircle2, FileText, RefreshCcw, Plus } from "lucide-react";
+import { CheckCircle2, FileText, RefreshCcw, Plus, ArrowLeft } from "lucide-react";
 import { useMyRegistrationRequests } from "@/hooks/useMyRegistrationRequests";
 import { useModifyDocument } from "@/hooks/useModifyDocument";
 import { getRequiredDocTypes, DOCUMENT_LABELS } from "@/lib/documentConfig";
@@ -66,10 +68,25 @@ export default function RegistrationTrackingPage() {
       <div className="mx-auto max-w-3xl px-6 py-12 sm:px-10 lg:py-16">
         <div className="mb-10 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Leaf className="h-6 w-6 text-gold-300" />
+            <Image
+              src="/logo-ministere.png"
+              alt="Ministère de l'Agriculture"
+              width={90}
+              height={55}
+              className="h-10 w-auto object-contain"
+            />
             <span className="font-display text-lg tracking-wide">MARHP</span>
           </div>
-          <NotificationBell />
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 rounded-full border border-cream-50/15 px-3.5 py-2 text-sm text-cream-50/80 transition-all duration-200 hover:border-gold-300/30 hover:text-gold-300"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Accueil
+            </Link>
+            <NotificationBell />
+          </div>
         </div>
 
         <div className="rounded-2xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md p-8 sm:p-10">

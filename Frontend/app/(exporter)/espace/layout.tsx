@@ -12,7 +12,7 @@ export default function ExporterDashboardLayout({ children }: { children: React.
   console.log(user)
   useEffect(() => {
     if (!isLoading && user && user.status !== "APPROVED") {
-      router.replace("/espace");
+      router.replace("/not-approved");
     }
   }, [isLoading, user, router]);
 

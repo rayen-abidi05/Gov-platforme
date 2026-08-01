@@ -12,10 +12,14 @@ import ExportRequestsTable from "@/components/admin/ExportRequestsTable";
 import ExportRequestModal from "@/components/admin/ExportRequestModal";
 import Spinner from "@/components/ui/spinner";
 
+import { Users } from "lucide-react";
+import CreateInstanceModal from "@/components/admin/CreateInstanceModal";
+
 export default function AdminExportRequestsPage() {
   const { data, isLoading, isError } = useAdminExportRequests();
   const requests: ExportRequest[] = data?.requests ?? [];
-
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [showInstanceModal, setShowInstanceModal] = useState(false);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<ExportRequestStatus | "ALL">("ALL");
   const [month, setMonth] = useState("ALL");
@@ -46,7 +50,6 @@ export default function AdminExportRequestsPage() {
     });
   }, [requests, search, status, month, year]);
 
-  // dedupe AGRIMs by reference for the monitoring section
   const uniqueAgrims = useMemo(() => {
     const map = new Map<string, ExportRequest["agrim"]>();
     requests.forEach((r) => map.set(r.agrim.reference, r.agrim));
@@ -60,6 +63,16 @@ export default function AdminExportRequestsPage() {
     approved: requests.filter((r) => r.status === "APPROVED").length,
     rejected: requests.filter((r) => r.status === "REJECTED").length,
   };
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  };
+
+  const toggleSelectAll = (ids: string[]) => {
+    setSelectedIds((prev) => (ids.every((id) => prev.includes(id)) ? [] : ids));
+  };
+
+  const selectedRequests = requests.filter((r) => selectedIds.includes(r.id));
 
   return (
     <>
@@ -79,7 +92,6 @@ export default function AdminExportRequestsPage() {
           </div>
         ) : (
           <>
-            {/* summary cards */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
               <StatCard label="Total" value={counts.total} accent="text-cream-50" />
               <StatCard label="Envoyées" value={counts.sent} accent="text-cream-50/70" />
@@ -88,12 +100,10 @@ export default function AdminExportRequestsPage() {
               <StatCard label="Rejetées" value={counts.rejected} accent="text-red-300" />
             </div>
 
-            {/* charts */}
             <div className="mt-8">
               <ExportStatsCharts requests={requests} />
             </div>
 
-            {/* AGRIM monitoring */}
             <div className="mt-8">
               <h2 className="text-sm font-medium text-cream-50/90">
                 Suivi des certificats AGRIM
@@ -106,8 +116,23 @@ export default function AdminExportRequestsPage() {
               </div>
             </div>
 
-            {/* filters + table */}
             <div className="mt-8 rounded-2xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md p-5 sm:p-6">
+              {selectedIds.length > 0 && (
+                <div className="mb-4 flex items-center justify-between rounded-xl border border-gold-300/30 bg-gold-300/[0.06] px-5 py-3.5">
+                  <span className="text-sm text-cream-50">
+                    {selectedIds.length} demande{selectedIds.length > 1 ? "s" : ""} sélectionnée
+                    {selectedIds.length > 1 ? "s" : ""}
+                  </span>
+                  <button
+                    onClick={() => setShowInstanceModal(true)}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-gold-300 px-4 py-2 text-xs font-medium text-olive-950 transition-all duration-200 hover:bg-gold-300/90"
+                  >
+                    <Users className="h-3.5 w-3.5" />
+                    Créer une instance
+                  </button>
+                </div>
+              )}
+
               <ExportRequestsFilters
                 search={search}
                 onSearchChange={setSearch}
@@ -119,7 +144,13 @@ export default function AdminExportRequestsPage() {
                 onYearChange={setYear}
               />
               <div className="mt-5">
-                <ExportRequestsTable requests={filtered} onView={setSelected} />
+                <ExportRequestsTable
+                  requests={filtered}
+                  onView={setSelected}
+                  selectedIds={selectedIds}
+                  onToggleSelect={toggleSelect}
+                  onToggleSelectAll={toggleSelectAll}
+                />
               </div>
             </div>
           </>
@@ -131,6 +162,17 @@ export default function AdminExportRequestsPage() {
           request={selected}
           onClose={() => setSelected(null)}
           onStatusChange={handleStatusChange}
+        />
+      )}
+
+      {showInstanceModal && (
+        <CreateInstanceModal
+          selectedRequests={selectedRequests}
+          onClose={() => setShowInstanceModal(false)}
+          onCreated={() => {
+            setShowInstanceModal(false);
+            setSelectedIds([]);
+          }}
         />
       )}
     </>

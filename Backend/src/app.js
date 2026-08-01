@@ -10,6 +10,7 @@ const companyRoute = require("./routes/companyRoute");
 const notifRoute = require("./routes/notifRoute");
 const activityLogRoute = require("./routes/activityLog.routes");
 const ministerRoute = require ("./routes/ministerFormulaire.routes");
+const instanceRoute = require ("./routes/instances");
 const authenticateToken = require('./middleware/authToken');
 
 const app = express();
@@ -31,4 +32,5 @@ app.use("/api/company",companyRoute);
 app.use("/api/notifications",authenticateToken,notifRoute)
 app.use("/api/activity-logs",authenticateToken,activityLogRoute)
 app.use("/api/minister-formulaires",authenticateToken,ministerRoute)
+app.use("/api/instances",instanceRoute)
 module.exports = app;

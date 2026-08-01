@@ -36,7 +36,13 @@ export default function ExporterOverviewPage() {
           />
           <SummaryCard
             label="Catégorie"
-            value={user?.oliveListe === "LISTE_2" ? "Liste 2" : "Liste 1"}
+            value={
+              user?.company
+                ? user.company.oliveListe === "LISTE_2"
+                  ? "Liste 2"
+                  : "Liste 1"
+                : "—"
+          }
             accent="text-blue-300"
           />
           <SummaryCard label="Demandes en attente" value={String(pendingCount)} accent="text-cream-50/70" />

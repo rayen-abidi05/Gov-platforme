@@ -26,7 +26,12 @@ enum RegionStatus {
   AMERICA
   MIDDLE_EAST
 }
-
+enum ExportRequestStatus {
+  SENT
+  UNDER_COMMITTEE_REVIEW
+  APPROVED
+  REJECTED
+}
 enum UserStatus {
   APPROVED
   REJECTED
@@ -46,7 +51,11 @@ enum Role {
   MINISTER  
   INSPA        
 }
-
+enum InspectionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
 enum documenttype {
   RNE
   TAXREALTED
@@ -56,7 +65,10 @@ enum documenttype {
   RENTEDDECLARATION
   CERTIFICATIONOWNERSHIP
   LABDOC
-  MARKETCONTROLDECLARATION   
+  MARKETCONTROLDECLARATION
+  AGRIM              
+  CONTRACT          
+  MINISTERIAL_LETTER 
 }
 
 enum FormulaireStatus {
@@ -100,6 +112,8 @@ model User {
   company       Company?
   notifications Notification[]
   activityLogs  ActivityLog[]
+   instanceMemberships   InstanceMember[]     
+  storageInspections    StorageInspection[] 
 }
 
 // =======================
@@ -159,41 +173,109 @@ model RegistrationRequest {
 
   documents   Document[]
   ministerFormulaire MinisterFormulaire?
-
+   storageInspection StorageInspection?
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 }
+// =======================
+// AGRIM
+// =======================
+// One AGRIM certificate can be consumed progressively by multiple exporters,
+// each submitting their own ExportRequest against the same reference.
+model Agrim {
+  id          String   @id @default(cuid())
+  reference   String   @unique
+  limitKg     Float
 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  exportRequests ExportRequest[]
+}
 // =======================
 // EXPORT REQUEST
 // =======================
 
 model ExportRequest {
-  id                  String         @id @default(cuid())
+  id            String              @id @default(cuid())
 
-  region              RegionStatus
+  client        String
+  requestedKg   Float
 
-  destinationCountry  String
+  status        ExportRequestStatus @default(SENT)
+  notes         String?
 
-  oilType             String
+  submittedAt   DateTime            @default(now())
+  reviewedAt    DateTime?
 
-  quantity            Float
+  companyId     String
+  company       Company             @relation(fields: [companyId], references: [id])
 
-  status              RequestStatus
+  agrimId       String
+  agrim         Agrim               @relation(fields: [agrimId], references: [id])
 
-  notes               String?
+  documents     Document[]
 
-  submittedAt         DateTime       @default(now())
+  instanceId    String?             
+  instance      Instance?           @relation(fields: [instanceId], references: [id])
 
-  companyId           String
-  company             Company        @relation(fields: [companyId], references: [id])
-
-  documents           Document[]
-
-  createdAt           DateTime       @default(now())
-  updatedAt           DateTime       @updatedAt
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
 }
+// =======================
+// INSTANCE — ad-hoc committee reviewing one export request
+// =======================
+// Not a standing body: created fresh per review session, with whichever
+// members actually attended that particular meeting.
+model Instance {
+  id              String    @id @default(cuid())
 
+  meetingDate     DateTime  @default(now())
+
+ 
+  reportFileUrl   String?
+
+  internalNotes   String?   
+  exportRequests  ExportRequest[] 
+  members         InstanceMember[]
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+// =======================
+// STORAGE INSPECTION — INSPA's check during registration (non-resident flow)
+// =======================
+model StorageInspection {
+  id                     String            @id @default(cuid())
+
+  registrationRequestId  String            @unique
+  registrationRequest    RegistrationRequest @relation(fields: [registrationRequestId], references: [id])
+
+  inspectorId            String
+  inspector              User              @relation(fields: [inspectorId], references: [id])
+
+  status                 InspectionStatus  @default(PENDING)
+  notes                  String?
+
+  inspectedAt            DateTime?
+
+  createdAt              DateTime          @default(now())
+  updatedAt               DateTime         @updatedAt
+}
+// =======================
+// INSTANCE MEMBER — who actually attended a given session
+// =======================
+model InstanceMember {
+  id          String   @id @default(cuid())
+
+  instanceId  String
+  instance    Instance @relation(fields: [instanceId], references: [id])
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+}
 // =======================
 // DOCUMENT
 // =======================

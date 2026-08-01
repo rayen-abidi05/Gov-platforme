@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 export default function Navbar() {
   const router = useRouter()
   const { data: user, isLoading } = useUser();
+  console.log(user)
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const logoutMutation = useMutation({

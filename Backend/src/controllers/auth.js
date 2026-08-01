@@ -161,20 +161,37 @@ const registerUser = async (req, res,status=null) => {
 
 const verify = async (req,res) =>{
     try {
-        const user = await prisma.user.findUnique({
-        where: { id: req.user.id },
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            role: true,
-            status : true,
-        },
-        });
+        const basicUser = await prisma.user.findUnique({
+            where: { id: req.user.id },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+                status: true,
+            },
+            });
 
-        if (!user) {
-        return res.status(401).json({ error: "User not found" });
+        if (!basicUser) {
+            return res.status(404).json({ message: "User not found" });
         }
+
+        let user = basicUser;
+
+        if (basicUser.role === "EXPORTER") {
+            user = await prisma.user.findUnique({
+                where: { id: req.user.id },
+                select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+                status: true,
+                company: true,
+                },
+            });
+        }
+      
 
         res.status(200).json(user);
     } catch (error) {

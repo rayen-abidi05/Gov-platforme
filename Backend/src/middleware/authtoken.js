@@ -3,17 +3,17 @@ const { jwtVerify } = require("jose");
 const secretRefresh = new TextEncoder().encode(process.env.SECRET_KEY_REFRESH);
 
 
-const authToken = async (req, res, next) => {
+const authenticateToken = async (req, res, next) => {
     try {
-        console.log("Route reached")
-        const token = req.cookie.tokenRefresh;
-        console.log(token)
+        
+        const token = req.cookies.tokenRefresh;
+ 
         if (!token) {
             return res.status(401).json({
                 error: "No refresh token found"
             });
         }
-        console.log("req.cookies =", req.cookies);
+        
 
         const { payload } = await jwtVerify(token, secretRefresh);
 
@@ -30,4 +30,4 @@ const authToken = async (req, res, next) => {
     }
 };
 
-module.exports = authToken;
+module.exports = authenticateToken;

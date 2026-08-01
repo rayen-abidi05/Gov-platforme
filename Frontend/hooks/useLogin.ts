@@ -7,7 +7,7 @@ import { ROLE_HOME_ROUTE } from "@/lib/auth/roleAccess";
 
 interface LoginResponse {
   id?: string;
-  role: "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER";
+  role: "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER" | "MINISTER" |"INSPA";
   status?: "APPROVED" | "REJECTED";
   name?: string;
   email?: string;

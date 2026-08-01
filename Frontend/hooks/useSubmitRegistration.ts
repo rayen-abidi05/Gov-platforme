@@ -16,7 +16,7 @@ export function useSubmitRegistration() {
       if (note) formData.append("note", note);
 
       const res = await privateApi.post("/api/registration", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+       
       });
       return res.data;
     },

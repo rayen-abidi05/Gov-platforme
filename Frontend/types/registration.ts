@@ -71,7 +71,7 @@ export interface ApiRegistrationRequest {
   company: ApiCompany;
   documents: ApiDocument[];
 }
-export type Role = "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER" | "MINISTER"
+export type Role = "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER" | "MINISTER" | "INSPA";
 
 export interface ApiNotification {
   id: string;

@@ -44,7 +44,7 @@ enum Role {
   OBSERVATOR
   DIWAN_MEMBER
   MINISTER  
-  INSPA_MEMBER      
+  INSPA        
 }
 
 enum documenttype {

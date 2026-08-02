@@ -1,12 +1,13 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { X, Building2, Hash, Globe, FileText } from "lucide-react";
+import { X, Building2, Hash, Globe, FileText, Download, Eye as EyeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ApiMinisterFormulaire } from "@/types/ministerFormulaire";
 import { useReviewFormulaire } from "@/hooks/useMinisterFormulaires";
+import { privateApi } from "@/lib/api/privateApi";
+import { DOCUMENT_LABELS } from "@/lib/documentConfig";
 
 export function FormulaireReviewModal({
   formulaire,
@@ -23,6 +24,7 @@ export function FormulaireReviewModal({
   if (!mounted) return null;
 
   const company = formulaire.registrationRequest.company;
+  const documents = formulaire.registrationRequest.documents;
   const isPendingReview = formulaire.status === "PENDING";
 
   async function handleReview(status: "APPROVED" | "REJECTED") {
@@ -30,9 +32,25 @@ export function FormulaireReviewModal({
     onClose();
   }
 
+  const handleViewDocument = async (docId: string) => {
+    const res = await privateApi.get(`/api/files/${docId}/view`, { responseType: "blob" });
+    const url = URL.createObjectURL(res.data);
+    window.open(url, "_blank");
+  };
+
+  const handleDownloadDocument = async (docId: string) => {
+    const res = await privateApi.get(`/api/files/${docId}/download`, { responseType: "blob" });
+    const url = URL.createObjectURL(res.data);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="w-full max-w-lg rounded-2xl border border-cream-50/10 bg-olive-950 p-6 sm:p-8">
+      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-cream-50/10 bg-olive-950 p-6 sm:p-8">
         <div className="flex items-start justify-between">
           <h2 className="font-display text-xl text-cream-50">Demande ministérielle</h2>
           <button
@@ -71,8 +89,49 @@ export function FormulaireReviewModal({
           </p>
         </div>
 
+        <div className="mt-5">
+          <p className="mb-2 text-xs font-medium text-cream-50/60">
+            Documents du dossier ({documents.length})
+          </p>
+          {documents.length === 0 ? (
+            <p className="text-sm text-cream-50/40">Aucun document disponible.</p>
+          ) : (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {documents.map((doc) => (
+                <div
+                  key={doc.id}
+                  className="flex items-center justify-between gap-2 rounded-lg border border-gold-300/30 bg-gold-300/[0.04] p-3"
+                >
+                  <div className="flex min-w-0 items-center gap-2.5">
+                    <FileText className="h-4 w-4 shrink-0 text-gold-300" />
+                    <span className="truncate text-sm text-cream-50/90">
+                      {DOCUMENT_LABELS[doc.DocType]?.fr ?? doc.fileName}
+                    </span>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-1">
+                    <button
+                      onClick={() => handleViewDocument(doc.id)}
+                      className="rounded-md p-1.5 text-cream-50/60 transition-colors duration-150 hover:bg-cream-50/10 hover:text-gold-300"
+                      title="Aperçu"
+                    >
+                      <EyeIcon className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDownloadDocument(doc.id)}
+                      className="rounded-md p-1.5 text-cream-50/60 transition-colors duration-150 hover:bg-cream-50/10 hover:text-gold-300"
+                      title="Télécharger"
+                    >
+                      <Download className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         {!isPendingReview && formulaire.notes && (
-          <div className="mt-4">
+          <div className="mt-5">
             <p className="mb-1.5 text-xs font-medium text-cream-50/60">Notes de révision</p>
             <p className="rounded-xl border border-cream-50/10 bg-cream-50/[0.02] p-3.5 text-sm text-cream-50/70">
               {formulaire.notes}

@@ -8,7 +8,7 @@ export function useNotifications() {
     queryKey: ["notifications"],
     queryFn: async () => {
       const res = await privateApi.get("/api/notifications");
-      return res.data as { notifications: ApiNotification[] };
+      return res.data;
     },
     staleTime: 1000 * 30 , 
     refetchInterval: 1000 * 30,

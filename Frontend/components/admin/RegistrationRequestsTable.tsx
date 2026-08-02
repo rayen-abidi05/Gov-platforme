@@ -12,9 +12,10 @@ interface Props {
 }
 
 export default function RegistrationRequestsTable({ requests, onView }: Props) {
+  console.log("Rendering RegistrationRequestsTable with requests:", requests);
   return (
-    <div className="overflow-x-auto rounded-xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md">
-      <table className="w-full text-left text-sm">
+    <div className="overflow-x-hidden rounded-xl  border border-cream-50/10 bg-olive-950/40 backdrop-blur-md">
+      <table className="w-full text-left text-sm overflow-y-hidden">
         <thead>
           <tr className="border-b border-cream-50/10 text-xs uppercase tracking-wide text-cream-50/50">
             <th className="px-5 py-3.5 font-medium">Entreprise</th>

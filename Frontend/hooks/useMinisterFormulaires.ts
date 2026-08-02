@@ -17,19 +17,10 @@ export function useMinisterFormulaires(status?: FormulaireStatus | "ALL") {
 
 export function useReviewFormulaire() {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: async ({
-      id,
-      status,
-      notes,
-    }: {
-      id: string;
-      status: "APPROVED" | "REJECTED";
-      notes?: string;
-    }) => {
-      const res = await privateApi.patch(`/api/minister-formulaires/${id}`, { status, notes });
-      return res.data as ApiMinisterFormulaire;
+    mutationFn: async ({ id, status, notes }: { id: string; status: "APPROVED" | "REJECTED"; notes?: string }) => {
+      const res = await privateApi.patch(`/api/minister-formulaires/${id}/review`, { status, notes });
+      return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["minister-formulaires"] });

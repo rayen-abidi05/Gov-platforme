@@ -1,4 +1,4 @@
-
+const express = require("express");
 const router = require("express").Router();
 const { getMinisterFormulaires, reviewMinisterFormulaire } = require("../controllers/ministerFormulaire");
 const checkRole = require("../middleware/checkRole"); 

@@ -104,6 +104,9 @@ const getAllRequestRegis = async(req,res) => {
                         isRented: true,
                         isResident: true,  
                         exportType: true,
+                        rne: true,
+                        activity: true,
+                        nationality: true,
                         user: {
                             select: {
                                 name: true,

@@ -92,7 +92,7 @@ console.log(file)
     },
   });
 
- if (!file) {
+    if (!file) {
       return res.status(403).json({ message: "Access denied" });
     }
 

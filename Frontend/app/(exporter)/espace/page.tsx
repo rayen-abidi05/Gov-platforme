@@ -82,14 +82,14 @@ export default function ExporterOverviewPage() {
               {recent.map((r) => (
                 <Link
                   key={r.id}
-                  href={`/dashboard/exports/${r.id}`}
+                  href={`/espace/exports/${r.id}`}
                   className="flex items-center justify-between gap-3 py-3 transition-colors duration-150 hover:bg-cream-50/[0.02]"
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium text-cream-50">{r.client}</p>
-                    <p className="text-xs text-cream-50/50">
-                      AGRIM {r.agrim.reference} · {r.agrim.requestedKg} kg
-                    </p>
+                   <p className="text-xs text-cream-50/50">
+                     AGRIM {r.agrim?.reference ?? r.agrimReference} · {r.requestedKg} kg
+                  </p>
                   </div>
                   <ExportStatusBadge status={r.status} />
                 </Link>

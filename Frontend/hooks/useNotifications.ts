@@ -10,6 +10,8 @@ export function useNotifications() {
       const res = await privateApi.get("/api/notifications");
       return res.data as { notifications: ApiNotification[] };
     },
+    staleTime: 1000 * 30 , 
+    refetchInterval: 1000 * 30,
   });
 }
 
@@ -20,7 +22,7 @@ export function useMarkNotificationRead() {
     mutationFn: async (id: string) => {
       const res = await privateApi.put(`/api/notifications/${id}/read`);
       return res.data;
-      return []
+      
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notifications"] });

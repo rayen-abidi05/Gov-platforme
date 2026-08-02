@@ -6,7 +6,8 @@ import { ApiRegistrationRequest, RequestStatus } from "@/types/registration";
 import { DOCUMENT_LABELS, getRequiredDocTypes } from "@/lib/documentConfig";
 import StatusBadge from "./StatusBadge";
 import ConfirmDialog from "@/components/ui/confirm-dialog";
-
+import { useAssignToInspa } from "@/hooks/useAssignToInspa";
+import { Send } from "lucide-react";
 interface Props {
   request: ApiRegistrationRequest;
   onClose: () => void;
@@ -30,11 +31,16 @@ export default function RegistrationRequestModal({
   const [verifiedDocIds, setVerifiedDocIds] = useState<Set<string>>(new Set());
   const [pendingAction, setPendingAction] = useState<PendingAction>(null);
 
-  const requiredTypes = getRequiredDocTypes(request.company.isRented);
+  const requiredTypes = getRequiredDocTypes(request.company.isRented, request.company.isResident);
   const uploadedMap = new Map(request.documents.map((d) => [d.DocType, d]));
 
   const isFinalized = request.status === "APPROVED" || request.status === "REJECTED";
+  const { mutate: assignToInspa, isPending: isAssigning } = useAssignToInspa();
+  console.log(request)
+  const showAssignInspaButton =
+    request.ministerFormulaire?.status === "APPROVED" && !request.storageInspection;
 
+  const inspectionAlreadyAssigned = !!request.storageInspection;
   const toggleVerified = (docId: string) => {
     setVerifiedDocIds((prev) => {
       const next = new Set(prev);
@@ -90,7 +96,7 @@ export default function RegistrationRequestModal({
           </span>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 rounded-lg border border-cream-50/10 bg-cream-50/[0.03] p-4 text-sm sm:grid-cols-3">
+        <div className="mt-5 grid grid-cols-2 gap-3 rounded-lg border border-cream-50/10 bg-cream-50/[0.03] p-4 text-sm sm:grid-cols-4">
           <div>
             <p className="text-xs text-cream-50/50">Matricule fiscal</p>
             <p className="text-cream-50">{request.company.matFisc}</p>
@@ -103,6 +109,10 @@ export default function RegistrationRequestModal({
             <p className="text-xs text-cream-50/50">Statut du local</p>
             <p className="text-cream-50">{request.company.isRented ? "Loué" : "Propriété"}</p>
           </div>
+          <div>
+            <p className="text-xs text-cream-50/50">Statut du résident</p>
+            <p className="text-cream-50">{request.company.isResident ? "Résident" : "Non-résident"}</p>
+          </div>
         </div>
 
         {request.status === "REJECTED" && request.notes && (
@@ -111,7 +121,34 @@ export default function RegistrationRequestModal({
             <p className="mt-1 text-cream-50/70">{request.notes}</p>
           </div>
         )}
+        {request.ministerFormulaire?.status === "APPROVED" && (
+  <div className="mt-4 rounded-lg border border-blue-400/30 bg-blue-950/20 p-4">
+    <p className="text-sm font-medium text-blue-300">Formulaire ministériel approuvé</p>
+    <p className="mt-1 text-sm text-cream-50/70">
+      Le Ministre a approuvé le dossier de {request.company.commName}.
+      {inspectionAlreadyAssigned
+        ? " Une inspection a déjà été assignée à l'INSPA."
+        : " Veuillez contacter l'INSPA pour la suite."}
+    </p>
 
+      {showAssignInspaButton && (
+          <button
+            onClick={() => assignToInspa(request.id)}
+            disabled={isAssigning}
+            className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-blue-500/90 px-4 py-2 text-sm font-medium text-white transition-colors duration-150 hover:bg-blue-500 disabled:opacity-50"
+          >
+            <Send className="h-3.5 w-3.5" />
+            {isAssigning ? "Envoi en cours..." : "Envoyer à l'INSPA"}
+          </button>
+        )}
+
+        {inspectionAlreadyAssigned && (
+          <div className="mt-2 flex items-center gap-1.5 text-xs text-cream-50/50">
+            Statut de l'inspection : <StatusBadge status={request.storageInspection!.status} />
+          </div>
+        )}
+      </div>
+    )}
         <h3 className="mt-6 text-sm font-medium text-cream-50/90">
           Documents ({request.documents.length}/{requiredTypes.length})
           {request.documents.length > 0 && (

@@ -108,6 +108,7 @@ CREATE TABLE "ExportRequest" (
     "id" TEXT NOT NULL,
     "client" TEXT NOT NULL,
     "requestedKg" DOUBLE PRECISION NOT NULL,
+    "agrimReference" TEXT NOT NULL,
     "status" "ExportRequestStatus" NOT NULL DEFAULT 'SENT',
     "notes" TEXT,
     "submittedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

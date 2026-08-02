@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, FileCheck2, Users, Settings, Ship, ClipboardCheck } from "lucide-react";
+import { LayoutDashboard, FileCheck2, Users, Settings,ShieldCheck , Ship, ClipboardCheck } from "lucide-react";
 import {LogOut } from "lucide-react";
 import { privateApi } from "@/lib/api/privateApi";
 
@@ -13,8 +13,10 @@ const NAV_ITEMS = [
   { href: "/dashboard/requests", label: "Demandes d'inscription", icon: FileCheck2 },
   { href: "/dashboard/exporters", label: "Exportateurs", icon: Users },
   { href: "/dashboard/export-requests", label: "Demandes d'exportation", icon: Ship },
-  { href: "/dashboard/inspections", label: "Inspections", icon: ClipboardCheck },
+  
+  { href: "/dashboard/inspections", label: "Inspections", icon: ShieldCheck },
   { href: "/dashboard/settings", label: "Paramètres", icon: Settings },
+
 ];
 
 export default function AdminSidebar() {

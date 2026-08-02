@@ -1,20 +1,16 @@
 "use client";
 
-import { useState } from "react";
 import { useInspections } from "@/hooks/useInspections";
-import { ApiInspection } from "@/types/inspection";
 import InspaHeader from "@/components/inspa/InspaHeader";
 import InspectionsTable from "@/components/inspa/InspectionsTable";
-import DecideInspectionModal from "@/components/inspa/DecideInspectionModal";
 import Spinner from "@/components/ui/spinner";
 
-export default function AssignedInspectionsPage() {
-  const { data, isLoading, isError } = useInspections("assigned");
-  const [selected, setSelected] = useState<ApiInspection | null>(null);
+export default function InspectionHistoryPage() {
+  const { data, isLoading, isError } = useInspections("history");
 
   return (
     <>
-      <InspaHeader title="Inspections assignées" subtitle="Assignées, pas encore décidées" />
+      <InspaHeader title="Historique" subtitle="Toutes vos inspections" />
 
       <main className="mx-auto max-w-5xl px-6 py-8 sm:px-10">
         {isLoading ? (
@@ -28,13 +24,10 @@ export default function AssignedInspectionsPage() {
         ) : (
           <InspectionsTable
             inspections={data?.inspections ?? []}
-            emptyMessage="Aucune inspection assignée pour le moment."
-            onDecide={setSelected}
+            emptyMessage="Aucune inspection dans votre historique."
           />
         )}
       </main>
-
-      {selected && <DecideInspectionModal inspection={selected} onClose={() => setSelected(null)} />}
     </>
   );
 }

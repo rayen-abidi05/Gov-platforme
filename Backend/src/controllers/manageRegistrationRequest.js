@@ -102,8 +102,8 @@ const getAllRequestRegis = async(req,res) => {
                         matFisc: true,
                         governorate: true,
                         isRented: true,
-                        rne : true,
-                        exportType : true,
+                        isResident: true,  
+                        exportType: true,
                         user: {
                             select: {
                                 name: true,
@@ -113,6 +113,16 @@ const getAllRequestRegis = async(req,res) => {
                     },
                 },
                 documents: true,
+                ministerFormulaire: {
+                    select: {
+                        status: true,
+                    },
+                },
+                storageInspection: {
+                    select: {
+                        status: true,
+                    },
+                },
             },
             orderBy: {
                 createdAt: "desc",
@@ -135,6 +145,7 @@ const getAllRequestRegis = async(req,res) => {
 
 const addRequest = async (req, res) => {
     try {
+        console.log("Controller reached");
         const user = req.user;
         const { note = "", requestText } = req.body;
 
@@ -247,7 +258,7 @@ const updateRequestStatus = async (req, res) => {
         status === "APPROVED"
           ? "Votre compte exportateur a été approuvé. Vous pouvez maintenant vous connecter."
           : `Le statut de votre demande de révision a été mis à jour : ${status}.`,
-      read: false,
+      isRead: false,
     },
   });
 

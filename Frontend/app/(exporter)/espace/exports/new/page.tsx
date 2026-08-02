@@ -5,25 +5,30 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Upload, FileText } from "lucide-react";
 import { useCreateExportRequest } from "@/hooks/useCreateExportRequest";
-import { exportRequestSchema, ExportRequestFormValues } from "@/lib/validations/exportRequest";
-import ExporterHeader from "@/components/exporter/ExporterHeader";
 
+import ExporterHeader from "@/components/exporter/ExporterHeader";
+import { ExportRequestFormInput, ExportRequestFormValues, exportRequestSchema } from "@/lib/validations/exportRequest";
 export default function NewExportRequestPage() {
   const router = useRouter();
+  
+
+
+
   const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<ExportRequestFormValues>({
-    // resolver: zodResolver(exportRequestSchema),
-  });
+  control,
+  register,
+  handleSubmit,
+  formState: { errors, isSubmitting },
+} = useForm<ExportRequestFormInput, any, ExportRequestFormValues>({
+  resolver: zodResolver(exportRequestSchema),
+});
 
   const { mutateAsync, isPending, isError } = useCreateExportRequest();
 
+
   const onSubmit = async (values: ExportRequestFormValues) => {
     await mutateAsync(values);
-    router.push("/dashboard/exports");
+    router.push("/espace/exports");
   };
 
   return (

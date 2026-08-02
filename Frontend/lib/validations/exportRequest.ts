@@ -19,4 +19,7 @@ export const exportRequestSchema = z.object({
   ministerialLetterFile: fileSchema,
 });
 
-export type ExportRequestFormValues = z.infer<typeof exportRequestSchema>;
+export type ExportRequestFormInput = z.input<typeof exportRequestSchema>;
+
+
+export type ExportRequestFormValues = z.output<typeof exportRequestSchema>;

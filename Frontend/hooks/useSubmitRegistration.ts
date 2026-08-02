@@ -9,11 +9,22 @@ export function useSubmitRegistration() {
     mutationFn: async (values: DocumentsFormValues & { note?: string }) => {
       const formData = new FormData();
 
-      const { note, ...docs } = values;
-      Object.entries(docs).forEach(([docType, file]) => {
-        if (file) formData.append(docType, file as File);
+  const { note, requestText, ...docs } = values;
+
+  Object.entries(docs).forEach(([docType, file]) => {
+    if (file instanceof File) {
+      formData.append(docType, file);
+        }
       });
-      if (note) formData.append("note", note);
+
+      if (note) {
+        formData.append("note", note);
+      }
+
+      if (requestText) {
+        formData.append("requestText", requestText);
+      }
+
 
       const res = await privateApi.post("/api/registration", formData, {
        

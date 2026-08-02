@@ -36,9 +36,7 @@ export default function RegistrationPage() {
     resolver: zodResolver(documentsSchema),
   });
 
-  // Documents (files) can't be persisted across sessions for security
-  // reasons in the browser, but the request text can — so an exporter
-  // can pause mid-way and pick up where they left off.
+
   useEffect(() => {
     const saved = typeof window !== "undefined" ? localStorage.getItem(DRAFT_KEY) : null;
     if (saved) {

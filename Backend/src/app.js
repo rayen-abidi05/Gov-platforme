@@ -11,6 +11,8 @@ const notifRoute = require("./routes/notifRoute");
 const activityLogRoute = require("./routes/activityLog.routes");
 const ministerRoute = require ("./routes/ministerFormulaire.routes");
 const instanceRoute = require ("./routes/instances");
+const inspecRoute = require("./routes/inspections"); 
+const exportRequestsRoute = require("./routes/export-requests");
 const authenticateToken = require('./middleware/authToken');
 
 const app = express();
@@ -33,4 +35,6 @@ app.use("/api/notifications",authenticateToken,notifRoute)
 app.use("/api/activity-logs",authenticateToken,activityLogRoute)
 app.use("/api/minister-formulaires",authenticateToken,ministerRoute)
 app.use("/api/instances",instanceRoute)
+app.use("/api/inspections",inspecRoute)
+app.use("/api/export-requests",exportRequestsRoute)
 module.exports = app;

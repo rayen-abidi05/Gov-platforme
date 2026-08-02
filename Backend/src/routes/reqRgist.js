@@ -5,6 +5,7 @@ const router = express.Router();
 const {getApprovedExporters, getRequestRegis , updateRequestStatus , getAllRequestRegis, getRequestRegisByIdAdmin , getRequestRegisById , addRequest } = require('../controllers/manageRegistrationRequest');
 const authenticateToken = require('../middleware/authToken');
 const adminCheck = require ("../middleware/adminCheck")
+const { assignToInspa,getAssignedInspections } = require("../controllers/storageInspectionController");
 const checkRole = require ("../middleware/checkRole")
 const upload = require ("../middleware/upload")
 router.get("/exporters",authenticateToken,checkRole(["ADMIN","DIWAN_MEMBER"]),getApprovedExporters);
@@ -30,6 +31,7 @@ router.post(
 );
 router.post("/updateStatus/:id",authenticateToken,adminCheck,updateRequestStatus)
 
-
+router.post("/:id/assign-inspa", authenticateToken, checkRole("ADMIN"), assignToInspa);
+router.get("/inspections/assigned", authenticateToken, checkRole("INSPA"), getAssignedInspections);
 
 module.exports = router;

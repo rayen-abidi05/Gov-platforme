@@ -63,17 +63,22 @@ export default function CreateInstanceModal({ selectedRequests, onClose, onCreat
           </button>
         </div>
 
-        {/* summary of selected requests */}
+        
         <div className="mt-5 space-y-1.5 rounded-lg border border-cream-50/10 bg-cream-50/[0.03] p-3.5">
-          {selectedRequests.map((r) => (
-            <div key={r.id} className="flex items-center justify-between text-xs">
-              <span className="text-cream-50/80">{r.client}</span>
-              <span className="text-cream-50/50">AGRIM {r.agrim.reference} · {r.agrim.requestedKg.toLocaleString("fr-FR")} kg</span>
-            </div>
+            {selectedRequests.map((r) => (
+              <div key={r.id} className="flex items-center justify-between text-xs">
+                <span className="text-cream-50/80">
+                  {r.client}
+                </span>
+
+                <span className="text-cream-50/50">
+                  AGRIM {r.agrimReference} · {r.requestedKg.toLocaleString("fr-FR")} kg
+                </span>
+              </div>
           ))}
         </div>
 
-        {/* meeting date */}
+
         <div className="mt-5">
           <label className="text-sm font-medium text-cream-50/90">Date de la réunion</label>
           <input

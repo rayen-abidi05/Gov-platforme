@@ -70,6 +70,12 @@ export interface ApiRegistrationRequest {
   updatedAt: string;
   company: ApiCompany;
   documents: ApiDocument[];
+   ministerFormulaire?: {
+    status: "PENDING" | "APPROVED" | "REJECTED";
+  } | null;
+  storageInspection?: {
+    status: "PENDING" | "APPROVED" | "REJECTED";
+  } | null;
 }
 export type Role = "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER" | "MINISTER" | "INSPA"
 

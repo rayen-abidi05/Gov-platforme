@@ -1,14 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { MOCK_EXPORT_REQUESTS } from "@/lib/mockData/exportRequests";
+import { privateApi } from "@/lib/api/privateApi";
 import { ExportRequest } from "@/types/exportRequest";
-
 
 export function useExportRequests() {
   return useQuery({
     queryKey: ["export-requests"],
     queryFn: async (): Promise<{ requests: ExportRequest[] }> => {
-      
-      return { requests: MOCK_EXPORT_REQUESTS };
+      const res = await privateApi.get("/api/export-requests/my-requests");
+      return res.data;
     },
   });
 }
@@ -16,10 +15,15 @@ export function useExportRequests() {
 export function useExportRequest(id: string) {
   return useQuery({
     queryKey: ["export-requests", id],
-    queryFn: async (): Promise<ExportRequest | undefined> => {
-      
-      return MOCK_EXPORT_REQUESTS.find((r) => r.id === id);
+
+    queryFn: async (): Promise<ExportRequest> => {
+      const res = await privateApi.get(
+        `/api/export-requests/my-requests/${id}`
+      );
+
+      return res.data.request; 
     },
+
     enabled: !!id,
   });
 }

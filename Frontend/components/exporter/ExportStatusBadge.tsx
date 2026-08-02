@@ -7,10 +7,19 @@ const STYLES: Record<ExportRequestStatus, string> = {
   REJECTED: "bg-red-400/10 text-red-300 border-red-400/30",
 };
 
-export default function ExportStatusBadge({ status }: { status: ExportRequestStatus }) {
+export default function ExportStatusBadge({
+  status,
+}: {
+  status: ExportRequestStatus;
+}) {
+
   return (
-    <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium ${STYLES[status]}`}>
-      {EXPORT_STATUS_LABELS[status].fr}
+    <span
+      className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium ${
+        STYLES[status] ?? "bg-gray-400/10 text-gray-300 border-gray-400/30"
+      }`}
+    >
+      {EXPORT_STATUS_LABELS[status]?.fr ?? status}
     </span>
   );
 }

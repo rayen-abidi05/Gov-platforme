@@ -38,7 +38,7 @@ export function RegisterWizard() {
 
   const registerMutation = useRegister({
     onSuccess: () => {
-      setTimeout(() => router.push("/login"), 1200);
+      router.push("/login");
     },
   });
 

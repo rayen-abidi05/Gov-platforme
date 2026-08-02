@@ -38,7 +38,7 @@ export default function AdminExportRequestsPage() {
       const matchesSearch =
         q === "" ||
         r.client.toLowerCase().includes(q) ||
-        r.agrim.reference.toLowerCase().includes(q);
+        r.agrimReference.toLowerCase().includes(q);
 
       const matchesStatus = status === "ALL" || r.status === status;
 
@@ -51,10 +51,16 @@ export default function AdminExportRequestsPage() {
   }, [requests, search, status, month, year]);
 
   const uniqueAgrims = useMemo(() => {
-    const map = new Map<string, ExportRequest["agrim"]>();
-    requests.forEach((r) => map.set(r.agrim.reference, r.agrim));
-    return Array.from(map.values());
-  }, [requests]);
+      const map = new Map<string, NonNullable<ExportRequest["agrim"]>>();
+
+      requests.forEach((r) => {
+        if (r.agrim) {
+          map.set(r.agrim.reference, r.agrim);
+        }
+      });
+
+      return Array.from(map.values());
+    }, [requests]);
 
   const counts = {
     total: requests.length,

@@ -1,5 +1,8 @@
+"use client";
+
+import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { Building2, Hash, FileText, MapPin, Phone, FlaskConical } from "lucide-react";
+import { Building2, Hash, FileText, MapPin, Phone, FlaskConical, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { SegmentedToggle } from "@/components/ui/segmented-toggle";
@@ -14,11 +17,18 @@ export function StepCompany() {
     register,
     control,
     watch,
+    setValue,
     formState: { errors },
   } = useFormContext<RegisterFormValues>();
 
   const activity = watch("activity");
+  const isResident = watch("isResident");
 
+  useEffect(() => {
+    if (isResident === false) {
+      setValue("exportType", false, { shouldValidate: true, shouldDirty: true });
+    }
+  }, [isResident, setValue]);
   return (
     <div>
       <h3 className="font-display text-xl text-cream-50">
@@ -338,29 +348,36 @@ export function StepCompany() {
           {errors.labName && (
             <p className="mt-1.5 text-xs text-red-300">{errors.labName.message}</p>
           )}
-         <div >
-          <BilingualLabel fr="Type d'exportation" ar="نوع التصدير" required />
-          <Controller
-            name="exportType"
-            control={control}
-            render={({ field }) => (
-              <SegmentedToggle
-                value={field.value}
-                onChange={field.onChange}
-                hasError={!!errors.exportType}
-                options={[
-                  { value: false, fr: "Conditionnée", ar: "معلب" },
-                  { value: true, fr: "En vrac", ar: "ميع الأنواع" },
-                ]}
-              />
+
+          <div className="mt-5">
+            <BilingualLabel fr="Type d'exportation" ar="نوع التصدير" required />
+            <Controller
+              name="exportType"
+              control={control}
+              render={({ field }) => (
+                <SegmentedToggle
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={isResident === false}
+                  hasError={!!errors.exportType}
+                  options={[
+                    { value: false, fr: "Conditionnée", ar: "معلب" },
+                    { value: true, fr: "En vrac", ar: "جميع الأنواع" },
+                  ]}
+                />
+              )}
+            />
+            {isResident === false && (
+              <p className="mt-1.5 flex items-start gap-1.5 text-xs text-cream-50/60">
+                <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold-300" />
+                Les entreprises non-résidentes ne peuvent exporter que de l&apos;huile
+                conditionnée (≤ 5 litres).
+              </p>
             )}
-          />
-          {errors.exportType && (
-            <p className="mt-1.5 text-xs text-red-300">
-              {errors.exportType.message}
-            </p>
-          )}
-        </div>
+            {errors.exportType && (
+              <p className="mt-1.5 text-xs text-red-300">{errors.exportType.message}</p>
+            )}
+          </div>
         </div>
       </div>
     </div>

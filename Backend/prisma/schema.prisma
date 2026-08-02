@@ -201,7 +201,7 @@ model ExportRequest {
 
   client        String
   requestedKg   Float
-
+  agrimReference String  
   status        ExportRequestStatus @default(SENT)
   notes         String?
 
@@ -211,8 +211,8 @@ model ExportRequest {
   companyId     String
   company       Company             @relation(fields: [companyId], references: [id])
 
-  agrimId       String
-  agrim         Agrim               @relation(fields: [agrimId], references: [id])
+  agrimId       String?
+  agrim         Agrim?              @relation(fields: [agrimId], references: [id])
 
   documents     Document[]
 
@@ -297,6 +297,7 @@ model Document {
   exportRequestId String?
   exportRequest   ExportRequest? @relation(fields: [exportRequestId], references: [id])
 }
+
 
 // =======================
 // NOTIFICATION

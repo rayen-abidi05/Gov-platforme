@@ -16,7 +16,7 @@ export default function ExportRequestsPage() {
       <ExporterHeader title="Mes exportations" subtitle="Demandes d'exportation dans le cadre du contingent" />
 
       <main className="mx-auto max-w-6xl px-6 py-8 sm:px-10">
-        {/* outside-quota informational badge */}
+        
         <div className="mb-6 flex items-start gap-3 rounded-xl border border-blue-400/20 bg-blue-400/[0.04] px-5 py-4">
           <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-blue-300" />
           <div>
@@ -37,7 +37,7 @@ export default function ExportRequestsPage() {
             <span className="ml-1.5 text-xs text-cream-50/50">داخل الحصة</span>
           </h2>
           <Link
-            href="/dashboard/exports/new"
+            href="/espace/exports/new"
             className="inline-flex items-center gap-1.5 rounded-lg bg-gold-300 px-4 py-2 text-sm font-medium text-olive-950 transition-all duration-200 hover:bg-gold-300/90"
           >
             <Plus className="h-4 w-4" />
@@ -70,11 +70,11 @@ export default function ExportRequestsPage() {
                   <tr
                     key={r.id}
                     className="cursor-pointer border-b border-cream-50/5 last:border-0 transition-colors duration-150 hover:bg-cream-50/[0.02]"
-                    onClick={() => (window.location.href = `/dashboard/exports/${r.id}`)}
+                    onClick={() => (window.location.href = `/espace/exports/${r.id}`)}
                   >
                     <td className="px-5 py-4 font-medium text-cream-50">{r.client}</td>
-                    <td className="px-5 py-4 text-cream-50/70">{r.agrim.reference}</td>
-                    <td className="px-5 py-4 text-cream-50/70">{r.agrim.requestedKg} kg</td>
+                    <td className="px-5 py-4 text-cream-50/70">{r.agrim?.reference}</td>
+                    <td className="px-5 py-4 text-cream-50/70">{r.requestedKg} kg</td>
                     <td className="px-5 py-4 text-cream-50/70">
                       {new Date(r.submittedAt).toLocaleDateString("fr-FR", {
                         day: "2-digit",

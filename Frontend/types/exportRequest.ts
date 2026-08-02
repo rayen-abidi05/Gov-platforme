@@ -5,12 +5,12 @@ export type ExportRequestStatus =
   | "REJECTED";               
 
 export interface AgrimInfo {
-  reference: string;  
-  limitKg: number;     
-  consumedKg: number;  
-  requestedKg: number; 
+  id:string;
+  reference:string;
+  limitKg:number;
+  consumedKg:number;
+  remainingKg:number;
 }
-
 export interface ExportRequestDocument {
   id: string;
   label: "AGRIM" | "CONTRACT" | "MINISTERIAL_LETTER";
@@ -18,19 +18,32 @@ export interface ExportRequestDocument {
   fileUrl: string;
 }
 
+
+
 export interface ExportRequest {
   id: string;
   client: string;
-  agrim: AgrimInfo;
+  agrimReference: string;
+  requestedKg: number;
+  agrim: AgrimInfo | null; 
   documents: ExportRequestDocument[];
   status: ExportRequestStatus;
   submittedAt: string;
-
 }
+export const EXPORT_STATUS_LABELS = {
+  SENT: {
+    fr: "Envoyée",
+  },
 
-export const EXPORT_STATUS_LABELS: Record<ExportRequestStatus, { fr: string; ar: string }> = {
-  SENT: { fr: "Envoyée", ar: "أرسلت" },
-  UNDER_COMMITTEE_REVIEW: { fr: "Examen par l'instance", ar: "قيد نظر الهيئة" },
-  APPROVED: { fr: "Approuvée", ar: "موافق عليها" },
-  REJECTED: { fr: "Rejetée", ar: "مرفوضة" },
-};
+  UNDER_COMMITTEE_REVIEW: {
+    fr: "En examen par l'instance",
+  },
+
+  APPROVED: {
+    fr: "Approuvée",
+  },
+
+  REJECTED: {
+    fr: "Rejetée",
+  },
+} as const;

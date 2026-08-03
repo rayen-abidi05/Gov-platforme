@@ -6,7 +6,12 @@ export interface InstanceMemberDetail {
     role: string;
   };
 }
-
+export interface CommitteeMember {
+  id:string;
+  name:string;
+  email:string;
+  role:"COMMITTEE_MEMBER";
+}
 export interface InstanceExportRequestSummary {
   id: string;
   client: string;
@@ -18,9 +23,19 @@ export interface InstanceExportRequestSummary {
 export interface AdminInstance {
   id: string;
   meetingDate: string;
-  reportFileUrl?: string | null;
   internalNotes?: string | null;
+
+  reportDocument?: {
+    id: string;
+    fileName: string;
+    fileType: string;
+    fileUrl: string;
+    size: number;
+  } | null;
+
   members: InstanceMemberDetail[];
+
   exportRequests: InstanceExportRequestSummary[];
+
   createdAt: string;
 }

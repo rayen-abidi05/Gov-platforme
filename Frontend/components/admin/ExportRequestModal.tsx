@@ -46,7 +46,7 @@ export default function ExportRequestModal({
       window.open(url, "_blank");
     };
   
-
+    console.log("request", request);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -217,7 +217,7 @@ export default function ExportRequestModal({
                 <FileText className="h-4 w-4 shrink-0 text-gold-300" />
 
                 <span className="truncate text-sm text-cream-50/90">
-                  {DOC_LABELS[doc.label]}
+                  {DOC_LABELS[doc.DocType]}
                 </span>
 
               </div>

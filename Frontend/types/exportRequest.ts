@@ -13,7 +13,7 @@ export interface AgrimInfo {
 }
 export interface ExportRequestDocument {
   id: string;
-  label: "AGRIM" | "CONTRACT" | "MINISTERIAL_LETTER";
+  DocType: "AGRIM" | "CONTRACT" | "MINISTERIAL_LETTER";
   fileName: string;
   fileUrl: string;
 }

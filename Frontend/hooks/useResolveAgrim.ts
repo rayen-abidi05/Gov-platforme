@@ -1,5 +1,6 @@
 import { privateApi } from "@/lib/api/privateApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export function useResolveAgrim() {
   const queryClient = useQueryClient();
@@ -23,9 +24,18 @@ export function useResolveAgrim() {
     },
 
     onSuccess: () => {
+      toast.success("AGRIM résolu avec succès.");
+
       queryClient.invalidateQueries({
         queryKey: ["admin-export-requests"],
       });
+    },
+
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message ||
+        "Une erreur est survenue lors de la résolution de l'AGRIM."
+      );
     },
   });
 }

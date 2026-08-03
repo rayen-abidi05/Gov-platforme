@@ -4,26 +4,14 @@ import LandingContent from "@/components/landing/LandingContent"
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
-  ShieldCheck,
+ 
   Lock,
-  Server,
-  ArrowRight,
-  Clock,
-  MessageSquareWarning,
-  EyeOff,
-  Activity,
-  FileText,
-  BellRing,
-  GitBranch,
-  UserPlus,
-  UploadCloud,
-  BadgeCheck,
+ 
   Mail,
   Phone,
   MapPin,
 
-  Menu,
-  X,
+ 
 } from "lucide-react";
 
 

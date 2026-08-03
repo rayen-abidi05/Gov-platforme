@@ -21,7 +21,7 @@ export default function ExportRequestsTable({
 }: Props) {
 
   const selectable = requests.filter(
-    (r) => r.status === "SENT"
+    (r) => r.status === "SENT" 
   );
 
   const allSelectableSelected =

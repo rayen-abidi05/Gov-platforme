@@ -44,6 +44,7 @@ export default function CreateInstanceModal({ selectedRequests, onClose, onCreat
     onCreated();
   };
 
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-cream-50/10 bg-olive-950 p-6 sm:p-8">
@@ -89,7 +90,7 @@ export default function CreateInstanceModal({ selectedRequests, onClose, onCreat
           />
         </div>
 
-        {/* members */}
+      
         <div className="mt-5">
           <label className="flex items-center gap-1.5 text-sm font-medium text-cream-50/90">
             <Users className="h-4 w-4 text-gold-300" />
@@ -111,19 +112,21 @@ export default function CreateInstanceModal({ selectedRequests, onClose, onCreat
                       onChange={() => toggleMember(m.id)}
                       className="h-3.5 w-3.5 rounded border-cream-50/30 bg-cream-50/[0.03] accent-gold-300"
                     />
-                    <span className="text-sm text-cream-50">{m.user.name}</span>
+                    <span className="text-sm text-cream-50">{m.name}</span>
                   </div>
-                  <span className="text-xs text-cream-50/50">{ROLE_LABELS[m.user.role]}</span>
+                  <span className="text-xs text-cream-50/50">Membre de commission</span>
                 </label>
               ))}
             </div>
           )}
-          {selectedMemberIds.length === 0 && (
-            <p className="mt-1.5 text-xs text-red-400">Sélectionnez au moins un membre.</p>
-          )}
+         {!loadingMembers && selectedMemberIds.length === 0 && (
+          <p className="mt-1.5 text-xs text-red-400">
+            Sélectionnez au moins un membre.
+          </p>
+        )}
         </div>
 
-        {/* optional report file */}
+        
         <div className="mt-5">
           <label className="text-sm font-medium text-cream-50/90">
             Fiche de données (optionnel)

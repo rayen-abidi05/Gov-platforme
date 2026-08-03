@@ -3,53 +3,178 @@ const prisma = new PrismaClient();
 
 const createInstance = async (req, res) => {
   try {
-    const { exportRequestIds, memberIds, meetingDate, reportFileUrl } = req.body;
+
+    const {
+      exportRequestIds: exportRequestIdsRaw,
+      memberIds: memberIdsRaw,
+      meetingDate
+    } = req.body;
+
+
+    const exportRequestIds = JSON.parse(
+      exportRequestIdsRaw || "[]"
+    );
+
+    const memberIds = JSON.parse(
+      memberIdsRaw || "[]"
+    );
+
 
     if (!Array.isArray(exportRequestIds) || exportRequestIds.length === 0) {
-      return res.status(400).json({ message: "Aucune demande sélectionnée" });
-    }
-    if (!Array.isArray(memberIds) || memberIds.length === 0) {
-      return res.status(400).json({ message: "Aucun membre sélectionné" });
+      return res.status(400).json({
+        message:"Aucune demande sélectionnée"
+      });
     }
 
-   
+
+    if (!Array.isArray(memberIds) || memberIds.length === 0) {
+      return res.status(400).json({
+        message:"Aucun membre sélectionné"
+      });
+    }
+
+
+
     const requests = await prisma.exportRequest.findMany({
-      where: { id: { in: exportRequestIds } },
+      where:{
+        id:{
+          in:exportRequestIds
+        }
+      }
     });
 
-    const invalid = requests.filter((r) => r.status !== "SENT");
-    if (invalid.length > 0) {
-      return res.status(409).json({
-        message: "Certaines demandes ne sont plus disponibles pour une nouvelle instance",
-        invalidIds: invalid.map((r) => r.id),
+
+
+    if(requests.length !== exportRequestIds.length){
+      return res.status(404).json({
+        message:"Une demande est introuvable"
       });
     }
 
-    const instance = await prisma.$transaction(async (tx) => {
-      const created = await tx.instance.create({
-        data: {
-          meetingDate: meetingDate ? new Date(meetingDate) : new Date(),
-          reportFileUrl: reportFileUrl ?? null,
-          members: {
-            create: memberIds.map((userId) => ({ userId })),
-          },
-        },
+
+
+    const invalid = requests.filter(
+      r=>r.status !== "SENT" 
+    );
+
+
+    if(invalid.length){
+      return res.status(409).json({
+        message:"Certaines demandes ne sont plus disponibles",
+        invalidIds:invalid.map(r=>r.id)
       });
+    }
+
+
+
+
+    const members = await prisma.user.findMany({
+      where:{
+        id:{
+          in:memberIds
+        }
+      }
+    });
+
+
+    if(members.length !== memberIds.length){
+      return res.status(404).json({
+        message:"Un membre est introuvable"
+      });
+    }
+
+
+
+
+    const instance = await prisma.$transaction(async(tx)=>{
+
+
+      let reportDocument = null;
+
+
+      if(req.file){
+
+        reportDocument = await tx.document.create({
+
+          data:{
+            fileName:req.file.originalname,
+
+            fileType:req.file.mimetype,
+
+            fileUrl:`/uploads/${req.file.filename}`,
+
+            DocType:"INSTANCE_REPORT",
+
+            size:req.file.size
+          }
+
+        });
+
+      }
+
+
+
+      const created = await tx.instance.create({
+
+        data:{
+
+          meetingDate:meetingDate
+          ? new Date(meetingDate)
+          : new Date(),
+
+
+          reportDocumentId:reportDocument?.id ?? null,
+
+
+          members:{
+            create:memberIds.map(userId=>({
+              userId
+            }))
+          }
+
+        }
+
+      });
+
+
+
 
       await tx.exportRequest.updateMany({
-        where: { id: { in: exportRequestIds } },
-        data: {
-          instanceId: created.id,
-          status: "UNDER_COMMITTEE_REVIEW",
+
+        where:{
+          id:{
+            in:exportRequestIds
+          }
         },
+
+
+        data:{
+          instanceId:created.id,
+          status:"UNDER_COMMITTEE_REVIEW"
+        }
+
       });
 
+
+
       return created;
+
     });
 
-    res.status(201).json(instance);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+
+
+    return res.status(201).json(instance);
+
+
+
+  }catch(error){
+
+    console.error(error);
+
+    return res.status(500).json({
+      message:error.message
+    });
+
   }
 };
 
@@ -77,28 +202,77 @@ const getInstances = async (req, res) => {
   }
 };
 
-const getInstanceById = async (req, res) => {
+const getInstanceById = async(req,res)=>{
+
+ const {id}=req.params;
+
+
+ const instance = await prisma.instance.findUnique({
+
+  where:{
+    id
+  },
+
+
+  include:{
+
+    members:{
+      include:{
+        user:true
+      }
+    },
+
+
+    reportDocument:true,
+
+
+    exportRequests:{
+      include:{
+        agrim:true
+      }
+    }
+
+  }
+
+ });
+
+
+
+ if(!instance){
+  return res.status(404).json({
+    message:"Instance introuvable"
+  });
+ }
+
+
+ res.json(instance);
+
+};
+
+const getEligibleMembers = async (req,res)=>{
   try {
-    const instance = await prisma.instance.findUnique({
-      where: { id: req.params.id },
-      include: {
-        members: { include: { user: { select: { id: true, name: true, role: true } } } },
-        exportRequests: {
-          include: {
-            company: { select: { commName: true } },
-            agrim: true,
-            documents: true,
-          },
-        },
+
+    const members = await prisma.user.findMany({
+      where:{
+        role:"COMMITTEE_MEMBER",
+        
       },
+      select:{
+        id:true,
+        name:true,
+        email:true,
+        role:true
+      }
     });
 
-    if (!instance) return res.status(404).json({ message: "Instance introuvable" });
 
-    res.status(200).json(instance);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.json(members);
+
+  } catch(error){
+    res.status(500).json({
+      message:error.message
+    });
   }
 };
 
-module.exports = { createInstance, getInstances, getInstanceById };
+module.exports = { createInstance, getInstances, getInstanceById, getEligibleMembers };

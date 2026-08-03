@@ -7,12 +7,19 @@ import { useDecideExportRequest } from "@/hooks/useDecideExportRequest";
 import ExportStatusBadge from "@/components/exporter/ExportStatusBadge";
 import AdminHeader from "@/components/admin/AdminHeader";
 import Spinner from "@/components/ui/spinner";
+import { privateApi } from "@/lib/api/privateApi";
+const ROLE_LABELS: Record<string,string> = {
 
-const ROLE_LABELS: Record<string, string> = {
-  MINISTER: "Ministre",
-  DIWAN_MEMBER: "Membre Diwan",
-  OBSERVATOR: "Observateur",
-  ADMIN: "Administrateur",
+  MINISTER:"Ministre",
+
+  DIWAN_MEMBER:"Membre Diwan",
+
+  OBSERVATOR:"Observateur",
+
+  ADMIN:"Administrateur",
+
+  COMMITTEE_MEMBER:"Membre commission"
+
 };
 
 export default function InstanceDetailPage() {
@@ -36,7 +43,45 @@ export default function InstanceDetailPage() {
       </div>
     );
   }
+  const handleDownload = async(fileId:string)=>{
 
+ try{
+
+  const res = await privateApi.get(
+    `/api/files/${fileId}/download`,
+    {
+      responseType:"blob"
+    }
+  );
+
+
+  const url = URL.createObjectURL(res.data);
+
+
+  const a=document.createElement("a");
+
+  a.href=url;
+
+  a.download="fiche-instance.pdf";
+
+
+  document.body.appendChild(a);
+
+  a.click();
+
+
+  a.remove();
+
+  URL.revokeObjectURL(url);
+
+
+ }catch(error){
+
+  console.error(error);
+
+ }
+
+};
   return (
     <>
       <AdminHeader
@@ -72,18 +117,24 @@ export default function InstanceDetailPage() {
             ))}
           </div>
 
-          {instance.reportFileUrl && (
-            <a
-              href={instance.reportFileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center gap-1.5 text-xs text-gold-300 transition-colors duration-150 hover:text-gold-300/80"
+         {instance.reportDocument && (
+            <button
+               onClick={() => handleDownload(instance.reportDocument!.id)}
+
+            className="mt-4 inline-flex items-center gap-1.5 text-xs text-gold-300 hover:text-gold-300/80"
+
             >
-              <FileText className="h-3.5 w-3.5" />
-              Voir la fiche de données
-              <Download className="h-3 w-3" />
-            </a>
-          )}
+
+            <FileText className="h-3.5 w-3.5"/>
+
+            Télécharger la fiche de données
+
+            <Download className="h-3 w-3"/>
+
+
+            </button>
+
+            )}
 
           {instance.internalNotes && (
             <div className="mt-4 rounded-lg border border-cream-50/10 bg-cream-50/[0.03] p-3.5 text-sm text-cream-50/70">

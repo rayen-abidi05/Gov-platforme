@@ -77,7 +77,7 @@ export interface ApiRegistrationRequest {
     status: "PENDING" | "APPROVED" | "REJECTED";
   } | null;
 }
-export type Role = "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER" | "MINISTER" | "INSPA"
+export type Role = "EXPORTER" | "ADMIN" | "OBSERVATOR" | "DIWAN_MEMBER" | "MINISTER" | "INSPA" | "COMMITTEE_MEMBER"
 
 export interface ApiNotification {
   id: string;

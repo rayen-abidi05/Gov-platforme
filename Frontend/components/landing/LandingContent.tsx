@@ -251,7 +251,7 @@ function Stats() {
 
 function Problem() {
   const pains = [
-    { icon: EyeOff, title: "Manque de visibilité", desc: "Aucun suivi en temps réel du statut des demandes ni des étapes de validation." },
+    { icon: EyeOff, title: "Amélioration de la visibilité", desc: "Aucun suivi en temps réel du statut des demandes ni des étapes de validation." },
     { icon: MessageSquareWarning, title: "Communication fragmentée", desc: "Échanges dispersés entre exportateurs, administrations et organismes de contrôle." },
     { icon: Clock, title: "Traçabilité limitée", desc: "Documents papier, délais imprévisibles et transparence restreinte sur les décisions." },
   ];
@@ -302,7 +302,7 @@ function Solution() {
   const features = [
     { icon: Activity, title: "Suivi en temps réel", desc: "Consultez à tout moment l'état de vos inscriptions et de vos demandes d'exportation." },
     { icon: FileText, title: "Documents centralisés", desc: "Gérez vos certificats, licences et attestations depuis un espace unique et sécurisé." },
-    { icon: BellRing, title: "Communication directe", desc: "Recevez une notification instantanée dès qu'une décision est prise par le Ministère." },
+    { icon: BellRing, title: "Communication directe", desc: "Recevez une notification instantanée dès qu'une décision est prise par DGEDA." },
     { icon: GitBranch, title: "Traçabilité complète", desc: "Historique d'audit complet, de l'enregistrement à l'exportation finale." },
   ];
   return (
@@ -408,7 +408,7 @@ function Trust() {
             </Reveal>
             <Reveal delay={100}>
               <h2 className="mt-5 font-serif text-3xl leading-tight text-cream-50 md:text-4xl">
-                Une plateforme officielle du <span className="text-gradient-gold">Ministère de l'Agriculture</span>
+                Une plateforme officielle du <span className="text-gradient-gold"> Ministère de l'Agriculture, des Ressources hydrauliques et de la Pêche</span>
               </h2>
             </Reveal>
           </div>

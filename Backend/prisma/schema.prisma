@@ -48,8 +48,9 @@ enum Role {
   ADMIN
   OBSERVATOR
   DIWAN_MEMBER
-  MINISTER  
-  INSPA        
+  MINISTER
+  INSPA
+  COMMITTEE_MEMBER
 }
 enum InspectionStatus {
   PENDING
@@ -66,9 +67,10 @@ enum documenttype {
   CERTIFICATIONOWNERSHIP
   LABDOC
   MARKETCONTROLDECLARATION
-  AGRIM              
-  CONTRACT          
-  MINISTERIAL_LETTER 
+  AGRIM
+  CONTRACT
+  MINISTERIAL_LETTER
+  INSTANCE_REPORT
 }
 
 enum FormulaireStatus {
@@ -232,15 +234,18 @@ model Instance {
 
   meetingDate     DateTime  @default(now())
 
- 
   reportFileUrl   String?
 
-  internalNotes   String?   
-  exportRequests  ExportRequest[] 
+  internalNotes   String?
+
+  exportRequests  ExportRequest[]
   members         InstanceMember[]
 
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  reportDocumentId String? @unique
+  reportDocument   Document? @relation("InstanceReport", fields: [reportDocumentId], references: [id])
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 // =======================
 // STORAGE INSPECTION — INSPA's check during registration (non-resident flow)
@@ -269,12 +274,10 @@ model InstanceMember {
   id          String   @id @default(cuid())
 
   instanceId  String
-  instance    Instance @relation(fields: [instanceId], references: [id])
+  instance    Instance @relation(fields:[instanceId], references:[id])
 
   userId      String
-  user        User     @relation(fields: [userId], references: [id])
-
-  createdAt   DateTime @default(now())
+  user        User @relation(fields:[userId], references:[id])
 }
 // =======================
 // DOCUMENT
@@ -296,6 +299,9 @@ model Document {
 
   exportRequestId String?
   exportRequest   ExportRequest? @relation(fields: [exportRequestId], references: [id])
+
+
+  instanceReport Instance? @relation("InstanceReport")
 }
 
 

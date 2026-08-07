@@ -13,14 +13,14 @@ const storage = multer.diskStorage({
     },
 
     filename: (req, file, cb) => {
-        
+        const category = file.fieldname;
         const ext = path.extname(file.originalname); 
         const uniqueId = crypto.randomUUID(); 
-        const fileName = `Report File-${uniqueId}${ext}`;
+        const fileName = `${category}-${uniqueId}${ext}`;
         cb(null, fileName);
     },
 });
 
-const uploadReportFile = multer({ storage });
+const upload = multer({ storage });
 
-module.exports = uploadReportFile;
+module.exports = upload;

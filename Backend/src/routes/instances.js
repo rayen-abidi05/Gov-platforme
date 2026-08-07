@@ -3,12 +3,12 @@ const router = express.Router();
 const authenticateToken = require("../middleware/authtoken");
 const checkRole = require("../middleware/checkRole");
 const { createInstance, getInstances, getInstanceById ,getEligibleMembers} = require("../controllers/instanceController");
-const upload = require("../middleware/upload");
+const uploadReportFile = require("../middleware//uploadReportFile");
 router.post(
   "/",
   authenticateToken,
   checkRole("ADMIN"),
-  upload.single("reportFile"),
+  uploadReportFile.single("reportFile"),
   createInstance
 );
 router.get("/members", authenticateToken, checkRole("ADMIN"), getEligibleMembers);

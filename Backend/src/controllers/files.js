@@ -96,8 +96,9 @@ console.log(file)
       return res.status(403).json({ message: "Access denied" });
     }
 
-    
+    console.log(file)
     const filePath = path.resolve(file.fileUrl);
+    console.log(filePath)
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: "File not found on server" });
     }

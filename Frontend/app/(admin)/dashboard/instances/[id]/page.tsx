@@ -43,10 +43,11 @@ export default function InstanceDetailPage() {
       </div>
     );
   }
+  console.log("Instance data:", instance); 
   const handleDownload = async(fileId:string)=>{
 
  try{
-
+  console.log("Downloading file with ID:", fileId);
   const res = await privateApi.get(
     `/api/files/${fileId}/download`,
     {
@@ -100,7 +101,7 @@ export default function InstanceDetailPage() {
           Retour aux instances
         </button>
 
-        {/* members + report */}
+        
         <div className="rounded-2xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md p-6 sm:p-8">
           <h2 className="flex items-center gap-1.5 text-sm font-medium text-cream-50/90">
             <Users className="h-4 w-4 text-gold-300" />
@@ -119,7 +120,7 @@ export default function InstanceDetailPage() {
 
          {instance.reportDocument && (
             <button
-               onClick={() => handleDownload(instance.reportDocument!.id)}
+               onClick={() => handleDownload(instance.reportDocumentId!)}
 
             className="mt-4 inline-flex items-center gap-1.5 text-xs text-gold-300 hover:text-gold-300/80"
 

@@ -101,7 +101,7 @@ const createInstance = async (req, res) => {
 
             fileType:req.file.mimetype,
 
-            fileUrl:`/uploads/${req.file.filename}`,
+            fileUrl:req.file.path,
 
             DocType:"INSTANCE_REPORT",
 

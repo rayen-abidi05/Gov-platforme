@@ -9,7 +9,6 @@ import {
 import Link from "next/link";
 import { useUser } from "@/hooks/useUser";
 
-/* ---------------- Reveal on scroll ---------------- */
 function useReveal<T extends HTMLElement>() {
   const ref = useRef<T | null>(null);
   useEffect(() => {

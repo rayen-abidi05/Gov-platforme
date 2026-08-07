@@ -32,7 +32,7 @@ export interface AdminInstance {
     fileUrl: string;
     size: number;
   } | null;
-
+  reportDocumentId?: string | null;
   members: InstanceMemberDetail[];
 
   exportRequests: InstanceExportRequestSummary[];

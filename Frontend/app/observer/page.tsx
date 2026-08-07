@@ -1,80 +1,57 @@
-
 "use client";
 
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useActivityLogs, type ActivityLogFilters } from "@/hooks/useActivityLogs";
+import { useMemo } from "react";
+import { Ship, Clock, CheckCircle2, XCircle, PackageSearch } from "lucide-react";
+import { useObserverExportRequests } from "@/hooks/useObserverExportRequests";
 import ObserverHeader from "@/components/observer/ObserverHeader";
-import { ActivityLogFiltersBar } from "@/components/observer/ActivityLogFilters";
-import { ActivityLogRow } from "@/components/observer/ActivityLogRow";
-import { Button } from "@/components/ui/button";
+import StatCard from "@/components/observer/StatCard";
+import DashboardCharts from "@/components/observer/DashboardCharts";
+import RecentActivity from "@/components/observer/RecentActivity";
 import Spinner from "@/components/ui/spinner";
+import { computeKpis } from "@/lib/observerStats";
 
 export default function ObserverDashboardPage() {
-  const [filters, setFilters] = useState<ActivityLogFilters>({ page: 1 });
-  const { data, isLoading, isFetching } = useActivityLogs(filters);
+  const { data, isLoading } = useObserverExportRequests();
+  const requests = data ?? [];
 
-  const logs = data?.logs ?? [];
-  const availableActions = data?.availableActions ?? [];
+  const kpis = useMemo(() => computeKpis(requests), [requests]);
 
   return (
     <>
       <ObserverHeader
-        title="Journal d'activité"
-        subtitle="Historique des actions effectuées par les administrateurs"
+        title="Tableau de bord"
+        subtitle="Vue d'ensemble des exportations d'huile d'olive"
       />
 
-      <main className="mx-auto max-w-4xl px-6 py-8 sm:px-10">
-        <ActivityLogFiltersBar
-          availableActions={availableActions}
-          filters={filters}
-          onChange={setFilters}
-        />
-
-        <div className="mt-6 rounded-2xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md p-5 sm:p-6">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-16">
-              <Spinner size="h-8 w-8" />
-            </div>
-          ) : logs.length === 0 ? (
-            <p className="py-10 text-center text-sm text-cream-50/40">
-              Aucune activité trouvée pour ces filtres.
-            </p>
-          ) : (
-            <div className={`divide-y divide-cream-50/5 ${isFetching ? "opacity-60" : ""}`}>
-              {logs.map((log) => (
-                <ActivityLogRow key={log.id} log={log} />
-              ))}
-            </div>
-          )}
-        </div>
-
-        {data && data.totalPages > 1 && (
-          <div className="mt-4 flex items-center justify-between">
-            <p className="text-xs text-cream-50/50">
-              Page {data.page} sur {data.totalPages} — {data.total} entrées
-            </p>
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                className="w-auto px-3"
-                disabled={filters.page <= 1}
-                onClick={() => setFilters((f) => ({ ...f, page: f.page - 1 }))}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="w-auto px-3"
-                disabled={filters.page >= data.totalPages}
-                onClick={() => setFilters((f) => ({ ...f, page: f.page + 1 }))}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
+      <main className="mx-auto max-w-6xl px-6 py-8 sm:px-10">
+        {isLoading ? (
+          <div className="flex items-center justify-center py-24">
+            <Spinner size="h-8 w-8" />
           </div>
+        ) : (
+          <>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              <StatCard label="Total des demandes" value={String(kpis.total)} icon={Ship} accent="gold" />
+              <StatCard label="En attente" value={String(kpis.sent)} icon={Clock} accent="blue" />
+              <StatCard
+                label="En cours d'examen"
+                value={String(kpis.underReview)}
+                icon={PackageSearch}
+                accent="blue"
+                hint="Suivi d'expédition non disponible — demandes en cours d'instruction"
+              />
+              <StatCard label="Approuvées" value={String(kpis.approved)} icon={CheckCircle2} accent="green" />
+              <StatCard label="Rejetées" value={String(kpis.rejected)} icon={XCircle} accent="red" />
+            </div>
+
+            <div className="mt-6">
+              <DashboardCharts requests={requests} />
+            </div>
+
+            <div className="mt-6">
+              <RecentActivity />
+            </div>
+          </>
         )}
       </main>
     </>

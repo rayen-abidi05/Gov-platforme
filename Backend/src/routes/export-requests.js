@@ -32,14 +32,14 @@ router.post(
 router.get(
   "/",
   authenticateToken,
-  checkRole("ADMIN"),
+  checkRole(["ADMIN", "OBSERVATOR"]),
   getExportRequests
 );
 
 router.get(
   "/:id",
   authenticateToken,
-  checkRole("ADMIN"),
+  checkRole(["ADMIN", "OBSERVATOR"]),
   getExportRequest
 );
 

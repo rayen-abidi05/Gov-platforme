@@ -20,6 +20,15 @@ export interface ExportRequestDocument {
 
 
 
+export interface CompanyInfo {
+  id: string;
+  commName: string;
+  city?: string;
+  governorate?: string;
+  nationality?: string;
+  exportType?: "liste1" | "liste2";
+}
+
 export interface ExportRequest {
   id: string;
   client: string;
@@ -29,6 +38,8 @@ export interface ExportRequest {
   documents: ExportRequestDocument[];
   status: ExportRequestStatus;
   submittedAt: string;
+  reviewedAt?: string | null;
+  company?: CompanyInfo;
 }
 export const EXPORT_STATUS_LABELS = {
   SENT: {

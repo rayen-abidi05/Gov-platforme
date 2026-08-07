@@ -18,7 +18,7 @@ export default function ExporterOverviewPage() {
   const pendingCount = requests.filter(
     (r) => r.status === "SENT" || r.status === "UNDER_COMMITTEE_REVIEW"
   ).length;
-  const unreadCount = (notifData?.notifications ?? []).filter((n) => !n.isRead).length;
+  const unreadCount = (notifData?.notifications ?? []).filter((n:any) => !n.isRead).length;
   const recent = [...requests]
     .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
     .slice(0, 5);

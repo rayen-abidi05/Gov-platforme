@@ -43,9 +43,6 @@ function Footer() {
             />
             <div>
 
-              <div className="text-[10px] uppercase tracking-[0.18em] text-cream-300/60">
-                MARHP
-              </div>
               <div className="font-serif text-[15px] text-cream-50">
                 MARHP
               </div>

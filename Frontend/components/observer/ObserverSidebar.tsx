@@ -19,7 +19,7 @@ const NAV_ITEMS = [
   { href: "/observer/export-requests", label: "Demandes d'exportation", icon: Ship },
   { href: "/observer/analytics", label: "Analytique", icon: BarChart3 },
   { href: "/observer/reports", label: "Rapports", icon: FileDown },
-  { href: "/observer/activity-log", label: "Journal d'activité", icon: ScrollText },
+  
 ];
 
 export default function ObserverSidebar() {

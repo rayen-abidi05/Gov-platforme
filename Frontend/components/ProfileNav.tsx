@@ -62,12 +62,12 @@ export default function ProfileNav({ user }: { user: { id: string; name: string 
 
           <div className="p-1.5">
             <Link
-              href={`/${user.id}`}
+              href="/espace"
               onClick={() => setIsDropdownOpen(false)}
               className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-cream-50/85 transition-colors duration-150 hover:bg-cream-50/5 hover:text-gold-300"
             >
               <UserCircle className="h-4 w-4" />
-              Mon profil
+              Mon espace
             </Link>
             <button
               onClick={() => {

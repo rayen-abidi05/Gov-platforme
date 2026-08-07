@@ -4,6 +4,6 @@ const { getMinisterFormulaires, reviewMinisterFormulaire } = require("../control
 const checkRole = require("../middleware/checkRole"); 
 
 router.get("/", checkRole(["MINISTER"]), getMinisterFormulaires);
-router.patch("/:id", checkRole(["MINISTER"]), reviewMinisterFormulaire);
+router.patch("/:id/review", checkRole(["MINISTER"]), reviewMinisterFormulaire);
 
 module.exports = router;

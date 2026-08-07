@@ -87,7 +87,7 @@ export default function ObserverExportRequestModal({ request, isLoading, onClose
                 </div>
                 <div>
                   <p className="text-xs text-cream-50/50">Déjà consommé</p>
-                  <p className="text-cream-50">{request.agrim.consumedKg.toLocaleString("fr-FR")} kg</p>
+                  <p className="text-cream-50">{request.agrim.consumedKg} kg</p>
                 </div>
                 <div>
                   <p className="text-xs text-cream-50/50">Restant</p>

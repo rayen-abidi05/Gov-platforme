@@ -16,6 +16,7 @@ Elle relie les exportateurs, le Ministère, la Douane, l'INSPA et les instances 
 - **TypeScript** — typage strict de bout en bout
 - **Tailwind CSS** — système de design personnalisé (charte visuelle du Ministère)
 - **TanStack Query** — gestion de l'état serveur, cache et synchronisation
+- **Axios** — client HTTP avec intercepteurs pour la gestion automatique du rafraîchissement de session
 - **React Hook Form + Zod** — validation de formulaires typée et partagée entre client et schéma
 - **Recharts** — visualisation de données (tableaux de bord administratifs)
 - **Lucide React** — iconographie

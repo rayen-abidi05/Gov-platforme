@@ -2,19 +2,21 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
-   experimental: {
+
+  experimental: {
     proxyClientMaxBodySize: "50mb",
-   },
-  async rewrites(){
-     return [
-        {
-            source: '/api/:path*',
-            destination: 'http://localhost:5000/:path*'
-        }
-     ]
-  }
+  },
+
+  output: "standalone",
+
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://backend:5000/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
-
-

@@ -9,6 +9,7 @@ export const ROLE_HOME_ROUTE: Record<Role, string> = {
   DIWAN_MEMBER: "/exporters", 
   MINISTER : "/minister",
   INSPA : "/inspa/dashboard",
+  "COMMITTEE_MEMBER": "/committee/dashboard",
 };
 
 

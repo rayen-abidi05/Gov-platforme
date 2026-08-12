@@ -77,7 +77,7 @@ export default function AnalyticsCharts({ requests }: { requests: ExportRequest[
                   ))}
                 </Pie>
                 <Legend verticalAlign="bottom" height={24} wrapperStyle={{ fontSize: 11, color: "#fdf6e3" }} />
-                <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => `${v.toLocaleString("fr-FR")} kg`} />
+                <Tooltip contentStyle={tooltipStyle} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -92,7 +92,7 @@ export default function AnalyticsCharts({ requests }: { requests: ExportRequest[
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(253,246,227,0.08)" />
               <XAxis dataKey="name" stroke="rgba(253,246,227,0.5)" fontSize={11} interval={0} angle={-20} textAnchor="end" height={60} />
               <YAxis stroke="rgba(253,246,227,0.5)" fontSize={12} />
-              <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => `${v.toLocaleString("fr-FR")} kg`} />
+              <Tooltip contentStyle={tooltipStyle} />
               <Bar dataKey="volumeKg" name="Volume (kg)" fill="#60a5fa" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -111,7 +111,7 @@ export default function AnalyticsCharts({ requests }: { requests: ExportRequest[
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(253,246,227,0.08)" />
                 <XAxis dataKey="id" stroke="rgba(253,246,227,0.5)" fontSize={11} />
                 <YAxis stroke="rgba(253,246,227,0.5)" fontSize={12} unit="j" />
-                <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => `${v} jour(s)`} />
+                <Tooltip contentStyle={tooltipStyle}  />
                 <Line type="monotone" dataKey="days" name="Jours" stroke="#e8b923" strokeWidth={2} dot={{ r: 3 }} />
               </LineChart>
             </ResponsiveContainer>

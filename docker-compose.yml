@@ -1,0 +1,50 @@
+services:
+
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: gov-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - gov-network
+
+  backend:
+    build:
+      context: ./Backend
+    container_name: gov-backend
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      DATABASE_URL: postgresql://postgres:112021@postgres:5432/postgres?schema=public
+      SECRET_KEY: ${SECRET_KEY}
+      SECRET_KEY_REFRESH: ${SECRET_KEY_REFRESH}
+    depends_on:
+      - postgres
+    networks:
+      - gov-network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: gov-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 112021
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - gov-network
+
+volumes:
+  postgres_data:
+
+networks:
+  gov-network:
+    driver: bridge

@@ -9,10 +9,10 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import { RegistrationRequestRow, RequestStatus } from "@/lib/types/registration";
+import {  ApiRegistrationRequest,RequestStatus } from "@/types/registration";
 
 interface Props {
-  requests: RegistrationRequestRow[];
+  requests: ApiRegistrationRequest[];
 }
 
 const STATUS_COLORS: Record<RequestStatus, string> = {
@@ -50,7 +50,7 @@ export default function AdminStatsCharts({ requests }: Props) {
 
   return (
     <div className="grid gap-4 lg:grid-cols-3">
-      {/* status stat cards */}
+      
       <div className="grid grid-cols-2 gap-3 lg:col-span-1 lg:grid-rows-4 lg:gap-3">
         {(Object.keys(STATUS_LABELS) as RequestStatus[]).map((status) => (
           <div

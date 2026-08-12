@@ -24,7 +24,7 @@ export default function NotificationBell() {
   const { mutate: markRead } = useMarkNotificationRead();
 
   const notifications = data?.notifications ?? [];
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
+  const unreadCount = notifications.filter((n:any) => !n.isRead).length;
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -66,7 +66,7 @@ export default function NotificationBell() {
                   Aucune notification
                 </p>
               ) : (
-                notifications.map((n) => (
+                notifications.map((n:any) => (
                   <div
                     key={n.id}
                     className={`flex w-full items-start gap-2.5 px-4 py-3 text-left transition-colors duration-150 hover:bg-cream-50/[0.04] ${

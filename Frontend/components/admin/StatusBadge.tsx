@@ -1,4 +1,4 @@
-import { RequestStatus } from "@/lib/types/registration";
+import { RequestStatus } from "@/types/registration";
 
 const STYLES: Record<RequestStatus, string> = {
   PENDING: "bg-cream-50/10 text-cream-50/70 border-cream-50/20",

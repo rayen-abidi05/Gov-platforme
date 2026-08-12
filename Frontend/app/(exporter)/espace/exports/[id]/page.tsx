@@ -229,7 +229,7 @@ export default function ExportRequestDetailPage() {
                     <div className="min-w-0">
 
                       <p className="truncate text-sm text-cream-50">
-                        {DOC_LABELS[doc.label] ?? doc.label}
+                        {DOC_LABELS[doc.DocType] ?? doc.DocType}
                       </p>
 
 

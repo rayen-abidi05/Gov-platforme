@@ -1,9 +1,10 @@
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
+import type { LegendPayload, TooltipPayloadEntry } from "recharts";
 
 import { cn } from "@/lib/utils";
 
-// Format: { THEME_NAME: CSS_SELECTOR }
+
 const THEMES = { light: "", dark: ".dark" } as const;
 
 export type ChartConfig = {
@@ -92,16 +93,36 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
+// Recharts v3 injects payload/label/active into the tooltip's `content` element via
+// cloneElement rather than through its public TooltipProps, and its own
+// TooltipContentProps marks several of those fields as required — which breaks
+// plain `<ChartTooltipContent />` usage if we type against it directly. So this
+// component declares its own fully-optional prop shape instead, borrowing only
+// the payload item type (TooltipPayloadEntry) from recharts for accuracy.
+type TooltipItem = TooltipPayloadEntry;
+
 const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
-    React.ComponentProps<"div"> & {
-      hideLabel?: boolean;
-      hideIndicator?: boolean;
-      indicator?: "line" | "dot" | "dashed";
-      nameKey?: string;
-      labelKey?: string;
-    }
+  Omit<React.ComponentProps<"div">, "label"> & {
+    active?: boolean;
+    payload?: ReadonlyArray<TooltipItem>;
+    label?: React.ReactNode;
+    labelFormatter?: (label: React.ReactNode, payload: ReadonlyArray<TooltipItem>) => React.ReactNode;
+    labelClassName?: string;
+    formatter?: (
+      value: TooltipItem["value"],
+      name: TooltipItem["name"],
+      item: TooltipItem,
+      index: number,
+      payload: unknown,
+    ) => React.ReactNode;
+    color?: string;
+    hideLabel?: boolean;
+    hideIndicator?: boolean;
+    indicator?: "line" | "dot" | "dashed";
+    nameKey?: string;
+    labelKey?: string;
+  }
 >(
   (
     {
@@ -138,7 +159,9 @@ const ChartTooltipContent = React.forwardRef<
 
       if (labelFormatter) {
         return (
-          <div className={cn("font-medium", labelClassName)}>{labelFormatter(value, payload)}</div>
+          <div className={cn("font-medium", labelClassName)}>
+            {labelFormatter(value, payload)}
+          </div>
         );
       }
 
@@ -170,11 +193,11 @@ const ChartTooltipContent = React.forwardRef<
             .map((item, index) => {
               const key = `${nameKey || item.name || item.dataKey || "value"}`;
               const itemConfig = getPayloadConfigFromPayload(config, item, key);
-              const indicatorColor = color || item.payload.fill || item.color;
+              const indicatorColor = color || (item.payload as any)?.fill || item.color;
 
               return (
                 <div
-                  key={item.dataKey}
+                  key={item.dataKey?.toString() ?? index}
                   className={cn(
                     "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
                     indicator === "dot" && "items-center",
@@ -220,9 +243,9 @@ const ChartTooltipContent = React.forwardRef<
                             {itemConfig?.label || item.name}
                           </span>
                         </div>
-                        {item.value && (
+                        {item.value !== undefined && (
                           <span className="font-mono font-medium tabular-nums text-foreground">
-                            {item.value.toLocaleString()}
+                            {Number(item.value).toLocaleString()}
                           </span>
                         )}
                       </div>
@@ -240,13 +263,19 @@ ChartTooltipContent.displayName = "ChartTooltip";
 
 const ChartLegend = RechartsPrimitive.Legend;
 
+// Same story as the tooltip above: Recharts v3's public LegendProps
+// (the props you pass to <Legend>) deliberately omits payload/verticalAlign
+// since those are injected into the `content` element via cloneElement. So
+// this component declares its own optional shape, borrowing only the
+// LegendPayload item type from recharts for accuracy.
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<"div"> &
-    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
-      hideIcon?: boolean;
-      nameKey?: string;
-    }
+  React.ComponentProps<"div"> & {
+    payload?: ReadonlyArray<LegendPayload>;
+    verticalAlign?: "top" | "bottom" | "middle";
+    hideIcon?: boolean;
+    nameKey?: string;
+  }
 >(({ className, hideIcon = false, payload, verticalAlign = "bottom", nameKey }, ref) => {
   const { config } = useChart();
 
@@ -271,7 +300,7 @@ const ChartLegendContent = React.forwardRef<
 
           return (
             <div
-              key={item.value}
+              key={item.value?.toString()}
               className={cn(
                 "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground",
               )}

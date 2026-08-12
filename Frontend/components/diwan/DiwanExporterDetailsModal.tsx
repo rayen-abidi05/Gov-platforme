@@ -39,7 +39,7 @@ export default function DiwanExporterDetailsModal({
               year: "numeric",
             })}
           </span>
-          <OliveListeBadge liste={exporter.oliveListe} />
+          <OliveListeBadge liste={exporter.exportType} />
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-4 text-sm">

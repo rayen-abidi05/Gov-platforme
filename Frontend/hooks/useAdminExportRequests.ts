@@ -1,3 +1,4 @@
+"use client";
 import { useQuery } from "@tanstack/react-query";
 import { privateApi } from "@/lib/api/privateApi";
 import { ExportRequest } from "@/types/exportRequest";

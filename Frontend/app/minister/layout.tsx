@@ -1,9 +1,18 @@
-import { Leaf } from "lucide-react";
+"use client"
 import Image from "next/image";
 import NotificationBell from "@/components/NotificationBell";
 import MinisterLogoutButton from "@/components/minister/MinisterLogoutButton";
-
+import { redirect } from "next/navigation";
+ import { useVerifyUser } from "@/hooks/useVerifyUser";
+import { SECTION_ALLOWED_ROLES, ROLE_HOME_ROUTE } from "@/lib/auth/roleAccess";
 export default function MinisterLayout({ children }: { children: React.ReactNode }) {
+ const {data : user} =  useVerifyUser();
+ 
+    if (!user) redirect("/login");
+ 
+   if (!SECTION_ALLOWED_ROLES.ministerArea.includes(user.role)) {
+      redirect(ROLE_HOME_ROUTE[user.role] ?? "/");
+    }
   return (
     <div className="min-h-screen w-full bg-olive-950 font-body text-cream-50">
       <header className="flex items-center justify-between border-b border-cream-50/10 bg-olive-950/60 px-6 py-3.5 backdrop-blur-md sm:px-10">

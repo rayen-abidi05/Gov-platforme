@@ -1,4 +1,4 @@
-
+"use client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ExportRequestStatus } from "@/types/exportRequest";
 import { privateApi } from "@/lib/api/privateApi";

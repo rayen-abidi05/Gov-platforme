@@ -13,7 +13,7 @@ import { User, UserCircle, LogOut, Menu, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const router = useRouter()
+  const router = useRouter();
   const { data: user, isLoading } = useUser();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -24,12 +24,21 @@ export default function Navbar() {
     },
     onSuccess: () => router.push("/login"),
   });
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Lock body scroll while the mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   const links = [
     { href: "/contact", label: "Contact" },
@@ -38,10 +47,8 @@ export default function Navbar() {
     { href: "/registration", label: "Demande d'enregistrement" },
   ];
 
-  // "Espace" is the exporter's private dashboard. If the exporter hasn't
-  // been approved by an admin yet, send them to a clear explanation page
-  // instead of letting them hit the (looping) guard inside /espace itself.
   const handleProtectedNav = (href: string) => {
+    setOpen(false);
     if (href !== "/espace") {
       router.push(href);
       return;
@@ -58,68 +65,74 @@ export default function Navbar() {
   };
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "backdrop-blur-xl bg-olive-950/75 border-b border-gold-500/15"
-          : "backdrop-blur-md bg-olive-950/35 border-b border-transparent"
-      }`}
-    >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 md:px-8">
-        <Link href="/" className="group flex items-center gap-2.5">
-          <Image
-            src="/logo-ministere.png"
-            alt="Ministère de l'Agriculture"
-            width={90}
-            height={55}
-            className="h-10 w-auto object-contain"
-            priority
-          />
-          <div className="leading-tight">
-            <div className="font-serif text-[15px] text-cream-50">
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+          scrolled
+            ? "backdrop-blur-xl bg-olive-950/75 border-b border-gold-500/15"
+            : "backdrop-blur-md bg-olive-950/35 border-b border-transparent"
+        }`}
+      >
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 md:px-8">
+          <Link href="/" className="group flex items-center gap-2.5">
+            <Image
+              src="/logo-ministere.png"
+              alt="Ministère de l'Agriculture"
+              width={90}
+              height={55}
+              className="h-10 w-auto object-contain"
+              priority
+            />
+           <div className="leading-tight">
+            <div className="font-serif text-[12px] sm:text-[15px] text-cream-50">
               République Tunisienne
             </div>
-            <div className="text-[10px] uppercase tracking-[0.18em] text-cream-300/70">
-              Ministère de l'Agriculture, des Ressources <br /> Hydrauliques et de la Pêche
+            <div className="text-[8px] sm:text-[10px] uppercase tracking-[0.12em] sm:tracking-[0.18em] text-cream-300/70 max-w-[140px] sm:max-w-none">
+              <span className="sm:hidden">MARHP</span>
+              <span className="hidden sm:inline">
+                Ministère de l'Agriculture, des Ressources <br /> Hydrauliques et de la Pêche
+              </span>
             </div>
           </div>
-        </Link>
+          </Link>
 
-        <nav className="hidden items-center gap-2 lg:flex">
-          {links.map((l) => (
-            <button
-              key={l.href}
-              onClick={() => handleProtectedNav(l.href)}
-              className="rounded-full border border-cream-50/10 bg-cream-50/[0.03] px-4 py-2 text-sm text-cream-100/85 transition-all duration-200 hover:border-gold-300/30 hover:bg-gold-300/10 hover:text-gold-300"
-            >
-              {l.label}
-            </button>
-          ))}
-        </nav>
+          <nav className="hidden items-center gap-2 lg:flex">
+            {links.map((l) => (
+              <button
+                key={l.href}
+                onClick={() => handleProtectedNav(l.href)}
+                className="rounded-full border border-cream-50/10 bg-cream-50/[0.03] px-4 py-2 text-sm text-cream-100/85 transition-all duration-200 hover:border-gold-300/30 hover:bg-gold-300/10 hover:text-gold-300"
+              >
+                {l.label}
+              </button>
+            ))}
+          </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          {isLoading ? null : user ? <ProfileNav user={user} /> : <AuthLinks />}
+          <div className="hidden items-center gap-3 lg:flex">
+            {isLoading ? null : user ? <ProfileNav user={user} /> : <AuthLinks />}
+          </div>
+
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="rounded-md p-2 text-cream-50 lg:hidden"
+            aria-label="Menu"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
+      </header>
 
-        <button
-          onClick={() => setOpen((v) => !v)}
-          className="rounded-md p-2 text-cream-50 lg:hidden"
-          aria-label="Menu"
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
-      </div>
-
+      {/* Mobile dropdown: rendered as a SIBLING of <header>, not nested inside it.
+         header has backdrop-blur (a backdrop-filter), which creates a new
+         containing block for any `fixed` descendant. That broke this panel's
+         fixed positioning/sizing. Moving it out of the blurred container fixes it. */}
       {open && (
-        <div className="fixed inset-x-0 top-16 bottom-0 z-[999] bg-olive-950 lg:hidden">
+        <div className="fixed inset-x-0 top-16 bottom-0 z-[60] bg-olive-950 lg:hidden">
           <div className="mx-auto flex h-full max-w-7xl flex-col gap-1 overflow-y-auto px-5 py-6">
             {links.map((l) => (
               <button
                 key={l.href}
-                onClick={() => {
-                  setOpen(false);
-                  handleProtectedNav(l.href);
-                }}
+                onClick={() => handleProtectedNav(l.href)}
                 className="rounded-md px-3 py-3 text-left text-base text-cream-100 hover:bg-olive-800 hover:text-gold-300"
               >
                 {l.label}
@@ -181,6 +194,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }

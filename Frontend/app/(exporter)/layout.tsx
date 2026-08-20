@@ -1,5 +1,7 @@
 "use client";
-import {DashboardShell} from "@/components/marhp-exporter/DashboardShell";
+import { redirect } from "next/navigation";
+ import { useVerifyUser } from "@/hooks/useVerifyUser";
+import { SECTION_ALLOWED_ROLES, ROLE_HOME_ROUTE } from "@/lib/auth/roleAccess";
 import { useCompany } from "@/hooks/useCompany";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/ui/spinner";
@@ -8,6 +10,13 @@ export default function ExporterLayout({
 }: {
   children: React.ReactNode;
 }) {
+   const {data : user} =  useVerifyUser();
+ 
+    if (!user) redirect("/login");
+ 
+   if (!SECTION_ALLOWED_ROLES.exporterArea.includes(user.role)) {
+      redirect(ROLE_HOME_ROUTE[user.role] ?? "/");
+    }
   const { isLoading, isError } = useCompany();
  const router = useRouter();
  if (isLoading) {

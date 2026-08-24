@@ -7,12 +7,12 @@ const uploadReportFile = require("../middleware//uploadReportFile");
 router.post(
   "/",
   authenticateToken,
-  checkRole("ADMIN"),
+  checkRole(["ADMIN"]),
   uploadReportFile.single("reportFile"),
   createInstance
 );
-router.get("/members", authenticateToken, checkRole("ADMIN"), getEligibleMembers);
-router.get("/", authenticateToken, checkRole("ADMIN"), getInstances);
-router.get("/:id", authenticateToken, checkRole("ADMIN"), getInstanceById);
+router.get("/members", authenticateToken, checkRole(["ADMIN"]), getEligibleMembers);
+router.get("/", authenticateToken, checkRole(["ADMIN"]), getInstances);
+router.get("/:id", authenticateToken, checkRole(["ADMIN"]), getInstanceById);
 
 module.exports = router;    

@@ -12,5 +12,9 @@ export function useVerifyUser() {
     },
     retry: false,
     staleTime: 5 * 60 * 1000,
-  });
+  },
+
+
+);
+  
 }

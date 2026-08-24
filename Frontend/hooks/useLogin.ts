@@ -25,7 +25,9 @@ export function useLogin(
     },
 
     onSuccess: (data) => {
+       console.log(data.role)
       if (data.role === "EXPORTER" ) {
+       
         router.replace("/");
       } else {
         router.replace(ROLE_HOME_ROUTE[data.role]);

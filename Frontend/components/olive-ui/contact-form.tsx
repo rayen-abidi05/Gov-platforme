@@ -109,7 +109,7 @@ export function ContactForm() {
         <Input
           id="email"
           type="email"
-          placeholder="email@exemple.com"
+          placeholder="Votre email"
           autoComplete="email"
           hasError={!!errors.email}
           {...register("email")}

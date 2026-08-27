@@ -131,19 +131,11 @@ export default function About() {
       <div className="relative z-10 flex min-h-screen flex-col">
         <Navbar />
 
-        {/* Hero */}
+       
         <section className="px-8 pt-28 sm:px-12 sm:pt-32 lg:px-16 lg:pt-24">
           <div className="mx-auto max-w-6xl">
-            <div className="flex items-center gap-2.5">
-              <Image
-              src="/logo-ministere.png"
-              alt="Ministère de l'Agriculture"
-              width={90}
-              height={55}
-              className="h-10 w-auto object-contain"
-            />
-              <span className="font-display text-lg tracking-wide">MARHP</span>
-            </div>
+            
+           
 
             <div className="mt-10 grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
               <div>

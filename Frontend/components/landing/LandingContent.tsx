@@ -166,16 +166,14 @@ function Hero() {
               <br />
               d'Exportation de <span className="text-gradient-gold">l'Huile d'Olive</span>
             </h1>
-            <p className="mt-3 font-[Noto_Naskh_Arabic] text-lg text-cream-200/70" dir="rtl" lang="ar">
-              المنصة الوطنية لتصدير زيت الزيتون
-            </p>
+           
           </Reveal>
 
           <Reveal delay={220}>
             <p className="mt-7 max-w-xl text-[15px] leading-relaxed text-cream-100/75 md:text-base">
               Une plateforme moderne pour accélérer l'exportation de l'huile d'olive
               tunisienne vers les marchés internationaux. Suivi en temps réel,
-              traçabilité complète et communication directe avec le Ministère —
+              traçabilité complète et communication directe avec le Ministère
               remplaçant les démarches papier par un système numérique transparent.
             </p>
           </Reveal>
@@ -228,7 +226,7 @@ function Hero() {
 function Stats() {
   const items = [
     { value: 145000, suffix: "+", label: "tonnes exportées en 2024" },
-    { value: 1.46, decimals: 2, prefix: "", suffix: " Md $", label: "de valeur d'exportation" },
+    { value: 1.46, decimals: 2, prefix: "", suffix: " Md TND", label: "de valeur d'exportation" },
     { value: 100, suffix: " %", label: "de traçabilité garantie" },
     { value: 2340, suffix: "+", label: "exportateurs vérifiés" },
   ];
@@ -271,7 +269,7 @@ function Problem() {
           <Reveal delay={200}>
             <p className="mt-6 max-w-md text-[15px] leading-relaxed text-cream-100/70">
               L'huile d'olive tunisienne est un pilier de l'économie nationale, mais
-              son processus d'exportation reste largement manuel — freinant la
+              son processus d'exportation reste largement manuel freinant la
               compétitivité et la transparence.
             </p>
           </Reveal>

@@ -41,10 +41,11 @@ export default function Navbar() {
   }, [open]);
 
   const links = [
-    { href: "/contact", label: "Contact" },
-    { href: "/about", label: "À propos" },
-    { href: "/espace", label: "Espace", protected: true },
-    { href: "/registration", label: "Demande d'enregistrement" },
+   
+    { href: "/espace", label: "Espace exportateur", protected: true,title: "Espace exportateur" },
+    { href: "/registration", label: "Demande d'enregistrement" ,title: "Demande d'enregistrement dans la liste des exportateurs"},
+     { href: "/contact", label: "Contact" ,title: "Contact"},
+    { href: "/about", label: "À propos" ,title: "À propos"},
   ];
 
   const handleProtectedNav = (href: string) => {
@@ -73,7 +74,7 @@ export default function Navbar() {
             : "backdrop-blur-md bg-olive-950/35 border-b border-transparent"
         }`}
       >
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 md:px-8">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
           <Link href="/" className="group flex items-center gap-2.5">
             <Image
               src="/logo-ministere.png"
@@ -99,6 +100,7 @@ export default function Navbar() {
           <nav className="hidden items-center gap-2 lg:flex">
             {links.map((l) => (
               <button
+                title={l.title}
                 key={l.href}
                 onClick={() => handleProtectedNav(l.href)}
                 className="rounded-full border border-cream-50/10 bg-cream-50/[0.03] px-4 py-2 text-sm text-cream-100/85 transition-all duration-200 hover:border-gold-300/30 hover:bg-gold-300/10 hover:text-gold-300"

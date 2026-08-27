@@ -13,6 +13,7 @@ import {
   SECTION_ALLOWED_ROLES,
   ROLE_HOME_ROUTE,
 } from "@/lib/auth/roleAccess";
+import Link from "next/dist/client/link";
 
 export default function MinisterLayout({
   children,
@@ -47,25 +48,27 @@ export default function MinisterLayout({
   return (
     <div className="min-h-screen w-full bg-olive-950 font-body text-cream-50">
       <header className="flex items-center justify-between border-b border-cream-50/10 bg-olive-950/60 px-6 py-3.5 backdrop-blur-md sm:px-10">
-        <div className="flex items-center gap-2.5">
-          <Image
-            src="/logo-ministere.png"
-            alt="Ministère de l'Agriculture"
-            width={90}
-            height={55}
-            className="h-9 w-auto object-contain"
-          />
-
-          <div className="leading-tight">
-            <span className="font-display text-base tracking-wide text-cream-50">
-              MARHP
-            </span>
-
-            <p className="text-[10px] uppercase tracking-[0.15em] text-cream-50/40">
-              Espace Ministre
-            </p>
+        <Link href="/" className="group flex items-center gap-2.5">
+            <Image
+              src="/logo-ministere.png"
+              alt="Ministère de l'Agriculture"
+              width={90}
+              height={55}
+              className="h-10 w-auto object-contain"
+              priority
+            />
+           <div className="leading-tight">
+            <div className="font-serif text-[12px] sm:text-[15px] text-cream-50">
+              République Tunisienne
+            </div>
+            <div className="text-[8px] sm:text-[10px] uppercase tracking-[0.12em] sm:tracking-[0.18em] text-cream-300/70 max-w-[140px] sm:max-w-none">
+              <span className="sm:hidden">MARHP</span>
+              <span className="hidden sm:inline">
+                Ministère de l'Agriculture, des Ressources <br /> Hydrauliques et de la Pêche
+              </span>
+            </div>
           </div>
-        </div>
+          </Link>
 
         <div className="flex items-center gap-3">
           <NotificationBell />

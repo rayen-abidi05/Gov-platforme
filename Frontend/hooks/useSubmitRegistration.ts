@@ -2,9 +2,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { privateApi } from "@/lib/api/privateApi";
 import { DocumentsFormValues } from "@/lib/validations/documentsSchema";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 export function useSubmitRegistration() {
   const queryClient = useQueryClient();
-
+  const router = useRouter();
   return useMutation({
     mutationFn: async (values: DocumentsFormValues & { note?: string }) => {
       const formData = new FormData();
@@ -32,7 +33,7 @@ export function useSubmitRegistration() {
       return res.data;
     },
     onSuccess: () => {
-      toast.success("envoyées avec succées!");
+      router.push("/registration");
       queryClient.invalidateQueries({ queryKey: ["registration-status"] });
     },
   });

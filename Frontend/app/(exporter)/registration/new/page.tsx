@@ -93,7 +93,17 @@ export default function RegistrationPage() {
               height={55}
               className="h-10 w-auto object-contain"
             />
-            <span className="font-display text-lg tracking-wide">MARP</span>
+             <div className="leading-tight">
+            <div className="font-serif text-[12px] sm:text-[15px] text-cream-50">
+              République Tunisienne
+            </div>
+            <div className="text-[8px] sm:text-[10px] uppercase tracking-[0.12em] sm:tracking-[0.18em] text-cream-300/70 max-w-[140px] sm:max-w-none">
+              <span className="sm:hidden">MARHP</span>
+              <span className="hidden sm:inline">
+                Ministère de l'Agriculture, des Ressources <br /> Hydrauliques et de la Pêche
+              </span>
+            </div>
+          </div>
           </div>
           <Link
             href="/"
@@ -112,7 +122,11 @@ export default function RegistrationPage() {
             Téléversez les documents requis. Votre dossier sera vérifié par le
             Ministère avant l'activation de votre accès.
           </p>
-
+          <p className="mt-1 text-xs text-gold-300 opacity-55">
+            Les documents téléversés doivent être des scans clairs et lisibles
+             des pièces originales. Toute falsification ou altération constitue
+              une infraction passible de sanctions.
+              </p>
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
             <h2 className="text-sm font-medium text-cream-50/90">
               Documents requis
@@ -162,6 +176,15 @@ export default function RegistrationPage() {
                 )}
               </div>
             )}
+            <div>
+              <input type="checkbox" id="terms" required disabled={isPending} className="mr-2" />
+              <label htmlFor="terms" className="text-sm text-cream-50/80">
+              Je déclare que les documents fournis sont authentiques et conformes aux originaux, conformément aux{" "}
+              <Link href="/terms" target="_blank" className="text-gold-300 hover:underline">
+                conditions d'utilisation
+              </Link>
+            </label>
+            </div>
 
             {isError && (
               <div className="mt-4 rounded-lg border border-red-400/30 bg-red-950/20 p-3 text-sm text-red-300">

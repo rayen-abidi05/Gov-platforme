@@ -27,9 +27,17 @@ export default function RegisterPage() {
                               height={55}
                               className="h-10 w-auto object-contain"
                             />
-                <span className="font-display text-lg tracking-wide">
-                  MARHP
-                </span>
+                <div className="leading-tight">
+            <div className="font-serif text-[12px] sm:text-[15px] text-cream-50">
+              République Tunisienne
+            </div>
+            <div className="text-[8px] sm:text-[10px] uppercase tracking-[0.12em] sm:tracking-[0.18em] text-cream-300/70 max-w-[140px] sm:max-w-none">
+              <span className="sm:hidden">MARHP</span>
+              <span className="hidden sm:inline">
+                Ministère de l'Agriculture, des Ressources <br /> Hydrauliques et de la Pêche
+              </span>
+            </div>
+          </div>
               </div>
 
           <div className="max-w-xl">

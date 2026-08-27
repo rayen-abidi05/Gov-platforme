@@ -62,18 +62,7 @@ export default function Contact() {
 
         <section className="flex-1 px-8 pt-28 pb-16 sm:px-12 sm:pt-32 lg:px-16 lg:pt-24 lg:pb-20">
           <div className="mx-auto max-w-5xl">
-            <div className="mb-10 flex items-center gap-2.5">
-              <Image
-                            src="/logo-ministere.png"
-                            alt="Ministère de l'Agriculture"
-                            width={90}
-                            height={55}
-                            className="h-10 w-auto object-contain"
-                          />
-              <span className="font-display text-lg tracking-wide">
-                MARHP
-              </span>
-            </div>
+            
 
             <OliveBranchMotif className="mb-6 h-9 w-40 text-gold-300" />
             <h1 className="font-display text-4xl leading-[1.05] tracking-tight sm:text-5xl">
@@ -150,7 +139,6 @@ export default function Contact() {
                 </div>
               </div>
 
-              {/* Form panel */}
               <div className="bg-olive-950/40 p-8 sm:p-10">
                 <ContactForm />
               </div>

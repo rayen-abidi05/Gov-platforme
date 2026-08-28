@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Upload, FileText } from "lucide-react";
+import { Upload, FileText, X } from "lucide-react";
 import { DocType } from "@/types/registration";
 
 interface Props {
@@ -30,6 +30,19 @@ export default function DocumentSlot({
     onChange(file);
   };
 
+  const handleRemove = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setFileName(null);
+
+    if (inputRef && "current" in inputRef && inputRef.current) {
+      inputRef.current.value = "";
+    }
+
+    onChange(null);
+  };
+
   return (
     <label
       htmlFor={docType}
@@ -45,21 +58,44 @@ export default function DocumentSlot({
 
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium text-cream-50">{label.fr}</p>
+
         <p className="text-xs text-cream-50/50" dir="rtl">
           {label.ar}
         </p>
 
         {fileName && (
-          <p className="mt-1 truncate text-xs text-gold-300">
-            {fileName}
-          </p>
+          <div className="mt-1 flex items-center gap-2">
+            <p className="min-w-0 truncate text-xs text-gold-300">
+              {fileName}
+            </p>
+
+            
+          </div>
         )}
 
-        {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
+        {error && (
+          <p className="mt-1 text-xs text-red-400">
+            {error}
+          </p>
+        )}
       </div>
 
       <Upload className="h-4 w-4 shrink-0 text-cream-50/50" />
+         {fileName && (
+          
+           
 
+            <button
+              type="button"
+              onClick={handleRemove}
+              disabled={disabled}
+              className="shrink-0 rounded-full p-0.5 text-cream-50/50 transition-colors hover:bg-red-400/10 hover:text-red-400"
+              aria-label="Supprimer le fichier"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          
+        )}
       <input
         id={docType}
         ref={inputRef}

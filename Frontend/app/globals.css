@@ -57,6 +57,36 @@
   50%  { transform: translate3d(-2%, 3%, 0) scale(1.05); }
   100% { transform: translate3d(0, 0, 0) scale(1); }
 }
+@keyframes heroCardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(32px) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroCardFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.hero-card-in {
+  animation: heroCardIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-card-float {
+  animation: heroCardFloat 6s ease-in-out infinite;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .olive-aurora-layer { animation: none !important; }

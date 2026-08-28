@@ -5,9 +5,15 @@ import {
   Leaf, ShieldCheck, Lock, Server, ArrowRight, Clock,
   MessageSquareWarning, EyeOff, Activity, FileText, BellRing,
   GitBranch, UserPlus, UploadCloud, BadgeCheck,
+  ArrowUpRight,Globe2,
+  Users
 } from "lucide-react";
 import Link from "next/link";
 import { useUser } from "@/hooks/useUser";
+
+import Image from "next/image";
+
+
 
 function useReveal<T extends HTMLElement>() {
   const ref = useRef<T | null>(null);
@@ -105,26 +111,58 @@ function CountUp({
 }
 
 /* ---------------- Decorative olive branch ---------------- */
-function OliveBranch({ className = "" }: { className?: string }) {
+/* ---------------- Olive Tree mark (replaces OliveBranch) ---------------- */
+function OliveTree({ className = "" }: { className?: string }) {
+  // Leaf clusters arranged like a canopy, mirroring the Olex-TN mark
+  const leaves = [
+    // left side
+    { x: 70, y: 150, rx: 26, ry: 11, rot: -20 },
+    { x: 55, y: 185, rx: 24, ry: 10, rot: -35 },
+    { x: 50, y: 225, rx: 22, ry: 9, rot: -55 },
+    { x: 90, y: 110, rx: 24, ry: 10, rot: -10 },
+    { x: 110, y: 80, rx: 22, ry: 9, rot: 5 },
+    // right side
+    { x: 330, y: 150, rx: 26, ry: 11, rot: 20 },
+    { x: 345, y: 185, rx: 24, ry: 10, rot: 35 },
+    { x: 350, y: 225, rx: 22, ry: 9, rot: 55 },
+    { x: 310, y: 110, rx: 24, ry: 10, rot: 10 },
+    { x: 290, y: 80, rx: 22, ry: 9, rot: -5 },
+    // top / center
+    { x: 200, y: 55, rx: 24, ry: 10, rot: 0 },
+    { x: 165, y: 65, rx: 22, ry: 9, rot: -20 },
+    { x: 235, y: 65, rx: 22, ry: 9, rot: 20 },
+    { x: 140, y: 95, rx: 22, ry: 9, rot: -40 },
+    { x: 260, y: 95, rx: 22, ry: 9, rot: 40 },
+  ];
+
   return (
     <svg viewBox="0 0 400 400" className={className} aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M60 340 C 130 260, 220 200, 340 90" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
-      {[
-        [100, 300, -35], [140, 260, -25], [180, 220, -15], [220, 180, -5],
-        [260, 140, 5], [300, 105, 15], [130, 285, 160], [170, 245, 170],
-        [210, 205, 180], [250, 165, 190], [290, 128, 200],
-      ].map(([x, y, r], i) => (
-        <g key={i} transform={`translate(${x} ${y}) rotate(${r})`}>
-          <ellipse cx="0" cy="0" rx="22" ry="8" fill="currentColor" opacity="0.85" />
-          <ellipse cx="0" cy="0" rx="22" ry="8" fill="url(#leafShine)" opacity="0.35" />
-        </g>
-      ))}
       <defs>
         <linearGradient id="leafShine" x1="0" y1="-8" x2="0" y2="8">
-          <stop offset="0" stopColor="#fff" stopOpacity="0.6" />
+          <stop offset="0" stopColor="#fff" stopOpacity="0.55" />
           <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </linearGradient>
+        <linearGradient id="trunkShine" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="currentColor" stopOpacity="0.6" />
+          <stop offset="1" stopColor="currentColor" stopOpacity="0.95" />
+        </linearGradient>
       </defs>
+
+      {/* trunk */}
+      <path
+        d="M200 380 L200 220 M200 240 L165 200 M200 235 L235 195"
+        stroke="url(#trunkShine)"
+        strokeWidth="7"
+        strokeLinecap="round"
+      />
+
+      {/* canopy */}
+      {leaves.map((l, i) => (
+        <g key={i} transform={`translate(${l.x} ${l.y}) rotate(${l.rot})`}>
+          <ellipse cx="0" cy="0" rx={l.rx} ry={l.ry} fill="currentColor" opacity="0.9" />
+          <ellipse cx="0" cy="0" rx={l.rx} ry={l.ry} fill="url(#leafShine)" opacity="0.4" />
+        </g>
+      ))}
     </svg>
   );
 }
@@ -141,84 +179,232 @@ function Aurora() {
   );
 }
 
+
+
+
+/* ---------------- Hero visual (photo) ---------------- */
+function HeroVisual() {
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const rect = el.getBoundingClientRect();
+        // distance scrolled past the element's initial position, clamped
+        const delta = Math.max(-80, Math.min(80, -rect.top * 0.12));
+        setOffset(delta);
+        ticking = false;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div
+      ref={wrapRef}
+      className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] border border-gold-500/20 shadow-[0_40px_120px_-30px] shadow-black/60"
+    >
+      {/* Reveal wipe wrapper — runs once on mount */}
+      <div className="absolute inset-0 animate-reveal-wipe">
+        {/* Parallax + Ken Burns wrapper */}
+        <div
+          className="absolute -inset-y-10 inset-x-0 animate-photo-settle"
+          style={{ transform: `translateY(${offset}px)` }}
+        >
+          <div className="absolute inset-0 animate-kenburns">
+            <Image
+              src="/hero-olive-export.jpg"
+              alt="Oliveraie tunisienne surplombant le port d'exportation"
+              fill
+              priority
+              className="object-cover"
+              sizes="(min-width: 1024px) 45vw, 100vw"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Gradients for legibility + theme blend */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-olive-950 via-olive-950/40 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-olive-950/50 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-inset ring-gold-400/15" />
+
+      <div className="absolute bottom-5 left-5 inline-flex items-center gap-2 rounded-full border border-cream-50/15 bg-olive-950/60 px-3.5 py-1.5 backdrop-blur-sm">
+        <span className="h-1.5 w-1.5 rounded-full bg-gold-400" />
+        <span className="text-[11px] tracking-wide text-cream-100/85">
+          De l'oliveraie au port d'exportation
+        </span>
+      </div>
+    </div>
+  );
+}
+
 /* ---------------- Sections ---------------- */
+
+/* ---------------- Hero (updated) ---------------- */
 function Hero() {
   const { data: user } = useUser();
   const isLoggedInExporter = user?.role === "EXPORTER";
 
   return (
-    <section className="relative overflow-hidden pt-36 pb-24 md:pt-44 md:pb-32">
-      <Aurora />
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-5 md:px-8 lg:grid-cols-[1.15fr_1fr]">
-        <div>
-          <Reveal>
-            <div className="inline-flex items-center gap-2 rounded-full border border-gold-500/25 bg-gold-500/5 px-3.5 py-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-gold-400 shadow-[0_0_10px] shadow-gold-400" />
+    <section className="relative isolate overflow-hidden">
+      
+      <div className="absolute inset-0">
+        <Image
+          src="/hero-olive-export.jpg"
+          alt="Oliveraie tunisienne surplombant le port d'exportation"
+          fill
+          priority
+          className="object-cover animate-kenburns"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 animate-fade-in bg-gradient-to-r from-olive-950/95 via-olive-950/55 to-olive-950/10" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-olive-950 to-transparent" />
+      </div>
+
+      <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-end px-5 pb-20 pt-40 md:px-8 md:pb-28">
+        <div className="max-w-2xl">
+          
+          <Reveal delay={100}>
+            <div
+              className="inline-flex items-center gap-2 rounded-full border border-gold-500/25 bg-gold-500/5 px-3.5 py-1.5 backdrop-blur-sm"
+            >
+              <span className="h-1.5 w-1.5 animate-badge-pulse rounded-full bg-gold-400" />
               <span className="text-[11px] uppercase tracking-[0.22em] text-gold-300">
                 Plateforme officielle du Ministère
               </span>
             </div>
           </Reveal>
 
-          <Reveal delay={120}>
-            <h1 className="mt-6 font-serif text-[42px] leading-[1.05] text-cream-50 md:text-[64px]">
-              Plateforme Nationale
+          <Reveal delay={250}>
+            <h1
+              className="mt-6 font-serif text-[42px] leading-[1.05] text-cream-50 md:text-[68px]"
+            >
+              Prévenir la complexité,
               <br />
-              d'Exportation de <span className="text-gradient-gold">l'Huile d'Olive</span>
+              exporter <span className="text-gradient-gold">l'huile d'olive</span> simplement
             </h1>
-           
           </Reveal>
 
-          <Reveal delay={220}>
-            <p className="mt-7 max-w-xl text-[15px] leading-relaxed text-cream-100/75 md:text-base">
+          <Reveal delay={400}>
+            <p
+              className="mt-6 max-w-xl text-[15px] leading-relaxed text-cream-100/80 md:text-base"
+            >
               Une plateforme moderne pour accélérer l'exportation de l'huile d'olive
-              tunisienne vers les marchés internationaux. Suivi en temps réel,
-              traçabilité complète et communication directe avec le Ministère
-              remplaçant les démarches papier par un système numérique transparent.
+              tunisienne vers les marchés internationaux — suivi en temps réel,
+              traçabilité complète et communication directe avec le Ministère.
             </p>
           </Reveal>
 
-          <Reveal delay={320}>
-            {!isLoggedInExporter && (
+          {!isLoggedInExporter && (
+            <Reveal delay={550}>
               <div className="mt-9 flex flex-wrap items-center gap-3">
                 <Link
                   href="/register"
-                  className="group inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3.5 text-sm font-medium text-olive-950 transition-all hover:scale-[1.03] hover:bg-gold-400 glow-gold"
+                  className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3.5 text-sm font-medium text-olive-950 transition-all hover:scale-[1.03] hover:bg-gold-400 glow-gold"
                 >
                   Devenir exportateur
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex items-center gap-2 rounded-full border border-gold-500/30 px-6 py-3.5 text-sm font-medium text-cream-50 transition-all hover:border-gold-400 hover:text-gold-300"
+                  className="grid h-12 w-12 place-items-center rounded-full border border-cream-50/25 text-cream-50 transition-all hover:border-gold-400 hover:text-gold-300"
+                  aria-label="Se connecter"
                 >
-                  Se connecter
+                  <ArrowUpRight className="h-4 w-4" />
                 </Link>
               </div>
-            )}
-          </Reveal>
+            </Reveal>
+          )}
+        </div>
+      </div>
 
-          <Reveal delay={420}>
-            <div className="mt-8 inline-flex items-center gap-2.5 rounded-full border border-olive-700/60 bg-olive-900/40 px-4 py-2">
-              <Lock className="h-3.5 w-3.5 text-gold-300" />
-              <span className="text-xs text-cream-100/75">
-                Accès chiffré et conforme aux normes du Ministère
-              </span>
-            </div>
-          </Reveal>
+     <div className="pointer-events-none absolute inset-0 hidden lg:block">
+  <div className="mx-auto max-w-7xl px-8">
+
+    {/* Main card */}
+    <div
+      className="pointer-events-auto absolute right-8 top-[30%] w-[340px] hero-card-in rounded-2xl bg-gradient-to-br from-cream-50 via-cream-50 to-gold-300/25 p-5 shadow-glass ring-1 ring-gold-400/20 backdrop-blur-sm"
+      style={{ animationDelay: "0.5s" }}
+    >
+      <div className="hero-card-float">
+        <div className="font-serif text-lg text-olive-950">
+          Traçabilité de bout en bout
         </div>
 
-        <Reveal delay={200} className="relative hidden lg:block">
-          <div className="relative aspect-square">
-            <div className="absolute inset-8 rounded-full border border-gold-500/20" />
-            <div className="absolute inset-16 rounded-full border border-gold-500/10" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="h-56 w-56 rounded-full bg-[radial-gradient(circle_at_30%_30%,oklch(0.72_0.15_82/0.5),transparent_70%)] blur-2xl" />
-            </div>
-            <OliveBranch className="absolute inset-0 h-full w-full text-gold-400/85 animate-float-slow" />
-          </div>
-        </Reveal>
+        <p className="mt-1.5 text-sm leading-relaxed text-olive-950/65">
+          De l'enregistrement à l'exportation, chaque étape est suivie et
+          vérifiée par le Ministère.
+        </p>
+
+        <Link
+          href="/registration"
+          className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-olive-950 px-3.5 py-2 text-xs font-medium text-cream-50 transition-transform hover:scale-105"
+        >
+          En savoir plus
+          <ArrowUpRight className="h-3 w-3" />
+        </Link>
       </div>
+    </div>
+
+    {/* Small cards */}
+    <div className="pointer-events-auto absolute bottom-16 right-8 flex gap-4">
+
+      {/* Countries card */}
+      <div
+        className="w-[165px] hero-card-in rounded-2xl bg-gradient-to-br from-cream-50 via-cream-50 to-gold-300/25 p-5 shadow-glass ring-1 ring-gold-400/20"
+        style={{ animationDelay: "0.65s" }}
+      >
+        <div
+          className="hero-card-float"
+          style={{ animationDelay: "0.3s" }}
+        >
+          <Globe2 className="h-5 w-5 text-olive-700" />
+
+          <div className="mt-3 font-serif text-2xl text-olive-950">
+            60+
+          </div>
+
+          <div className="mt-0.5 text-[11px] leading-snug text-olive-950/55">
+            pays de destination
+          </div>
+        </div>
+      </div>
+
+      {/* Exporters card */}
+      <div
+        className="w-[165px] hero-card-in rounded-2xl bg-gradient-to-br from-cream-50 via-cream-50 to-gold-300/25 p-5 shadow-glass ring-1 ring-gold-400/20"
+        style={{ animationDelay: "0.8s" }}
+      >
+        <div
+          className="hero-card-float"
+          style={{ animationDelay: "0.6s" }}
+        >
+          <Users className="h-5 w-5 text-olive-700" />
+
+          <div className="mt-3 font-serif text-2xl text-olive-950">
+            2 340+
+          </div>
+
+          <div className="mt-0.5 text-[11px] leading-snug text-olive-950/55">
+            exportateurs vérifiés
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
     </section>
   );
 }
@@ -441,7 +627,7 @@ function FinalCTA() {
         <div className="absolute left-1/2 top-1/2 h-[500px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,oklch(0.72_0.15_82/0.18),transparent_70%)] blur-3xl" />
       </div>
       <div className="relative mx-auto max-w-3xl px-5 text-center md:px-8">
-        <OliveBranch className="mx-auto h-16 w-16 text-gold-400/60 -scale-x-100" />
+        
         <Reveal>
           <h2 className="mt-6 font-serif text-4xl leading-tight text-cream-50 md:text-6xl">
             Prêt à exporter en <span className="text-gradient-gold">toute confiance</span> ?
@@ -472,6 +658,7 @@ function FinalCTA() {
 export default function LandingContent() {
   return (
     <>
+     
       <Hero />
       <Stats />
       <Problem />

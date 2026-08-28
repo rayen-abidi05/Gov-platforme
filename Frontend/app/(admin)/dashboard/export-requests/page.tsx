@@ -11,7 +11,19 @@ import ExportRequestsFilters from "@/components/admin/ExportRequestsFilters";
 import ExportRequestsTable from "@/components/admin/ExportRequestsTable";
 import ExportRequestModal from "@/components/admin/ExportRequestModal";
 import Spinner from "@/components/ui/spinner";
+import {
+  FileDown,
+  FileSpreadsheet,
+  FileText,
+  
+} from "lucide-react";
 
+import {
+  downloadCSV,
+  downloadExcel,
+  downloadPDF,
+  ReportData,
+} from "@/lib/reportExport";
 import { Users } from "lucide-react";
 import CreateInstanceModal from "@/components/admin/CreateInstanceModal";
 
@@ -79,7 +91,33 @@ export default function AdminExportRequestsPage() {
   };
 
   const selectedRequests = requests.filter((r) => selectedIds.includes(r.id));
+  const selectedRequestsReport: ReportData = {
+  title: "Demandes d'exportation sélectionnées",
 
+  columns: [
+    "Référence AGRIM",
+    "Client",
+    "Exportateur",
+    "Gouvernorat",
+    "Quantité (kg)",
+    "Statut",
+    "Soumise le",
+    "Décidée le",
+  ],
+
+  rows: selectedRequests.map((r) => ({
+    "Référence AGRIM": r.agrimReference,
+    "Client": r.client,
+    "Exportateur": r.company?.commName ?? "—",
+    "Gouvernorat": r.company?.governorate ?? "—",
+    "Quantité (kg)": r.requestedKg,
+    "Statut": r.status,
+    "Soumise le": new Date(r.submittedAt).toLocaleDateString("fr-FR"),
+    "Décidée le": r.reviewedAt
+      ? new Date(r.reviewedAt).toLocaleDateString("fr-FR")
+      : "—",
+  })),
+};
   return (
     <>
       <AdminHeader
@@ -124,18 +162,65 @@ export default function AdminExportRequestsPage() {
 
             <div className="mt-8 rounded-2xl border border-cream-50/10 bg-olive-950/40 backdrop-blur-md p-5 sm:p-6">
               {selectedIds.length > 0 && (
-                <div className="mb-4 flex items-center justify-between rounded-xl border border-gold-300/30 bg-gold-300/[0.06] px-5 py-3.5">
+               <div className="mb-4 flex flex-col gap-4 rounded-xl border border-gold-300/30 bg-gold-300/[0.06] px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
                   <span className="text-sm text-cream-50">
                     {selectedIds.length} demande{selectedIds.length > 1 ? "s" : ""} sélectionnée
                     {selectedIds.length > 1 ? "s" : ""}
                   </span>
+                 <div className="flex flex-wrap items-center gap-2">
+                  {/* PDF */}
                   <button
+                    type="button"
+                    onClick={() => downloadPDF(selectedRequestsReport)}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-gold-300/30 bg-gold-300/10 px-3 py-2 text-xs font-medium text-gold-300 transition-all duration-200 hover:bg-gold-300/20"
+                    title="Exporter en PDF"
+                  >
+                    <FileText className="h-3.5 w-3.5" />
+                    PDF
+                  </button>
+
+                  {/* Excel */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      downloadExcel(
+                        selectedRequestsReport,
+                        "demandes-exportation-selectionnees"
+                      )
+                    }
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-green-400/30 bg-green-400/10 px-3 py-2 text-xs font-medium text-green-300 transition-all duration-200 hover:bg-green-400/20"
+                    title="Exporter en Excel"
+                  >
+                    <FileSpreadsheet className="h-3.5 w-3.5" />
+                    Excel
+                  </button>
+
+                  {/* CSV */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      downloadCSV(
+                        selectedRequestsReport,
+                        "demandes-exportation-selectionnees"
+                      )
+                    }
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-medium text-blue-300 transition-all duration-200 hover:bg-blue-400/20"
+                    title="Exporter en CSV"
+                  >
+                    <FileDown className="h-3.5 w-3.5" />
+                    CSV
+                  </button>
+
+                  {/* Create instance */}
+                  <button
+                    type="button"
                     onClick={() => setShowInstanceModal(true)}
                     className="inline-flex items-center gap-1.5 rounded-lg bg-gold-300 px-4 py-2 text-xs font-medium text-olive-950 transition-all duration-200 hover:bg-gold-300/90"
                   >
                     <Users className="h-3.5 w-3.5" />
                     Créer une instance
                   </button>
+                </div>
                 </div>
               )}
 

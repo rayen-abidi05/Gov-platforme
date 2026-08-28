@@ -2,7 +2,7 @@ const cookieParser = require("cookie-parser");
 const express = require('express');
 const cors = require('cors');
 
-
+const testEmailRoutes = require("./routes/testEmail.routes");
 const authRouter = require('./routes/authRoute');
 const fileRoute = require("./routes/fileRoute");
 const reqRgistRoute = require("./routes/reqRgist");
@@ -27,6 +27,7 @@ app.use(cors({
 
 
 
+app.use("/api", testEmailRoutes);
 app.use('/api/auth', authRouter);
 app.use("/api/files",authenticateToken,fileRoute);
 app.use("/api/registration",authenticateToken,reqRgistRoute);

@@ -252,13 +252,15 @@ function HeroVisual() {
 /* ---------------- Sections ---------------- */
 
 /* ---------------- Hero (updated) ---------------- */
+
 function Hero() {
   const { data: user } = useUser();
   const isLoggedInExporter = user?.role === "EXPORTER";
 
   return (
     <section className="relative isolate overflow-hidden">
-      
+
+      {/* Background */}
       <div className="absolute inset-0">
         <Image
           src="/hero-olive-export.jpg"
@@ -268,53 +270,101 @@ function Hero() {
           className="object-cover animate-kenburns"
           sizes="100vw"
         />
+
         <div className="absolute inset-0 animate-fade-in bg-gradient-to-r from-olive-950/95 via-olive-950/55 to-olive-950/10" />
+
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-olive-950 to-transparent" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-end px-5 pb-20 pt-40 md:px-8 md:pb-28">
+      {/* Hero content */}
+      <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-end px-5 pb-20 pt-32 md:px-8 md:pb-28">
+
         <div className="max-w-2xl">
-          
+
+          {/* Badge */}
           <Reveal delay={100}>
-            <div
-              className="inline-flex items-center gap-2 rounded-full border border-gold-500/25 bg-gold-500/5 px-3.5 py-1.5 backdrop-blur-sm"
-            >
+            <div className="inline-flex items-center gap-2 rounded-full border border-gold-500/25 bg-gold-500/5 px-3.5 py-1.5 backdrop-blur-sm">
               <span className="h-1.5 w-1.5 animate-badge-pulse rounded-full bg-gold-400" />
+
               <span className="text-[11px] uppercase tracking-[0.22em] text-gold-300">
                 Plateforme officielle du Ministère
               </span>
             </div>
           </Reveal>
 
+          {/* Title */}
           <Reveal delay={250}>
-            <h1
-              className="mt-6 font-serif text-[42px] leading-[1.05] text-cream-50 md:text-[68px]"
-            >
+            <h1 className="mt-6 font-serif text-[42px] leading-[1.05] text-cream-50 md:text-[68px]">
               Prévenir la complexité,
               <br />
-              exporter <span className="text-gradient-gold">l'huile d'olive</span> simplement
+              exporter{" "}
+              <span className="text-gradient-gold">
+                l'huile d'olive
+              </span>{" "}
+              simplement
             </h1>
           </Reveal>
 
+          {/* Description */}
           <Reveal delay={400}>
-            <p
-              className="mt-6 max-w-xl text-[15px] leading-relaxed text-cream-100/80 md:text-base"
-            >
-              Une plateforme moderne pour accélérer l'exportation de l'huile d'olive
-              tunisienne vers les marchés internationaux — suivi en temps réel,
-              traçabilité complète et communication directe avec le Ministère.
+            <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-cream-100/80 md:text-base">
+              Une plateforme moderne pour accélérer l'exportation de l'huile
+              d'olive tunisienne vers les marchés internationaux — suivi en
+              temps réel, traçabilité complète et communication directe avec
+              le Ministère.
             </p>
           </Reveal>
 
+          {/* =====================================================
+              EXPORTER SERVICE PORTAL
+             ===================================================== */}
+          {isLoggedInExporter && (
+            <Reveal delay={520}>
+              <Link
+                href="/espace"
+                className="group mt-6 flex w-fit items-center gap-4 rounded-2xl border border-gold-400/25 bg-olive-950/65 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-gold-400/50 hover:bg-olive-950/80 hover:shadow-[0_15px_40px_-15px] hover:shadow-gold-500/30"
+              >
+
+                {/* Icon */}
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gold-400/10 ring-1 ring-gold-400/20 transition-colors group-hover:bg-gold-400/20">
+                  <ArrowUpRight className="h-4.5 w-4.5 text-gold-300" />
+                </div>
+
+                {/* Text */}
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-cream-50">
+                      Votre espace exportateur
+                    </span>
+
+                    <span className="rounded-full border border-green-400/20 bg-green-400/10 px-2 py-0.5 text-[9px] uppercase tracking-wider text-green-300">
+                      Connecté
+                    </span>
+                  </div>
+
+                  <p className="mt-0.5 text-xs text-cream-100/50">
+                    Accéder à votre portail de services
+                  </p>
+                </div>
+
+                {/* Arrow */}
+                <ArrowRight className="ml-2 h-4 w-4 text-cream-50/40 transition-all duration-300 group-hover:translate-x-1 group-hover:text-gold-300" />
+              </Link>
+            </Reveal>
+          )}
+
+          {/* CTA for visitors */}
           {!isLoggedInExporter && (
             <Reveal delay={550}>
               <div className="mt-9 flex flex-wrap items-center gap-3">
+
                 <Link
                   href="/register"
                   className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3.5 text-sm font-medium text-olive-950 transition-all hover:scale-[1.03] hover:bg-gold-400 glow-gold"
                 >
                   Devenir exportateur
                 </Link>
+
                 <Link
                   href="/login"
                   className="grid h-12 w-12 place-items-center rounded-full border border-cream-50/25 text-cream-50 transition-all hover:border-gold-400 hover:text-gold-300"
@@ -322,92 +372,101 @@ function Hero() {
                 >
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
+
               </div>
             </Reveal>
           )}
+
         </div>
       </div>
 
-     <div className="pointer-events-none absolute inset-0 hidden lg:block">
-  <div className="mx-auto max-w-7xl px-8">
+      {/* =====================================================
+          RIGHT SIDE VISUAL CARDS
+         ===================================================== */}
+      <div className="pointer-events-none absolute inset-0 hidden lg:block">
+        <div className="mx-auto max-w-7xl px-8">
 
-    {/* Main card */}
-    <div
-      className="pointer-events-auto absolute right-8 top-[30%] w-[340px] hero-card-in rounded-2xl bg-gradient-to-br from-cream-50 via-cream-50 to-gold-300/25 p-5 shadow-glass ring-1 ring-gold-400/20 backdrop-blur-sm"
-      style={{ animationDelay: "0.5s" }}
-    >
-      <div className="hero-card-float">
-        <div className="font-serif text-lg text-olive-950">
-          Traçabilité de bout en bout
+          {/* Main card */}
+          <div
+            className="pointer-events-auto absolute right-8 top-[30%] w-[340px] hero-card-in rounded-2xl bg-gradient-to-br from-cream-50 via-cream-50 to-gold-300/25 p-5 shadow-glass ring-1 ring-gold-400/20 backdrop-blur-sm"
+            style={{ animationDelay: "0.5s" }}
+          >
+            <div className="hero-card-float">
+
+              <div className="font-serif text-lg text-olive-950">
+                Traçabilité de bout en bout
+              </div>
+
+              <p className="mt-1.5 text-sm leading-relaxed text-olive-950/65">
+                De l'enregistrement à l'exportation, chaque étape est suivie
+                et vérifiée par le Ministère.
+              </p>
+
+              <Link
+                href="/registration"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-olive-950 px-3.5 py-2 text-xs font-medium text-cream-50 transition-transform hover:scale-105"
+              >
+                En savoir plus
+                <ArrowUpRight className="h-3 w-3" />
+              </Link>
+
+            </div>
+          </div>
+
+          {/* Small cards */}
+          <div className="pointer-events-auto absolute bottom-16 right-8 flex gap-4">
+
+            {/* Countries */}
+            <div
+              className="w-[165px] hero-card-in rounded-2xl bg-gradient-to-br from-cream-50 via-cream-50 to-gold-300/25 p-5 shadow-glass ring-1 ring-gold-400/20"
+              style={{ animationDelay: "0.65s" }}
+            >
+              <div
+                className="hero-card-float"
+                style={{ animationDelay: "0.3s" }}
+              >
+                <Globe2 className="h-5 w-5 text-olive-700" />
+
+                <div className="mt-3 font-serif text-2xl text-olive-950">
+                  60+
+                </div>
+
+                <div className="mt-0.5 text-[11px] leading-snug text-olive-950/55">
+                  pays de destination
+                </div>
+              </div>
+            </div>
+
+            {/* Exporters */}
+            <div
+              className="w-[165px] hero-card-in rounded-2xl bg-gradient-to-br from-cream-50 via-cream-50 to-gold-300/25 p-5 shadow-glass ring-1 ring-gold-400/20"
+              style={{ animationDelay: "0.8s" }}
+            >
+              <div
+                className="hero-card-float"
+                style={{ animationDelay: "0.6s" }}
+              >
+                <Users className="h-5 w-5 text-olive-700" />
+
+                <div className="mt-3 font-serif text-2xl text-olive-950">
+                  2 340+
+                </div>
+
+                <div className="mt-0.5 text-[11px] leading-snug text-olive-950/55">
+                  exportateurs vérifiés
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
-
-        <p className="mt-1.5 text-sm leading-relaxed text-olive-950/65">
-          De l'enregistrement à l'exportation, chaque étape est suivie et
-          vérifiée par le Ministère.
-        </p>
-
-        <Link
-          href="/registration"
-          className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-olive-950 px-3.5 py-2 text-xs font-medium text-cream-50 transition-transform hover:scale-105"
-        >
-          En savoir plus
-          <ArrowUpRight className="h-3 w-3" />
-        </Link>
       </div>
-    </div>
-
-    {/* Small cards */}
-    <div className="pointer-events-auto absolute bottom-16 right-8 flex gap-4">
-
-      {/* Countries card */}
-      <div
-        className="w-[165px] hero-card-in rounded-2xl bg-gradient-to-br from-cream-50 via-cream-50 to-gold-300/25 p-5 shadow-glass ring-1 ring-gold-400/20"
-        style={{ animationDelay: "0.65s" }}
-      >
-        <div
-          className="hero-card-float"
-          style={{ animationDelay: "0.3s" }}
-        >
-          <Globe2 className="h-5 w-5 text-olive-700" />
-
-          <div className="mt-3 font-serif text-2xl text-olive-950">
-            60+
-          </div>
-
-          <div className="mt-0.5 text-[11px] leading-snug text-olive-950/55">
-            pays de destination
-          </div>
-        </div>
-      </div>
-
-      {/* Exporters card */}
-      <div
-        className="w-[165px] hero-card-in rounded-2xl bg-gradient-to-br from-cream-50 via-cream-50 to-gold-300/25 p-5 shadow-glass ring-1 ring-gold-400/20"
-        style={{ animationDelay: "0.8s" }}
-      >
-        <div
-          className="hero-card-float"
-          style={{ animationDelay: "0.6s" }}
-        >
-          <Users className="h-5 w-5 text-olive-700" />
-
-          <div className="mt-3 font-serif text-2xl text-olive-950">
-            2 340+
-          </div>
-
-          <div className="mt-0.5 text-[11px] leading-snug text-olive-950/55">
-            exportateurs vérifiés
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
 
     </section>
   );
 }
+
+
 
 function Stats() {
   const items = [

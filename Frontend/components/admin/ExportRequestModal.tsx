@@ -6,6 +6,8 @@ import ExportStatusBadge from "@/components/exporter/ExportStatusBadge";
 import { useState } from "react";
 import { useResolveAgrim } from "@/hooks/useResolveAgrim";
 import { useSendToCommittee } from "@/hooks/useSendToCommittee";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+
 const DOC_LABELS: Record<string, string> = {
   AGRIM: "Certificat AGRIM",
   CONTRACT: "Contrat avec le client",
@@ -29,8 +31,9 @@ export default function ExportRequestModal({
     mutate: resolveAgrim,
     isPending: isResolving
   } = useResolveAgrim();
-  const {mutate:sendToCommittee}=useSendToCommittee();
-    const handleDownloadDocument = async (docId: string) => {
+  const { mutate: sendToCommittee } = useSendToCommittee();
+
+  const handleDownloadDocument = async (docId: string) => {
     const res = await privateApi.get(`/api/files/${docId}/download`, { responseType: "blob" });
     const url = URL.createObjectURL(res.data);
     const a = document.createElement("a");
@@ -39,14 +42,29 @@ export default function ExportRequestModal({
     a.click();
     URL.revokeObjectURL(url);
   };
-    const handleViewDocument = async (docId: string) => {
-      const res = await privateApi.get(`/api/files/${docId}/view`, { responseType: "blob" });
-      
-      const url = URL.createObjectURL(res.data);
-      window.open(url, "_blank");
-    };
-  
-    console.log("request", request);
+
+  const handleViewDocument = async (docId: string) => {
+    const res = await privateApi.get(`/api/files/${docId}/view`, { responseType: "blob" });
+    const url = URL.createObjectURL(res.data);
+    window.open(url, "_blank");
+  };
+
+  const [pendingAction, setPendingAction] = useState<"REVIEW" | "APPROVE" | "REJECT" | null>(null);
+
+  const STATUS_MAP = {
+    REVIEW: "UNDER_COMMITTEE_REVIEW",
+    APPROVE: "APPROVED",
+    REJECT: "REJECTED",
+  } as const;
+
+  function executeAction(action: "REVIEW" | "APPROVE" | "REJECT") {
+    if (action === "REVIEW") {
+      sendToCommittee(request.id);
+    } else {
+      onStatusChange(request.id, STATUS_MAP[action]);
+    }
+    setPendingAction(null);
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -258,7 +276,7 @@ export default function ExportRequestModal({
 
 
             <button
-              onClick={()=>sendToCommittee(request.id)}
+              onClick={() => setPendingAction("REVIEW")}
               disabled={
                 request.status !== "SENT"
               }
@@ -270,12 +288,7 @@ export default function ExportRequestModal({
 
 
             <button
-              onClick={() =>
-                onStatusChange(
-                  request.id,
-                  "APPROVED"
-                )
-              }
+              onClick={() => setPendingAction("APPROVE")}
               disabled={
               request.status !== "UNDER_COMMITTEE_REVIEW"
             }
@@ -287,12 +300,7 @@ export default function ExportRequestModal({
 
 
             <button
-              onClick={() =>
-                onStatusChange(
-                  request.id,
-                  "REJECTED"
-                )
-              }
+              onClick={() => setPendingAction("REJECT")}
               disabled={
                 request.status !== "UNDER_COMMITTEE_REVIEW"
               }
@@ -308,6 +316,37 @@ export default function ExportRequestModal({
 
 
       </div>
+
+      {pendingAction === "REVIEW" && (
+        <ConfirmDialog
+          title="Mettre le dossier en examen ?"
+          description="Le dossier passera au statut « En examen ». Vous pourrez toujours l'approuver ou le rejeter par la suite."
+          confirmLabel="Confirmer"
+          onConfirm={() => executeAction("REVIEW")}
+          onCancel={() => setPendingAction(null)}
+        />
+      )}
+
+      {pendingAction === "APPROVE" && (
+        <ConfirmDialog
+          title="Approuver ce dossier ?"
+          description={`Vous êtes sur le point d'approuver le dossier de ${request.client}. Cette action est définitive et ne pourra plus être modifiée.`}
+          confirmLabel="Approuver"
+          onConfirm={() => executeAction("APPROVE")}
+          onCancel={() => setPendingAction(null)}
+        />
+      )}
+
+      {pendingAction === "REJECT" && (
+        <ConfirmDialog
+          title="Rejeter ce dossier ?"
+          description={`Vous êtes sur le point de rejeter le dossier de ${request.client}. Cette action est définitive et ne pourra plus être modifiée.`}
+          confirmLabel="Rejeter"
+          variant="danger"
+          onConfirm={() => executeAction("REJECT")}
+          onCancel={() => setPendingAction(null)}
+        />
+      )}
 
     </div>
   );

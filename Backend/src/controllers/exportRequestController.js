@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const  prisma  = new PrismaClient();
-
+const { sendEmail } = require("../services/emailService");
 
 const resolveAgrim = async (req, res) => {
   try {
@@ -53,7 +53,7 @@ const createExportRequest = async (req, res) => {
       return res.status(400).json({ message: `Documents manquants : ${missing.join(", ")}` });
     }
 
-    const company = await prisma.company.findUnique({ where: { userId: user.id } });
+    const company = await prisma.company.findUnique({ where: { userId: user.id }, });
     if (!company) {
       return res.status(404).json({ message: "Entreprise introuvable" });
     }
@@ -105,6 +105,7 @@ const createExportRequest = async (req, res) => {
 };
 
 
+
 const decideExportRequest = async (req, res) => {
   try {
     const { id } = req.params;
@@ -116,27 +117,51 @@ const decideExportRequest = async (req, res) => {
 
     const request = await prisma.exportRequest.findUnique({
       where: { id },
-      include: { company: { include: { user: true } }, agrim: true },
+      include: {
+        company: {
+          include: {
+            user: true,
+          },
+        },
+        agrim: true,
+      },
     });
-    if (!request) return res.status(404).json({ message: "Demande introuvable" });
+
+    if (!request) {
+      return res.status(404).json({
+        message: "Demande introuvable",
+      });
+    }
 
     if (request.status !== "UNDER_COMMITTEE_REVIEW") {
       return res.status(409).json({
-        message: "Cette demande doit être en examen par l'instance avant décision",
+        message:
+          "Cette demande doit être en examen par l'instance avant décision",
       });
     }
+
+    /* --------------------------------
+       APPROVAL VALIDATION
+    -------------------------------- */
 
     if (status === "APPROVED") {
       if (!request.agrimId || !request.agrim) {
         return res.status(409).json({
-          message: "L'AGRIM doit être résolu (référence + limite) avant d'approuver cette demande",
+          message:
+            "L'AGRIM doit être résolu (référence + limite) avant d'approuver cette demande",
         });
       }
 
       const consumedAgg = await prisma.exportRequest.aggregate({
-        where: { agrimId: request.agrimId, status: "APPROVED" },
-        _sum: { requestedKg: true },
+        where: {
+          agrimId: request.agrimId,
+          status: "APPROVED",
+        },
+        _sum: {
+          requestedKg: true,
+        },
       });
+
       const consumed = consumedAgg._sum.requestedKg ?? 0;
       const remaining = request.agrim.limitKg - consumed;
 
@@ -147,12 +172,27 @@ const decideExportRequest = async (req, res) => {
       }
     }
 
+    /* --------------------------------
+       UPDATE REQUEST
+    -------------------------------- */
+
     const updated = await prisma.exportRequest.update({
       where: { id },
-      data: { status, reviewedAt: new Date() },
+      data: {
+        status,
+        reviewedAt: new Date(),
+      },
     });
 
-    const title = status === "APPROVED" ? "Demande d'exportation approuvée" : "Demande d'exportation rejetée";
+    /* --------------------------------
+       NOTIFICATION
+    -------------------------------- */
+
+    const title =
+      status === "APPROVED"
+        ? "Demande d'exportation approuvée"
+        : "Demande d'exportation rejetée";
+
     const message =
       status === "APPROVED"
         ? `Votre demande d'exportation pour ${request.client} a été approuvée. L'autorisation d'exportation vous sera transmise.`
@@ -161,19 +201,480 @@ const decideExportRequest = async (req, res) => {
     const recipients = [request.company.user.id];
 
     if (status === "APPROVED") {
-      const diwanUsers = await prisma.user.findMany({ where: { role: "DIWAN_MEMBER" } });
+      const diwanUsers = await prisma.user.findMany({
+        where: {
+          role: "DIWAN_MEMBER",
+        },
+      });
+
       recipients.push(...diwanUsers.map((u) => u.id));
     }
 
     await prisma.notification.createMany({
-      data: recipients.map((userId) => ({ userId, title, message })),
+      data: recipients.map((userId) => ({
+        userId,
+        title,
+        message,
+      })),
     });
 
+    /* --------------------------------
+       EMAIL DESIGN
+    -------------------------------- */
+
+    const isApproved = status === "APPROVED";
+
+    const statusColor = isApproved ? "#2f6b3f" : "#c0392b";
+    const statusBackground = isApproved ? "#edf7ef" : "#fdf0ef";
+    const statusBorder = isApproved ? "#c9e6cf" : "#f2c7c3";
+
+    const statusLabel = isApproved ? "Demande approuvée" : "Demande rejetée";
+
+    const statusIcon = isApproved ? "✓" : "×";
+
+    const emailTitle = isApproved
+      ? "Votre demande d'exportation a été approuvée"
+      : "Votre demande d'exportation a été rejetée";
+
+    const emailMessage = isApproved
+      ? `
+        Votre demande d'exportation pour
+        <strong>${request.client}</strong>
+        a été approuvée.
+        <br><br>
+        L'autorisation d'exportation vous sera transmise prochainement.
+      `
+      : `
+        Votre demande d'exportation pour
+        <strong>${request.client}</strong>
+        a été rejetée.
+        <br><br>
+        Nous vous invitons à consulter votre espace exportateur
+        pour obtenir plus d'informations.
+      `;
+
+    await sendEmail({
+      to: request.company.user.email,
+
+      subject: emailTitle,
+
+      html: `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>${emailTitle}</title>
+</head>
+
+<body
+  style="
+    margin:0;
+    padding:0;
+    background:#f4f6f4;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#18251c;
+  "
+>
+
+  <table
+    width="100%"
+    cellpadding="0"
+    cellspacing="0"
+    border="0"
+    style="background:#f4f6f4;"
+  >
+
+    <tr>
+      <td align="center" style="padding:40px 20px;">
+
+        <!-- Main container -->
+
+        <table
+          width="100%"
+          cellpadding="0"
+          cellspacing="0"
+          border="0"
+          style="
+            max-width:600px;
+            background:#ffffff;
+            border-radius:16px;
+            overflow:hidden;
+            border:1px solid #e3e8e3;
+          "
+        >
+
+          <!-- Header -->
+
+          <tr>
+            <td
+              style="
+                padding:28px 32px;
+                background:#17351f;
+              "
+            >
+
+              <table
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+              >
+
+                <tr>
+
+                  <td>
+
+                    <div
+                      style="
+                        font-size:22px;
+                        font-weight:700;
+                        color:#ffffff;
+                        letter-spacing:-0.3px;
+                      "
+                    >
+                      Olex-TN
+                    </div>
+
+                    <div
+                      style="
+                        margin-top:5px;
+                        font-size:12px;
+                        color:#d8e5da;
+                      "
+                    >
+                      Plateforme d'exportation de l'huile d'olive
+                    </div>
+
+                  </td>
+
+                  <td
+                    align="right"
+                    style="
+                      font-size:26px;
+                      color:#d4af37;
+                    "
+                  >
+                    ●
+                  </td>
+
+                </tr>
+
+              </table>
+
+            </td>
+          </tr>
+
+
+          <!-- Status -->
+
+          <tr>
+
+            <td style="padding:36px 32px 10px;">
+
+              <div
+                style="
+                  display:inline-block;
+                  padding:8px 13px;
+                  border-radius:20px;
+                  background:${statusBackground};
+                  border:1px solid ${statusBorder};
+                  color:${statusColor};
+                  font-size:12px;
+                  font-weight:700;
+                "
+              >
+
+                <span
+                  style="
+                    display:inline-block;
+                    width:20px;
+                    height:20px;
+                    line-height:20px;
+                    text-align:center;
+                    border-radius:50%;
+                    background:${statusColor};
+                    color:#ffffff;
+                    margin-right:6px;
+                  "
+                >
+                  ${statusIcon}
+                </span>
+
+                ${statusLabel}
+
+              </div>
+
+            </td>
+
+          </tr>
+
+
+          <!-- Content -->
+
+          <tr>
+
+            <td style="padding:15px 32px 32px;">
+
+              <h1
+                style="
+                  margin:0;
+                  font-size:28px;
+                  line-height:1.25;
+                  color:#17351f;
+                  letter-spacing:-0.5px;
+                "
+              >
+                ${emailTitle}
+              </h1>
+
+
+              <p
+                style="
+                  margin:18px 0 0;
+                  font-size:15px;
+                  line-height:1.7;
+                  color:#5d685f;
+                "
+              >
+                Bonjour
+                <strong style="color:#17351f;">
+                  ${request.company.commName}
+                </strong>,
+              </p>
+
+
+              <p
+                style="
+                  margin:12px 0 0;
+                  font-size:15px;
+                  line-height:1.7;
+                  color:#5d685f;
+                "
+              >
+                ${emailMessage}
+              </p>
+
+
+              <!-- Request information -->
+
+              <table
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                style="
+                  margin-top:26px;
+                  background:#f7f9f7;
+                  border:1px solid #e4e9e4;
+                  border-radius:12px;
+                "
+              >
+
+                <tr>
+
+                  <td
+                    style="
+                      padding:18px 20px;
+                      font-size:13px;
+                      color:#7a837b;
+                    "
+                  >
+                    Référence de la demande
+                  </td>
+
+                  <td
+                    align="right"
+                    style="
+                      padding:18px 20px;
+                      font-size:13px;
+                      font-weight:700;
+                      color:#17351f;
+                    "
+                  >
+                    ${request.id}
+                  </td>
+
+                </tr>
+
+                <tr>
+
+                  <td
+                    style="
+                      padding:0 20px 18px;
+                      font-size:13px;
+                      color:#7a837b;
+                    "
+                  >
+                    Client
+                  </td>
+
+                  <td
+                    align="right"
+                    style="
+                      padding:0 20px 18px;
+                      font-size:13px;
+                      font-weight:700;
+                      color:#17351f;
+                    "
+                  >
+                    ${request.client}
+                  </td>
+
+                </tr>
+
+                <tr>
+
+                  <td
+                    style="
+                      padding:0 20px 18px;
+                      font-size:13px;
+                      color:#7a837b;
+                    "
+                  >
+                    Quantité demandée
+                  </td>
+
+                  <td
+                    align="right"
+                    style="
+                      padding:0 20px 18px;
+                      font-size:13px;
+                      font-weight:700;
+                      color:#17351f;
+                    "
+                  >
+                    ${request.requestedKg.toLocaleString("fr-FR")} kg
+                  </td>
+
+                </tr>
+
+                <tr>
+
+                  <td
+                    style="
+                      padding:0 20px 18px;
+                      font-size:13px;
+                      color:#7a837b;
+                    "
+                  >
+                    Statut
+                  </td>
+
+                  <td
+                    align="right"
+                    style="
+                      padding:0 20px 18px;
+                      font-size:13px;
+                      font-weight:700;
+                      color:${statusColor};
+                    "
+                  >
+                    ${statusLabel}
+                  </td>
+
+                </tr>
+
+              </table>
+
+
+              <!-- CTA -->
+
+              <div
+                style="
+                  text-align:center;
+                  margin-top:30px;
+                "
+              >
+
+                <a
+                  href="${process.env.FRONTEND_URL}/espace"
+                  style="
+                    display:inline-block;
+                    padding:13px 24px;
+                    background:#17351f;
+                    color:#ffffff;
+                    text-decoration:none;
+                    border-radius:8px;
+                    font-size:14px;
+                    font-weight:700;
+                  "
+                >
+                  Accéder à mon espace
+                </a>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+
+          <!-- Footer -->
+
+          <tr>
+
+            <td
+              style="
+                padding:22px 32px;
+                border-top:1px solid #e8ece8;
+                background:#fafbfa;
+              "
+            >
+
+              <p
+                style="
+                  margin:0;
+                  font-size:12px;
+                  line-height:1.6;
+                  color:#8a928b;
+                  text-align:center;
+                "
+              >
+                Cet email a été envoyé automatiquement par Olex-TN.
+                <br>
+                Ministère de l'Agriculture, des Ressources hydrauliques et de la Pêche
+              </p>
+
+            </td>
+
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+
+  </table>
+
+</body>
+</html>
+      `,
+    });
+
+    console.log(
+      `Decision email sent to ${request.company.user.email}`
+    );
+
+   
+
+    
+
     res.status(200).json(updated);
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("DECIDE EXPORT REQUEST ERROR:", error);
+
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
+
+
 const getExportRequests = async (req,res)=>{
   try {
     const requests = await prisma.exportRequest.findMany({

@@ -8,11 +8,12 @@ import { useUser } from "@/hooks/useUser";
 import { useLogout } from "@/hooks/useLogout";
 import AuthLinks from "./AuthLinks";
 import ProfileNav from "./ProfileNav";
-import { User, UserCircle, LogOut, Menu, X, FileText } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { User, UserCircle, LogOut, Menu, X, FileText, Home } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const { data: user, isLoading } = useUser();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -34,12 +35,19 @@ export default function Navbar() {
   }, [open]);
 
   const links = [
-   
-    { href: "/espace", label: "Espace exportateur", protected: true,title: "Espace exportateur" },
+    { href: "/", label: "Accueil", title: "Retour à l'accueil" },
+    { href: "/espace", label: "Espace exportateur", protected: true, title: "Espace exportateur" },
     { href: "/registration", label: "Demande d'enregistrement" ,title: "Demande d'enregistrement dans la liste des exportateurs"},
      { href: "/contact", label: "Contact" ,title: "Contact"},
     { href: "/about", label: "À propos" ,title: "À propos"},
   ];
+
+  // Desktop nav shows Accueil as a dedicated home icon, so the text-link
+  // row only needs the rest.
+  const navLinks = links.filter((l) => l.href !== "/");
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname?.startsWith(`${href}/`);
 
   const guidePdfHref = "/docs/Guide_Exportation_Huile_Olive_FR.pdf";
 
@@ -65,58 +73,88 @@ export default function Navbar() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
           scrolled
-            ? "backdrop-blur-xl bg-olive-950/75 border-b border-gold-500/15"
-            : "backdrop-blur-md bg-olive-950/35 border-b border-transparent"
+            ? "backdrop-blur-xl bg-olive-950/85 shadow-[0_1px_0_0_rgb(var(--gold-500)/0.25),0_12px_30px_-16px_rgb(0_0_0/0.6)]"
+            : "backdrop-blur-md bg-olive-950/45"
         }`}
       >
-        <div className="mx-auto flex h-16 container-page items-center justify-between px-5">
-          <Link href="/" className="group flex items-center gap-2.5">
+        <div className="mx-auto flex h-[68px] container-page items-center justify-between gap-6 px-5">
+          <Link href="/" className="group flex shrink-0 items-center gap-3">
             <Image
               src="/logo-ministere.png"
               alt="Ministère de l'Agriculture"
               width={90}
               height={55}
-              className="h-10 w-auto object-contain"
+              className="h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
               priority
             />
-           <div className="leading-tight">
-            <div className="font-serif text-[12px] sm:text-[15px] text-cream-50">
-              République Tunisienne
+            <div className="leading-tight">
+              <div className="font-display text-[13px] tracking-wide text-cream-50">
+                République Tunisienne
+              </div>
+              <div className="text-[8px] uppercase tracking-[0.14em] text-cream-300/60 max-w-[140px] sm:max-w-none sm:text-[9px] sm:tracking-[0.16em]">
+                <span className="sm:hidden">MARHP</span>
+                <span className="hidden sm:inline">
+                  Ministère de l&apos;Agriculture, des Ressources <br /> Hydrauliques et de la Pêche
+                </span>
+              </div>
             </div>
-            <div className="text-[8px] sm:text-[10px] uppercase tracking-[0.12em] sm:tracking-[0.18em] text-cream-300/70 max-w-[140px] sm:max-w-none">
-              <span className="sm:hidden">MARHP</span>
-              <span className="hidden sm:inline">
-                Ministère de l'Agriculture, des Ressources <br /> Hydrauliques et de la Pêche
-              </span>
-            </div>
-          </div>
           </Link>
 
-          <nav className="hidden items-center gap-2 lg:flex">
-            {links.map((l) => (
-              <button
-                title={l.title}
-                key={l.href}
-                onClick={() => handleProtectedNav(l.href)}
-                className="rounded-full border border-cream-50/10 bg-cream-50/[0.03] px-4 py-2 text-sm text-cream-100/85 transition-all duration-200 hover:border-gold-300/30 hover:bg-gold-300/10 hover:text-gold-300"
+          <div className="hidden flex-1 items-center justify-center lg:flex">
+            <nav className="flex items-center gap-1 rounded-full border border-cream-50/[0.07] bg-olive-900/30 px-1.5 py-1.5">
+              <Link
+                href="/"
+                title="Retour à l'accueil"
+                aria-label="Retour à l'accueil"
+                className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-200 ${
+                  isActive("/")
+                    ? "bg-gold-300/15 text-gold-300"
+                    : "text-cream-100/60 hover:bg-cream-50/[0.06] hover:text-gold-300"
+                }`}
               >
-                {l.label}
-              </button>
-            ))}
+                <Home className="h-4 w-4" />
+              </Link>
+
+              <span className="h-4 w-px bg-cream-50/10" aria-hidden />
+
+              {navLinks.map((l) => (
+                <button
+                  title={l.title}
+                  key={l.href}
+                  onClick={() => handleProtectedNav(l.href)}
+                  className={`rounded-full px-4 py-1.5 text-[13.5px] font-medium tracking-tight transition-colors duration-200 ${
+                    isActive(l.href)
+                      ? "bg-gold-300/15 text-gold-300"
+                      : "text-cream-100/75 hover:bg-cream-50/[0.06] hover:text-cream-50"
+                  }`}
+                >
+                  {l.label}
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          <div className="hidden items-center gap-4 lg:flex">
             <a
               href={guidePdfHref}
               target="_blank"
               rel="noopener noreferrer"
               title="Guide d'exportation de l'huile d'olive"
-              className="flex items-center gap-1.5 rounded-full border border-gold-300/20 bg-gold-300/[0.06] px-4 py-2 text-sm text-gold-200 transition-all duration-200 hover:border-gold-300/40 hover:bg-gold-300/10 hover:text-gold-300"
+              className="flex items-center gap-1.5 rounded-full border border-gold-300/25 px-3.5 py-[7px] text-[13px] font-medium text-gold-200 transition-all duration-200 hover:border-gold-300/45 hover:bg-gold-300/[0.08] hover:text-gold-300"
             >
               <FileText className="h-3.5 w-3.5" />
               Guide
             </a>
-          </nav>
 
-          <div className="hidden items-center gap-3 lg:flex">
-            {isLoading ? null : user ? <ProfileNav user={user} /> : <AuthLinks />}
+            <span className="h-6 w-px bg-cream-50/10" aria-hidden />
+
+            {isLoading ? (
+              <div className="h-9 w-24 animate-pulse rounded-full bg-cream-50/5" />
+            ) : user ? (
+              <ProfileNav user={user} />
+            ) : (
+              <AuthLinks />
+            )}
           </div>
 
           <button
@@ -134,14 +172,19 @@ export default function Navbar() {
          containing block for any `fixed` descendant. That broke this panel's
          fixed positioning/sizing. Moving it out of the blurred container fixes it. */}
       {open && (
-        <div className="fixed inset-x-0 top-16 bottom-0 z-[60] bg-olive-950 lg:hidden">
+        <div className="fixed inset-x-0 top-[68px] bottom-0 z-[60] bg-olive-950 lg:hidden">
           <div className="mx-auto flex h-full container-page flex-col gap-1 overflow-y-auto px-5 py-6">
             {links.map((l) => (
               <button
                 key={l.href}
                 onClick={() => handleProtectedNav(l.href)}
-                className="rounded-md px-3 py-3 text-left text-base text-cream-100 hover:bg-olive-800 hover:text-gold-300"
+                className={`flex items-center gap-2.5 rounded-md px-3 py-3 text-left text-base transition-colors duration-200 ${
+                  isActive(l.href)
+                    ? "bg-gold-300/10 text-gold-300"
+                    : "text-cream-100 hover:bg-olive-800 hover:text-gold-300"
+                }`}
               >
+                {l.href === "/" && <Home className="h-4 w-4" />}
                 {l.label}
               </button>
             ))}

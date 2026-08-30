@@ -152,7 +152,7 @@ export default function About() {
                   Développée par le Ministère de l&apos;Agriculture, des Ressources
                   Hydrauliques et de la Pêche (MARHP), cette plateforme
                   numérique modernise et digitalise le processus d&apos;autorisation
-                  à l&apos;export de l&apos;huile d&apos;olive — de la création du compte
+                  à l&apos;export de l&apos;huile d&apos;olive de la création du compte
                   entreprise jusqu&apos;au suivi des demandes en temps réel.
                 </p>
 
@@ -281,9 +281,9 @@ export default function About() {
                 exportés, le reste partant en vrac. La Tunisie vend donc
                 surtout une matière première peu valorisée plutôt qu&apos;un
                 produit fini à marque tunisienne. Le Ministère répond à ce défi
-                à la fois par des programmes de promotion — les exportations
+                à la fois par des programmes de promotion les exportations
                 conditionnées ont progressé de 69 % en valeur à fin mars 2026
-                — et par la digitalisation du parcours administratif des
+                et par la digitalisation du parcours administratif des
                 exportateurs, pour leur faire gagner en temps et en
                 transparence.
               </p>

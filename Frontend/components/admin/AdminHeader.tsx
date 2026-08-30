@@ -1,10 +1,11 @@
 "use client";
 
-import { LogOut } from "lucide-react";
+import { LogOut, ArrowLeft } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import NotificationBell from "@/components/NotificationBell";
 import { useRouter } from "next/navigation";
 import { privateApi } from "@/lib/api/privateApi";
+import Link from "next/link";
 interface Props {
   title: string;
   subtitle?: string;
@@ -28,6 +29,13 @@ export default function AdminHeader({ title, subtitle }: Props) {
         {subtitle && <p className="text-xs text-cream-50/50">{subtitle}</p>}
       </div>
       <div className="flex items-center gap-3">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 rounded-full border border-cream-50/15 px-3.5 py-2 text-sm text-cream-50/80 transition-all duration-200 hover:border-gold-300/30 hover:text-gold-300"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Accueil
+        </Link>
         <NotificationBell />
         <button
           onClick={() => LogoutMutation.mutate()}

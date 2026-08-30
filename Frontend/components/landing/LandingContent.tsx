@@ -309,7 +309,7 @@ function Hero() {
           <Reveal delay={400}>
             <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-cream-100/80 md:text-base">
               Une plateforme moderne pour accélérer l'exportation de l'huile
-              d'olive tunisienne vers les marchés internationaux — suivi en
+              d'olive tunisienne vers les marchés internationaux, suivi en
               temps réel, traçabilité complète et communication directe avec
               le Ministère.
             </p>

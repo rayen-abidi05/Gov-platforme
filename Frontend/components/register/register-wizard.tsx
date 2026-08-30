@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -254,6 +255,17 @@ export function RegisterWizard() {
 
 
         </div>
+
+        {stepIndex === 0 && (
+          <div className="mt-4 text-center">
+            <Link
+              href="/"
+              className="text-sm font-medium text-cream-50/60 underline-offset-2 hover:text-gold-300 hover:underline"
+            >
+              Retour à l&apos;accueil
+            </Link>
+          </div>
+        )}
 
 
       </form>

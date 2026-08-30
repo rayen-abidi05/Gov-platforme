@@ -9,7 +9,7 @@ const GUIDE_PDF_HREF = "/docs/Guide_Demande_Exportation_FR.pdf";
 
 const NAV_ITEMS = [
   { href: "/espace", label: "Vue d'ensemble", icon: LayoutDashboard },
-  { href: "/registration", label: "Mon inscription", icon: FileCheck2 },
+  { href: "/espace/registration", label: "Mon inscription", icon: FileCheck2 },
   { href: "/espace/exports", label: "Mes exportations", icon: Ship },
   { href: "/espace/documents", label: "Mes documents", icon: FolderOpen },
   { href: "/espace/company", label: "Mon entreprise", icon: Building2 },

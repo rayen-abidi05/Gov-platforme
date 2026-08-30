@@ -3,9 +3,10 @@ import { privateApi } from "@/lib/api/privateApi";
 import { DocumentsFormValues } from "@/lib/validations/documentsSchema";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-export function useSubmitRegistration() {
+export function useSubmitRegistration(options?: { redirectTo?: string }) {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const redirectTo = options?.redirectTo ?? "/registration";
   return useMutation({
     mutationFn: async (values: DocumentsFormValues & { note?: string }) => {
       const formData = new FormData();
@@ -33,7 +34,7 @@ export function useSubmitRegistration() {
       return res.data;
     },
     onSuccess: () => {
-      router.push("/registration");
+      router.push(redirectTo);
       queryClient.invalidateQueries({ queryKey: ["registration-status"] });
     },
   });

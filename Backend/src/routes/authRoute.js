@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const { registerUser,login,logout , verify, users } = require('../controllers/auth');
-const authenticateToken = require('../middleware/authtoken');
+const authenticateToken = require('../middleware/authToken');
 const refresh = require ("../controllers/refresh")
 router.post('/register',async (req,res)=>{
     if(req.body.role==="EXPORTER"){

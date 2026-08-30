@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const {getApprovedExporters, getRequestRegis , updateRequestStatus , getAllRequestRegis, getRequestRegisByIdAdmin , getRequestRegisById , addRequest } = require('../controllers/manageRegistrationRequest');
-const authenticateToken = require('../middleware/authtoken');
+const authenticateToken = require('../middleware/authToken');
 const adminCheck = require ("../middleware/adminCheck")
 const { assignToInspa,getAssignedInspections } = require("../controllers/storageInspectionController");
 const checkRole = require ("../middleware/checkRole")

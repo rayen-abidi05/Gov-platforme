@@ -10,7 +10,7 @@ import AuthLinks from "./AuthLinks";
 import ProfileNav from "./ProfileNav";
 import { User, UserCircle, LogOut, Menu, X, FileText, Home } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
-
+import LanguageSelector from "@/components/ui/LanguageSelector"
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
@@ -42,8 +42,7 @@ export default function Navbar() {
     { href: "/about", label: "À propos" ,title: "À propos"},
   ];
 
-  // Desktop nav shows Accueil as a dedicated home icon, so the text-link
-  // row only needs the rest.
+  
   const navLinks = links.filter((l) => l.href !== "/");
 
   const isActive = (href: string) =>
@@ -145,9 +144,12 @@ export default function Navbar() {
               <FileText className="h-3.5 w-3.5" />
               Guide
             </a>
-
-            <span className="h-6 w-px bg-cream-50/10" aria-hidden />
-
+                
+            <LanguageSelector />
+              <span
+        className="h-6 w-px bg-cream-50/10"
+        aria-hidden
+      />
             {isLoading ? (
               <div className="h-9 w-24 animate-pulse rounded-full bg-cream-50/5" />
             ) : user ? (
@@ -167,10 +169,6 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile dropdown: rendered as a SIBLING of <header>, not nested inside it.
-         header has backdrop-blur (a backdrop-filter), which creates a new
-         containing block for any `fixed` descendant. That broke this panel's
-         fixed positioning/sizing. Moving it out of the blurred container fixes it. */}
       {open && (
         <div className="fixed inset-x-0 top-[68px] bottom-0 z-[60] bg-olive-950 lg:hidden">
           <div className="mx-auto flex h-full container-page flex-col gap-1 overflow-y-auto px-5 py-6">
@@ -199,6 +197,8 @@ export default function Navbar() {
               <FileText className="h-4 w-4" />
               Guide
             </a>
+              <LanguageSelector />
+              
 
             <div className="mt-4 border-t border-cream-50/10 pt-4">
               {isLoading ? null : user ? (

@@ -60,7 +60,8 @@ export default function LoginPage() {
 
           <div className="flex items-center gap-2 text-sm text-cream-50/60">
             <ShieldCheck className="h-4 w-4 text-gold-300" />
-            <span>Accès chiffré et conforme aux normes du Ministère</span>
+            <span>Accès chiffré et conforme aux normes du Ministère de l'Agriculture, des Ressources
+Hydrauliques et de la Pêche</span>
           </div>
         </section>
 

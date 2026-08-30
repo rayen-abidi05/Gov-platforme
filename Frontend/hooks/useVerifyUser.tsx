@@ -4,7 +4,7 @@ import { AuthenticatedUser } from "@/types/auth";
 
 export function useVerifyUser() {
   return useQuery({
-    queryKey: ["verify-check-ROLE"],
+    queryKey: ["auth", "user"],
 
     queryFn: async () : Promise<AuthenticatedUser> => {
       const res = await privateApi.get("/api/auth/verify");

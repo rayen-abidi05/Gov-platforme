@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const authenticateToken = require("../middleware/authtoken");
+const authenticateToken = require("../middleware/authToken");
 const checkRole = require("../middleware/checkRole");
 const {  getMyExportRequest,sendToCommittee,getAgrimMonitoring,getMyExportRequests,decideExportRequest ,resolveAgrim,createExportRequest,getExportRequests,getExportRequest} = require("../controllers/exportRequestController");
 const upload = require("../middleware/upload")

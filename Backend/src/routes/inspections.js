@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const authenticateToken = require("../middleware/authtoken");
+const authenticateToken = require("../middleware/authToken");
 const checkRole = require("../middleware/checkRole");
 const {
   assignToInspa,

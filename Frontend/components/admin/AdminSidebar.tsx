@@ -16,7 +16,8 @@ const NAV_ITEMS = [
   { href: "/dashboard/export-requests", label: "Demandes d'exportation", icon: Ship },
   { href: "/dashboard/instances", label: "Instances", icon: ClipboardCheck },
   { href: "/dashboard/inspections", label: "Inspections", icon: ShieldCheck },
-  { href: "/dashboard/settings", label: "Paramètres", icon: Settings },
+  
+  
 
 ];
 

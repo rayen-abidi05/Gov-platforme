@@ -37,7 +37,7 @@ export default function NewExportRequestPage() {
 
       <main className="mx-auto max-w-2xl px-6 py-8 sm:px-10">
         <button
-          onClick={() => router.push("/dashboard/exports")}
+          onClick={() => router.push("/espace/exports")}
           className="mb-6 flex items-center gap-1.5 text-sm text-cream-50/60 transition-colors duration-150 hover:text-gold-300"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -49,7 +49,7 @@ export default function NewExportRequestPage() {
             <div>
               <label className="text-sm font-medium text-cream-50/90">
                 Nom du client
-                <span className="ml-1.5 text-xs text-cream-50/50">اسم العميل</span>
+                <span className="ml-1.5 text-xs text-cream-50/50">اسم الحريف</span>
               </label>
               <input
                 {...register("client")}

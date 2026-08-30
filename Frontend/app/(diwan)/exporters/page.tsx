@@ -3,28 +3,18 @@
 import { useMemo, useState } from "react";
 import { Leaf, ShieldCheck, LogOut } from "lucide-react";
 import { useApprovedExporters } from "@/hooks/useApprovedExporters";
-import {  useRouter } from "next/navigation";
 import { ApprovedExporter } from "@/types/registration";
 import ExportersFilters, { ExporterSearchField } from "@/components/admin/ExportersFilters";
 import DiwanExportersTable from "@/components/diwan/DiwanExportersTable";
 import DiwanExporterDetailsModal from "@/components/diwan/DiwanExporterDetailsModal";
 import NotificationBell from "@/components/NotificationBell";
 import Spinner from "@/components/ui/spinner";
-import { privateApi } from "@/lib/api/privateApi";
-import { useMutation } from "@tanstack/react-query";
+import { useLogout } from "@/hooks/useLogout";
 import Image from "next/image";
 export default function DiwanExportersPage() {
-  const router = useRouter()
   const { data, isLoading, isError } = useApprovedExporters();
   const exporters: ApprovedExporter[] = data?.exporters ?? [];
-  const LogoutMutation = useMutation({
-    mutationFn: async () => {
-      const res = await privateApi.post("/api/auth/logout")
-      return res.data
-    },
-    onSuccess: () => router.push("/login"),
-    onError: () => console.log("nonnn"),
-  })
+  const LogoutMutation = useLogout();
 
   const [search, setSearch] = useState("");
   const [searchFields, setSearchFields] = useState<ExporterSearchField[]>(["commName", "ownerName"]);

@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { UseMutationOptions } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { publicApi } from "@/lib/api/publicApi";
@@ -17,6 +17,7 @@ export function useLogin(
   options?: UseMutationOptions<LoginResponse, Error, LoginFormValues>
 ) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: LoginFormValues) => {
@@ -25,9 +26,12 @@ export function useLogin(
     },
 
     onSuccess: (data) => {
-       console.log(data.role)
+      // Safety net: make sure no previous session's cached
+      // /api/auth/verify response (wrong role) can leak into the
+      // freshly logged-in session's first navigation.
+      queryClient.clear();
+
       if (data.role === "EXPORTER" ) {
-       
         router.replace("/");
       } else {
         router.replace(ROLE_HOME_ROUTE[data.role]);

@@ -2,27 +2,14 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLogout } from "@/hooks/useLogout";
 import { User, UserCircle, LogOut, ChevronDown } from "lucide-react";
-import { privateApi } from "@/lib/api/privateApi";
 
 export default function ProfileNav({ user }: { user: { id: string; name: string } }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-  const queryClient = useQueryClient();
 
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      const res = await privateApi.post("/api/auth/logout");
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.clear();
-      router.replace("/login");
-    },
-  });
+  const logoutMutation = useLogout();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

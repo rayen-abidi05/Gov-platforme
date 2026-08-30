@@ -1,24 +1,10 @@
 "use client";
 
 import { LogOut } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { privateApi } from "@/lib/api/privateApi";
+import { useLogout } from "@/hooks/useLogout";
 
 export default function MinisterLogoutButton() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  const { mutate: logout } = useMutation({
-    mutationFn: async () => {
-      const res = await privateApi.post("/api/auth/logout");
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.clear();
-      router.replace("/login");
-    },
-  });
+  const { mutate: logout } = useLogout();
 
   return (
     <button

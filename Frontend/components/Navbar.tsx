@@ -5,10 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { useUser } from "@/hooks/useUser";
+import { useLogout } from "@/hooks/useLogout";
 import AuthLinks from "./AuthLinks";
 import ProfileNav from "./ProfileNav";
-import { useMutation } from "@tanstack/react-query";
-import { privateApi } from "@/lib/api/privateApi";
 import { User, UserCircle, LogOut, Menu, X, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -17,13 +16,7 @@ export default function Navbar() {
   const { data: user, isLoading } = useUser();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      const res = await privateApi.post("/api/auth/logout");
-      return res.data;
-    },
-    onSuccess: () => router.push("/login"),
-  });
+  const logoutMutation = useLogout();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);

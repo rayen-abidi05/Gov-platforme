@@ -1,12 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { LayoutDashboard, FileCheck2, Users, Settings,ShieldCheck , Ship, ClipboardCheck, Download } from "lucide-react";
 import {LogOut } from "lucide-react";
-import { privateApi } from "@/lib/api/privateApi";
-
-import { useMutation } from "@tanstack/react-query";
+import { useLogout } from "@/hooks/useLogout";
 import Image from "next/image";
 
 const GUIDE_PDF_HREF = "/docs/Guide_Admin_FR.pdf";
@@ -23,16 +21,8 @@ const NAV_ITEMS = [
 ];
 
 export default function AdminSidebar() {
-  const router = useRouter()
   const pathname = usePathname();
-const LogoutMutation = useMutation({
-    mutationFn: async () => {
-      const res = await privateApi.post("/api/auth/logout")
-      return res.data
-    },
-    onSuccess: () => router.push("/login"),
-    onError: () => console.log("nonnn"),
-  })
+  const LogoutMutation = useLogout();
   return (
     <aside className="hidden w-64 shrink-0 border-r border-cream-50/10 bg-olive-950/60 backdrop-blur-md lg:flex lg:flex-col">
       <div className="flex items-center gap-2.5 px-6 py-6">

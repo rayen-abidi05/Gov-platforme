@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
+import { useLogout } from "@/hooks/useLogout";
 import {
   LayoutDashboard,
   Ship,
@@ -12,7 +12,6 @@ import {
   ScrollText,
   LogOut,
 } from "lucide-react";
-import { privateApi } from "@/lib/api/privateApi";
 
 const NAV_ITEMS = [
   { href: "/observer", label: "Tableau de bord", icon: LayoutDashboard },
@@ -23,16 +22,9 @@ const NAV_ITEMS = [
 ];
 
 export default function ObserverSidebar() {
-  const router = useRouter();
   const pathname = usePathname();
 
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      const res = await privateApi.post("/api/auth/logout");
-      return res.data;
-    },
-    onSuccess: () => router.push("/login"),
-  });
+  const logoutMutation = useLogout();
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r border-cream-50/10 bg-olive-950/60 backdrop-blur-md sm:flex">

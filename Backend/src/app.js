@@ -13,7 +13,7 @@ const ministerRoute = require ("./routes/ministerFormulaire.routes");
 const instanceRoute = require ("./routes/instances");
 const inspecRoute = require("./routes/inspections"); 
 const exportRequestsRoute = require("./routes/export-requests");
-const authenticateToken = require('./middleware/authToken');
+const authenticateToken = require('./middleware/authtoken');
 
 const app = express();
 

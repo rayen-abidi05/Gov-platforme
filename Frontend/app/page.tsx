@@ -31,7 +31,7 @@ import Navbar from "@/components/Navbar";
 function Footer() {
   return (
     <footer id="contact" className="relative border-t border-gold-500/15 bg-olive-950/80">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-5 py-16 md:grid-cols-4 md:px-8">
+      <div className="mx-auto grid container-page grid-cols-1 gap-12 px-5 py-16 md:grid-cols-4 md:px-8">
         <div className="md:col-span-1">
           <div className="flex items-center gap-2.5">
             <Image
@@ -44,7 +44,13 @@ function Footer() {
             <div>
 
               <div className="font-serif text-[15px] text-cream-50">
-                MARHP
+                République Tunisienne
+              </div>
+              <div className="text-[8px] sm:text-[10px] uppercase tracking-[0.12em] sm:tracking-[0.18em] text-cream-300/70 max-w-[140px] sm:max-w-none">
+                <span className="sm:hidden">MARHP</span>
+                <span className="hidden sm:inline">
+                  Ministère de l'Agriculture, des Ressources <br /> Hydrauliques et de la Pêche
+                </span>
               </div>
             </div>
           </div>
@@ -61,7 +67,7 @@ function Footer() {
           </div>
           <ul className="mt-5 space-y-3 text-sm text-cream-100/75">
             <li><a href="#apropos" className="hover:text-gold-300">À propos</a></li>
-            <li><a href="#cahier" className="hover:text-gold-300">Cahier de charge</a></li>
+            <li><a href="/docs/zit.pdf" download className="hover:text-gold-300">Cahier de charge</a></li>
             <li><a href="#demande" className="hover:text-gold-300">Demande d'enregistrement</a></li>
             <li><a href="/login" className="hover:text-gold-300">Se connecter</a></li>
           </ul>
@@ -101,7 +107,7 @@ function Footer() {
       </div>
 
       <div className="border-t border-olive-700/50">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-5 py-6 text-xs text-cream-100/50 md:flex-row md:px-8">
+        <div className="mx-auto flex container-page flex-col items-center justify-between gap-3 px-5 py-6 text-xs text-cream-100/50 md:flex-row md:px-8">
           <div>
             © {new Date().getFullYear()} Ministère de l'Agriculture — République Tunisienne. Tous droits réservés.
           </div>

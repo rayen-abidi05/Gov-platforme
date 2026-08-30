@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { StepIndicator, type WizardStep } from "@/components/register/step-indicator";
@@ -38,6 +39,9 @@ export function RegisterWizard() {
 
   const registerMutation = useRegister({
     onSuccess: () => {
+      toast.success("Inscription réussie !", {
+        description: "Votre compte a été créé avec succès.",
+      });
       router.push("/login");
     },
   });
@@ -165,7 +169,7 @@ export function RegisterWizard() {
             "
           >
 
-            Register succeed !!!
+            Inscription réussie !
 
           </div>
         )}

@@ -3,7 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FileCheck2, Ship, FolderOpen, Building2 } from "lucide-react";
+import { LayoutDashboard, FileCheck2, Ship, FolderOpen, Building2, Download } from "lucide-react";
+
+const GUIDE_PDF_HREF = "/docs/Guide_Demande_Exportation_FR.pdf";
 
 const NAV_ITEMS = [
   { href: "/espace", label: "Vue d'ensemble", icon: LayoutDashboard },
@@ -59,6 +61,20 @@ export default function ExporterSidebar() {
           );
         })}
       </nav>
+
+      <div className="border-t border-cream-50/10 px-3 py-4">
+        <p className="px-3 pb-2 text-[11px] font-medium uppercase tracking-wide text-cream-50/40">
+          Guide
+        </p>
+        <a
+          href={GUIDE_PDF_HREF}
+          download
+          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-cream-50/70 transition-all duration-200 hover:bg-cream-50/5 hover:text-gold-300"
+        >
+          <Download className="h-4.5 w-4.5 shrink-0" />
+          Guide de demande d'exportation
+        </a>
+      </div>
 
       <div className="border-t border-cream-50/10 px-6 py-4">
         <p className="text-xs text-cream-50/40">Espace exportateur</p>

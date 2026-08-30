@@ -277,7 +277,7 @@ function Hero() {
       </div>
 
       {/* Hero content */}
-      <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-end px-5 pb-20 pt-32 md:px-8 md:pb-28">
+      <div className="relative mx-auto flex min-h-[92vh] container-page flex-col justify-end px-5 pb-20 pt-32 md:px-8 md:pb-28">
 
         <div className="max-w-2xl">
 
@@ -384,7 +384,7 @@ function Hero() {
           RIGHT SIDE VISUAL CARDS
          ===================================================== */}
       <div className="pointer-events-none absolute inset-0 hidden lg:block">
-        <div className="mx-auto max-w-7xl px-8">
+        <div className="mx-auto container-page px-8">
 
           {/* Main card */}
           <div
@@ -477,7 +477,7 @@ function Stats() {
   ];
   return (
     <section className="relative border-y border-gold-500/10 bg-olive-900/40">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-y-10 px-5 py-14 md:px-8 lg:grid-cols-4">
+      <div className="mx-auto grid container-page grid-cols-2 gap-y-10 px-5 py-14 md:px-8 lg:grid-cols-4">
         {items.map((it, i) => (
           <Reveal key={i} delay={i * 100} className="text-center lg:text-left">
             <div className="font-serif text-4xl text-gradient-gold md:text-5xl">
@@ -499,7 +499,7 @@ function Problem() {
   ];
   return (
     <section id="apropos" className="relative py-28">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-14 px-5 md:px-8 lg:grid-cols-[1fr_1.15fr]">
+      <div className="mx-auto grid container-page grid-cols-1 gap-14 px-5 md:px-8 lg:grid-cols-[1fr_1.15fr]">
         <div>
           <Reveal>
             <div className="text-[11px] uppercase tracking-[0.22em] text-gold-300/80">Le problème</div>
@@ -550,7 +550,7 @@ function Solution() {
   return (
     <section id="cahier" className="relative overflow-hidden py-28">
       <div className="pointer-events-none absolute left-1/2 top-0 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,oklch(0.72_0.15_82/0.12),transparent_70%)] blur-3xl" />
-      <div className="relative mx-auto max-w-7xl px-5 md:px-8">
+      <div className="relative mx-auto container-page px-5 md:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <Reveal>
             <div className="text-[11px] uppercase tracking-[0.22em] text-gold-300/80">La solution</div>
@@ -594,7 +594,7 @@ function HowItWorks() {
   ];
   return (
     <section id="demande" className="relative py-28">
-      <div className="mx-auto max-w-7xl px-5 md:px-8">
+      <div className="mx-auto container-page px-5 md:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <Reveal>
             <div className="text-[11px] uppercase tracking-[0.22em] text-gold-300/80">Comment ça marche</div>
@@ -639,7 +639,7 @@ function Trust() {
   ];
   return (
     <section className="relative py-28">
-      <div className="mx-auto max-w-7xl px-5 md:px-8">
+      <div className="mx-auto container-page px-5 md:px-8">
         <div className="rounded-3xl border border-olive-700/60 bg-gradient-to-br from-olive-900/60 to-olive-950/80 p-10 md:p-14">
           <div className="mx-auto max-w-3xl text-center">
             <Reveal>

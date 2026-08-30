@@ -162,11 +162,11 @@ export default function About() {
                       Demande d&apos;enregistrement
                     </Button>
                   </Link>
-                  <Link href="/chaier-de-charge">
+                  <a href="/docs/zit.pdf" download>
                     <Button variant="outline" className="w-auto px-6">
                       Cahier des charges
                     </Button>
-                  </Link>
+                  </a>
                 </div>
               </div>
 

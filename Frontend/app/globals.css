@@ -146,3 +146,18 @@
 .animate-float-slower {
   animation: float-slower 16s ease-in-out infinite;
 }
+
+/*
+  Fluid page container — replaces fixed max-w-7xl (80rem) on the landing
+  page so the layout scales relative to the actual viewport instead of
+  staying pinned to a fixed pixel width. Fixed max-widths use rem, which
+  doesn't track the effective viewport size the way vw does, so on very
+  wide/zoomed-out views the content collapses into a narrow centered
+  column instead of spreading out with the page. min() lets it grow with
+  the viewport (94vw) while still capping at a sensible max (100rem) on
+  extremely wide screens so line lengths stay readable.
+*/
+.container-page {
+  width: 100%;
+  max-width: min(94vw, 100rem);
+}

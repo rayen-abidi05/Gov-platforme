@@ -2,12 +2,15 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, FileCheck2, Users, Settings,ShieldCheck , Ship, ClipboardCheck } from "lucide-react";
+import { LayoutDashboard, FileCheck2, Users, Settings,ShieldCheck , Ship, ClipboardCheck, Download } from "lucide-react";
 import {LogOut } from "lucide-react";
 import { privateApi } from "@/lib/api/privateApi";
 
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
+
+const GUIDE_PDF_HREF = "/docs/Guide_Admin_FR.pdf";
+
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/dashboard/requests", label: "Demandes d'inscription", icon: FileCheck2 },
@@ -88,6 +91,20 @@ const LogoutMutation = useMutation({
           </button>
         </div>
       </nav>
+
+      <div className="border-t border-cream-50/10 px-3 py-4">
+        <p className="px-3 pb-2 text-[11px] font-medium uppercase tracking-wide text-cream-50/40">
+          Guide
+        </p>
+        <a
+          href={GUIDE_PDF_HREF}
+          download
+          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-cream-50/70 transition-all duration-200 hover:bg-cream-50/5 hover:text-gold-300"
+        >
+          <Download className="h-4.5 w-4.5 shrink-0" />
+          Guide administrateur
+        </a>
+      </div>
 
       <div className="border-t border-cream-50/10 px-6 py-4">
         <p className="text-xs text-cream-50/40">Accès administrateur</p>

@@ -9,7 +9,7 @@ import AuthLinks from "./AuthLinks";
 import ProfileNav from "./ProfileNav";
 import { useMutation } from "@tanstack/react-query";
 import { privateApi } from "@/lib/api/privateApi";
-import { User, UserCircle, LogOut, Menu, X } from "lucide-react";
+import { User, UserCircle, LogOut, Menu, X, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
@@ -48,6 +48,8 @@ export default function Navbar() {
     { href: "/about", label: "À propos" ,title: "À propos"},
   ];
 
+  const guidePdfHref = "/docs/Guide_Exportation_Huile_Olive_FR.pdf";
+
   const handleProtectedNav = (href: string) => {
     setOpen(false);
     if (href !== "/espace") {
@@ -74,7 +76,7 @@ export default function Navbar() {
             : "backdrop-blur-md bg-olive-950/35 border-b border-transparent"
         }`}
       >
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
+        <div className="mx-auto flex h-16 container-page items-center justify-between px-5">
           <Link href="/" className="group flex items-center gap-2.5">
             <Image
               src="/logo-ministere.png"
@@ -108,6 +110,16 @@ export default function Navbar() {
                 {l.label}
               </button>
             ))}
+            <a
+              href={guidePdfHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Guide d'exportation de l'huile d'olive"
+              className="flex items-center gap-1.5 rounded-full border border-gold-300/20 bg-gold-300/[0.06] px-4 py-2 text-sm text-gold-200 transition-all duration-200 hover:border-gold-300/40 hover:bg-gold-300/10 hover:text-gold-300"
+            >
+              <FileText className="h-3.5 w-3.5" />
+              Guide
+            </a>
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
@@ -130,7 +142,7 @@ export default function Navbar() {
          fixed positioning/sizing. Moving it out of the blurred container fixes it. */}
       {open && (
         <div className="fixed inset-x-0 top-16 bottom-0 z-[60] bg-olive-950 lg:hidden">
-          <div className="mx-auto flex h-full max-w-7xl flex-col gap-1 overflow-y-auto px-5 py-6">
+          <div className="mx-auto flex h-full container-page flex-col gap-1 overflow-y-auto px-5 py-6">
             {links.map((l) => (
               <button
                 key={l.href}
@@ -140,6 +152,17 @@ export default function Navbar() {
                 {l.label}
               </button>
             ))}
+
+            <a
+              href={guidePdfHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2.5 rounded-md px-3 py-3 text-base text-gold-200 hover:bg-olive-800 hover:text-gold-300"
+            >
+              <FileText className="h-4 w-4" />
+              Guide
+            </a>
 
             <div className="mt-4 border-t border-cream-50/10 pt-4">
               {isLoading ? null : user ? (
